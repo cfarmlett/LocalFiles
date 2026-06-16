@@ -1,6 +1,7 @@
 Implement the LocalDocs Merge PDF workflow.
 
 Context:
+
 - LocalDocs is a privacy-first PDF utility suite.
 - All document processing must occur locally in the browser.
 - No document data may be uploaded to any server.
@@ -67,18 +68,21 @@ Non-functional requirements:
 Testing requirements:
 
 Unit tests:
+
 - merge success path
 - file validation
 - adapter error handling
 - merge ordering logic
 
 Component/UI tests:
+
 - file selection
 - file removal
 - reordering
 - merge action state transitions
 
 End-to-end tests:
+
 - upload multiple PDFs
 - reorder PDFs
 - merge PDFs
@@ -88,6 +92,7 @@ End-to-end tests:
 Validation:
 
 Run and fix issues from:
+
 - pnpm format:check
 - pnpm typecheck
 - pnpm lint

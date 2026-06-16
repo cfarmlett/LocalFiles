@@ -51,11 +51,13 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     clearOutputs();
 
     if (selected.length === 0) {
+      setFile(undefined);
       setErrors(["Choose one PDF before splitting."]);
       return;
     }
 
     if (selected.length > 1) {
+      setFile(undefined);
       setErrors(["Choose exactly one PDF before splitting."]);
       return;
     }
@@ -71,6 +73,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     }
 
     setIsReading(true);
+    setFile(undefined);
     setErrors([]);
 
     try {
@@ -239,6 +242,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         <label className="field-row">
           Page ranges
           <textarea
+            aria-describedby="split-ranges-help"
             onChange={(event) => {
               setCustomRanges(event.currentTarget.value);
               setErrors([]);
@@ -247,6 +251,9 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
             rows={4}
             value={customRanges}
           />
+          <span className="field-help" id="split-ranges-help">
+            Enter one range per output PDF, separated by commas or new lines.
+          </span>
         </label>
       ) : null}
 
@@ -270,7 +277,11 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
                 </span>
               </div>
               <div className="merge-actions">
-                <a download={output.filename} href={output.url}>
+                <a
+                  aria-label={`Download ${output.filename}`}
+                  download={output.filename}
+                  href={output.url}
+                >
                   Download
                 </a>
               </div>

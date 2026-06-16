@@ -1,6 +1,7 @@
 Review and harden the existing Merge PDF implementation.
 
 Important:
+
 - Start by inspecting the current implementation.
 - Do not rewrite the feature.
 - Do not add Split PDF or any new V1 feature.
@@ -14,6 +15,7 @@ Prefer proven defects over hypothetical improvements.
 Do not make changes solely because something could be improved.
 
 Only modify code when:
+
 - a bug exists
 - a stale state exists
 - a memory leak risk exists
@@ -62,11 +64,13 @@ Review focus:
    - If any dependency was added previously, verify it is justified.
 
 10. Future-tool pattern
-   - Ensure Merge PDF remains a clean implementation pattern for future V1 tools.
+
+- Ensure Merge PDF remains a clean implementation pattern for future V1 tools.
 
 Validation:
 
 Run and fix issues from:
+
 - pnpm format:check
 - pnpm typecheck
 - pnpm lint

@@ -1,6 +1,7 @@
 Review and harden the existing Split PDF implementation.
 
 Context:
+
 - Split PDF V1 has already been implemented.
 - This is a focused hardening/review pass.
 - Do not implement new features.
@@ -16,6 +17,7 @@ Prefer proven defects over hypothetical improvements.
 Do not make changes solely because something could be improved.
 
 Only modify code when:
+
 - a bug exists
 - a stale state exists
 - a memory leak risk exists
@@ -27,6 +29,7 @@ Only modify code when:
 Preserve the existing Split PDF workflow and user experience.
 
 Do not redesign:
+
 - mode selection
 - page range entry
 - download workflow

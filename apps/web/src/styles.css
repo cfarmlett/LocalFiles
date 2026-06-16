@@ -304,6 +304,12 @@ h3 {
   width: min(760px, calc(100vw - 40px));
 }
 
+.field-help {
+  color: #536171;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
 .file-list {
   display: grid;
   gap: 10px;

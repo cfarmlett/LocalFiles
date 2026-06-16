@@ -50,6 +50,13 @@ describe("createSplitPlan", () => {
     });
   });
 
+  it("plans a one-page PDF as one every-page output", () => {
+    expect(createSplitPlan("every-page", 1)).toEqual({
+      ranges: [{ start: 1, end: 1 }],
+      filenames: ["page-1.pdf"],
+    });
+  });
+
   it("plans every-N-page chunks including a short final chunk", () => {
     expect(createSplitPlan("every-n-pages", 12, { chunkSize: 5 })).toEqual({
       ranges: [
@@ -58,6 +65,13 @@ describe("createSplitPlan", () => {
         { start: 11, end: 12 },
       ],
       filenames: ["pages-1-5.pdf", "pages-6-10.pdf", "pages-11-12.pdf"],
+    });
+  });
+
+  it("plans one every-N-page chunk when chunk size is larger than page count", () => {
+    expect(createSplitPlan("every-n-pages", 3, { chunkSize: 10 })).toEqual({
+      ranges: [{ start: 1, end: 3 }],
+      filenames: ["pages-1-3.pdf"],
     });
   });
 
@@ -76,6 +90,25 @@ describe("createSplitPlan", () => {
         "part-1-pages-1-3.pdf",
         "part-2-pages-4-10.pdf",
         "part-3-pages-11-20.pdf",
+      ],
+    });
+  });
+
+  it("preserves duplicate and overlapping custom ranges as separate outputs", () => {
+    expect(
+      createSplitPlan("custom-ranges", 5, {
+        customRanges: "1-3, 1-3, 2-4",
+      }),
+    ).toEqual({
+      ranges: [
+        { start: 1, end: 3 },
+        { start: 1, end: 3 },
+        { start: 2, end: 4 },
+      ],
+      filenames: [
+        "part-1-pages-1-3.pdf",
+        "part-2-pages-1-3.pdf",
+        "part-3-pages-2-4.pdf",
       ],
     });
   });
