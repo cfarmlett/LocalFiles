@@ -6,9 +6,9 @@
   "include": [
     "apps/**/*",
     "packages/**/*",
-    "tests/**/*",
     "scripts/**/*",
     "*.config.ts",
     "*.config.js"
-  ]
+  ],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "tests/**/*"]
 }

@@ -179,11 +179,13 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
               </div>
               <div className="file-actions">
                 <button
+                  aria-label={`Move ${file.file.name} up`}
                   disabled={index === 0}
                   onClick={() => {
                     setFiles((currentFiles) =>
                       moveMergeFile(currentFiles, file.id, "up"),
                     );
+                    setErrors([]);
                     setMergeResult(undefined);
                   }}
                   type="button"
@@ -191,11 +193,13 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
                   Move up
                 </button>
                 <button
+                  aria-label={`Move ${file.file.name} down`}
                   disabled={index === files.length - 1}
                   onClick={() => {
                     setFiles((currentFiles) =>
                       moveMergeFile(currentFiles, file.id, "down"),
                     );
+                    setErrors([]);
                     setMergeResult(undefined);
                   }}
                   type="button"
@@ -203,10 +207,12 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
                   Move down
                 </button>
                 <button
+                  aria-label={`Remove ${file.file.name}`}
                   onClick={() => {
                     setFiles((currentFiles) =>
                       removeMergeFile(currentFiles, file.id),
                     );
+                    setErrors([]);
                     setMergeResult(undefined);
                   }}
                   type="button"

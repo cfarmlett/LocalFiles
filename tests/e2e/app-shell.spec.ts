@@ -67,7 +67,7 @@ test("LocalDocs web shell renders local-first placeholders", async ({
   const secondRow = page.locator(".file-list__item").filter({
     hasText: "second.pdf",
   });
-  await secondRow.getByRole("button", { name: "Move up" }).click();
+  await secondRow.getByRole("button", { name: "Move second.pdf up" }).click();
 
   const fileNames = await page
     .locator(".file-list__item strong")
@@ -82,7 +82,7 @@ test("LocalDocs web shell renders local-first placeholders", async ({
   const firstRow = page.locator(".file-list__item").filter({
     hasText: "second.pdf",
   });
-  await firstRow.getByRole("button", { name: "Move down" }).click();
+  await firstRow.getByRole("button", { name: "Move second.pdf down" }).click();
   await expect(
     page.getByRole("link", { name: "Download merged PDF" }),
   ).toHaveCount(0);

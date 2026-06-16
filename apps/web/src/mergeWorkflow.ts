@@ -31,6 +31,7 @@ export type FileValidationResult =
 
 export function validatePdfFile(file: File): FileValidationResult {
   const hasPdfExtension = file.name.toLowerCase().endsWith(".pdf");
+  // Some browsers and operating systems leave File.type empty for local PDFs.
   const hasPdfType = file.type === "" || file.type === "application/pdf";
 
   if (!hasPdfExtension || !hasPdfType) {
