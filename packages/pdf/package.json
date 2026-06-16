@@ -10,5 +10,8 @@
     "build": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "lint": "eslint ."
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
   }
 }

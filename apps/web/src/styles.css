@@ -25,6 +25,24 @@ a {
   color: inherit;
 }
 
+button {
+  background: #25313d;
+  border: 1px solid #25313d;
+  border-radius: 4px;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 8px 12px;
+}
+
+button:disabled {
+  background: #d9e0e7;
+  border-color: #c8d2dc;
+  color: #667382;
+  cursor: not-allowed;
+}
+
 .app-shell {
   min-height: 100vh;
 }
@@ -173,6 +191,134 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.merge-tool {
+  display: grid;
+  gap: 18px;
+}
+
+.tool-intro {
+  color: #44515f;
+  max-width: 760px;
+}
+
+.tool-intro p,
+.loading-note {
+  margin-bottom: 0;
+}
+
+.drop-zone {
+  background: #ffffff;
+  border: 2px dashed #9aa8b6;
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  max-width: 760px;
+  padding: 28px;
+}
+
+.drop-zone:focus-within {
+  outline: 3px solid #b8c7d6;
+  outline-offset: 2px;
+}
+
+.drop-zone__title {
+  color: #17212b;
+  font-weight: 700;
+}
+
+.drop-zone__copy {
+  color: #536171;
+}
+
+.drop-zone input {
+  margin-top: 10px;
+}
+
+.error-list {
+  background: #fff5f3;
+  border: 1px solid #d99b91;
+  border-radius: 6px;
+  color: #7b2c22;
+  display: grid;
+  gap: 6px;
+  max-width: 760px;
+  padding: 14px;
+}
+
+.error-list p {
+  margin-bottom: 0;
+}
+
+.merge-summary {
+  color: #3d4a57;
+  font-weight: 700;
+}
+
+.file-list {
+  display: grid;
+  gap: 10px;
+  list-style-position: inside;
+  margin: 0;
+  max-width: 920px;
+  padding: 0;
+}
+
+.file-list__item {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d7dde4;
+  border-radius: 6px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 16px;
+}
+
+.file-list__item strong,
+.file-list__item span {
+  display: block;
+}
+
+.file-list__item strong {
+  overflow-wrap: anywhere;
+}
+
+.file-list__item span {
+  color: #536171;
+  font-size: 0.9rem;
+}
+
+.file-actions,
+.merge-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.file-actions button {
+  background: #ffffff;
+  color: #25313d;
+}
+
+.file-actions button:disabled {
+  background: #eef2f5;
+}
+
+.merge-actions {
+  align-items: center;
+}
+
+.merge-actions a {
+  background: #ffffff;
+  border: 1px solid #25313d;
+  border-radius: 4px;
+  color: #25313d;
+  font-weight: 700;
+  padding: 8px 12px;
+  text-decoration: none;
+}
+
 @media (max-width: 760px) {
   .topbar {
     align-items: flex-start;
@@ -189,6 +335,10 @@ h3 {
   }
 
   .placeholder-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .file-list__item {
     grid-template-columns: 1fr;
   }
 }

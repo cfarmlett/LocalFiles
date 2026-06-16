@@ -1,13 +1,64 @@
 import { describe, expect, it } from "vitest";
+import { PDFDocument } from "pdf-lib";
 
 import {
+  LocalPdfAdapter,
   PdfProcessingError,
   StubLocalPdfAdapter,
   type PdfAdapter,
   type PdfDocumentMetadata,
 } from "./index";
 
-const samplePdfBytes = new Uint8Array([37, 80, 68, 70]);
+async function createPdf(pageCount: number): Promise<Uint8Array> {
+  const document = await PDFDocument.create();
+
+  for (let index = 0; index < pageCount; index += 1) {
+    document.addPage();
+  }
+
+  return document.save();
+}
+
+const invalidPdfBytes = new Uint8Array([37, 80, 68, 70, 45]);
+
+describe("LocalPdfAdapter", () => {
+  it("reads page count metadata locally", async () => {
+    const adapter = new LocalPdfAdapter();
+    const metadata = await adapter.readMetadata(await createPdf(2));
+
+    expect(metadata.pageCount).toBe(2);
+  });
+
+  it("merges PDFs in request order", async () => {
+    const adapter = new LocalPdfAdapter();
+    const first = await createPdf(1);
+    const second = await createPdf(2);
+    const merged = await adapter.merge({ documents: [second, first] });
+    const metadata = await adapter.readMetadata(merged);
+
+    expect(metadata.pageCount).toBe(3);
+  });
+
+  it("rejects non-PDF bytes before parsing", async () => {
+    const adapter = new LocalPdfAdapter();
+
+    await expect(
+      adapter.readMetadata(new Uint8Array([1, 2, 3])),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "Only PDF files can be processed.",
+    });
+  });
+
+  it("maps corrupted PDFs to a stable processing error", async () => {
+    const adapter = new LocalPdfAdapter();
+
+    await expect(adapter.readMetadata(invalidPdfBytes)).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "The PDF could not be read. It may be corrupted or unsupported.",
+    });
+  });
+});
 
 describe("StubLocalPdfAdapter", () => {
   it("can be used through the PdfAdapter interface", () => {
@@ -44,7 +95,9 @@ describe("StubLocalPdfAdapter", () => {
   it("reports metadata as an unsupported operation for valid bytes", async () => {
     const adapter = new StubLocalPdfAdapter();
 
-    await expect(adapter.readMetadata(samplePdfBytes)).rejects.toMatchObject({
+    await expect(
+      adapter.readMetadata(await createPdf(1)),
+    ).rejects.toMatchObject({
       code: "unsupported-operation",
       message: "Reading PDF metadata is not implemented yet.",
     });
@@ -52,6 +105,7 @@ describe("StubLocalPdfAdapter", () => {
 
   it("validates split ranges before reporting unsupported processing", async () => {
     const adapter = new StubLocalPdfAdapter();
+    const samplePdfBytes = await createPdf(1);
 
     await expect(
       adapter.split(null as unknown as Parameters<PdfAdapter["split"]>[0]),
@@ -97,7 +151,7 @@ describe("StubLocalPdfAdapter", () => {
     });
 
     await expect(
-      adapter.merge({ documents: [samplePdfBytes, samplePdfBytes] }),
+      adapter.merge({ documents: [await createPdf(1), await createPdf(1)] }),
     ).rejects.toMatchObject({
       code: "unsupported-operation",
       message: "Merging PDFs is not implemented yet.",

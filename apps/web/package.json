@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@localdocs/core": "workspace:*",
+    "@localdocs/pdf": "workspace:*",
     "@localdocs/ui": "workspace:*",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

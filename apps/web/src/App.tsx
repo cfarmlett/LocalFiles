@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
 import type { PageRange } from "@localdocs/core";
 
+import { MergePdfPage } from "./MergePdfPage";
 import "./styles.css";
 
 type SectionId = "home" | "split" | "merge" | "redact" | "privacy";
@@ -61,9 +62,9 @@ export function App() {
           <p className="eyebrow">Local-first document tools</p>
           <h1>PDF utilities that stay on your device.</h1>
           <p className="hero-copy">
-            LocalDocs.org is a browser app shell for common PDF workflows. Real
-            PDF processing is not implemented yet, but the product direction is
-            clear: your files should stay local in your browser by default.
+            LocalDocs.org is a browser app for common PDF workflows. Merge PDF
+            is available now, and the product direction is clear: your files
+            should stay local in your browser by default.
           </p>
         </div>
         <PrivacyNote>
@@ -84,10 +85,7 @@ export function App() {
       </Section>
 
       <Section id="merge" title="Merge PDF">
-        <PlaceholderPanel title="Merge PDF" status="Placeholder">
-          Future merge workflows will combine browser-local documents through a
-          PDF adapter. This shell does not send files anywhere.
-        </PlaceholderPanel>
+        <MergePdfPage />
       </Section>
 
       <Section id="redact" title="Redact PDF">
