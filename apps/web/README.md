@@ -1,5 +1,7 @@
 # apps/web
 
-Future browser application for LocalDocs.
+Browser application shell for LocalDocs.org.
 
-This app should remain local-first: no backend assumptions, no cloud uploads, no analytics, no telemetry, no accounts, and no payment code. Product features are intentionally deferred until the package boundaries are in place.
+This app is a Vite, React, and TypeScript shell for future local-first PDF tools. It currently provides navigation and placeholders only.
+
+The shell has no backend, login, server upload path, analytics, telemetry, external fonts, trackers, CDN assets, or real PDF processing. Page copy should continue to state plainly that files stay local in the browser.

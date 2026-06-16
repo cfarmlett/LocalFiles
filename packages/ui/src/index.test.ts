@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { uiPackageReady } from "./index";
+import { PlaceholderPanel, PrivacyNote, Section } from "./index";
 
-describe("ui package scaffold", () => {
-  it("exports a placeholder marker", () => {
-    expect(uiPackageReady).toBe(true);
+describe("ui components", () => {
+  it("exports shared app shell primitives", () => {
+    expect(Section).toBeTypeOf("function");
+    expect(PlaceholderPanel).toBeTypeOf("function");
+    expect(PrivacyNote).toBeTypeOf("function");
   });
 });
