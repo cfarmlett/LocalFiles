@@ -1,0 +1,22 @@
+{
+  "name": "localdocs",
+  "version": "0.1.0",
+  "description": "Privacy-first local document tools.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo \"No tests configured yet\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.6.0",
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "eslint": "^10.5.0",
+    "playwright": "^1.60.0",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  }
+}
