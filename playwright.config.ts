@@ -9,7 +9,7 @@ export default defineConfig({
   },
   webServer: {
     command: "pnpm --filter @localdocs/web dev -- --host 127.0.0.1",
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     url: "http://127.0.0.1:5173",
   },
 });

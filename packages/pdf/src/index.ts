@@ -56,21 +56,41 @@ export class StubLocalPdfAdapter implements PdfAdapter {
   }
 
   async split(request: PdfSplitRequest): Promise<readonly Uint8Array[]> {
+    this.assertSplitRequest(request);
     this.assertDocumentBytes(request.document);
     this.assertPageRanges(request.ranges);
     throw this.unsupported("Splitting PDFs is not implemented yet.");
   }
 
   async merge(request: PdfMergeRequest): Promise<Uint8Array> {
+    this.assertMergeRequest(request);
+    request.documents.forEach((document) => this.assertDocumentBytes(document));
+    throw this.unsupported("Merging PDFs is not implemented yet.");
+  }
+
+  private assertSplitRequest(request: PdfSplitRequest): void {
+    if (!isRecord(request)) {
+      throw new PdfProcessingError(
+        "invalid-document",
+        "PDF split request must be an object.",
+      );
+    }
+  }
+
+  private assertMergeRequest(request: PdfMergeRequest): void {
+    if (!isRecord(request)) {
+      throw new PdfProcessingError(
+        "invalid-document",
+        "PDF merge request must be an object.",
+      );
+    }
+
     if (!Array.isArray(request.documents) || request.documents.length === 0) {
       throw new PdfProcessingError(
         "invalid-document",
         "At least one PDF document is required.",
       );
     }
-
-    request.documents.forEach((document) => this.assertDocumentBytes(document));
-    throw this.unsupported("Merging PDFs is not implemented yet.");
   }
 
   private assertDocumentBytes(document: Uint8Array): void {
@@ -108,4 +128,8 @@ export class StubLocalPdfAdapter implements PdfAdapter {
   private unsupported(message: string): PdfProcessingError {
     return new PdfProcessingError("unsupported-operation", message);
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }

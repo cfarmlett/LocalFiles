@@ -54,6 +54,13 @@ describe("StubLocalPdfAdapter", () => {
     const adapter = new StubLocalPdfAdapter();
 
     await expect(
+      adapter.split(null as unknown as Parameters<PdfAdapter["split"]>[0]),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "PDF split request must be an object.",
+    });
+
+    await expect(
       adapter.split({
         document: samplePdfBytes,
         ranges: [{ start: 2, end: 1 }],
@@ -76,6 +83,13 @@ describe("StubLocalPdfAdapter", () => {
 
   it("validates merge inputs before reporting unsupported processing", async () => {
     const adapter = new StubLocalPdfAdapter();
+
+    await expect(
+      adapter.merge(null as unknown as Parameters<PdfAdapter["merge"]>[0]),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "PDF merge request must be an object.",
+    });
 
     await expect(adapter.merge({ documents: [] })).rejects.toMatchObject({
       code: "invalid-document",
