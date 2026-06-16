@@ -69,10 +69,34 @@ export class LocalPdfAdapter implements PdfAdapter {
     };
   }
 
-  async split(_request: PdfSplitRequest): Promise<readonly Uint8Array[]> {
-    throw new PdfProcessingError(
-      "unsupported-operation",
-      "Splitting PDFs is not implemented yet.",
+  async split(request: PdfSplitRequest): Promise<readonly Uint8Array[]> {
+    assertSplitRequest(request);
+    assertDocumentBytes(request.document);
+    assertPageRanges(request.ranges);
+
+    const sourceDocument = await loadPdfDocument(request.document);
+    const pageCount = sourceDocument.getPageCount();
+
+    return Promise.all(
+      request.ranges.map(async (range) => {
+        if (range.end > pageCount) {
+          throw new PdfProcessingError(
+            "invalid-page-range",
+            `Page range end must be less than or equal to page count (${pageCount}).`,
+          );
+        }
+
+        const splitDocument = await PDFDocument.create();
+        const pageIndexes = rangeToPageIndexes(range);
+        const copiedPages = await splitDocument.copyPages(
+          sourceDocument,
+          pageIndexes,
+        );
+
+        copiedPages.forEach((page) => splitDocument.addPage(page));
+
+        return splitDocument.save();
+      }),
     );
   }
 
@@ -173,6 +197,50 @@ function assertMergeRequest(request: PdfMergeRequest): void {
       "At least one PDF document is required.",
     );
   }
+}
+
+function assertSplitRequest(request: PdfSplitRequest): void {
+  if (!isRecord(request)) {
+    throw new PdfProcessingError(
+      "invalid-document",
+      "PDF split request must be an object.",
+    );
+  }
+}
+
+function assertPageRanges(ranges: readonly PdfPageRange[]): void {
+  if (!Array.isArray(ranges) || ranges.length === 0) {
+    throw new PdfProcessingError(
+      "invalid-page-range",
+      "At least one page range is required.",
+    );
+  }
+
+  for (const range of ranges) {
+    const start = isRecord(range) ? range.start : undefined;
+    const end = isRecord(range) ? range.end : undefined;
+
+    if (
+      typeof start !== "number" ||
+      typeof end !== "number" ||
+      !Number.isInteger(start) ||
+      !Number.isInteger(end) ||
+      start < 1 ||
+      end < start
+    ) {
+      throw new PdfProcessingError(
+        "invalid-page-range",
+        "Page ranges must use positive one-based start and end values.",
+      );
+    }
+  }
+}
+
+function rangeToPageIndexes(range: PdfPageRange): number[] {
+  return Array.from(
+    { length: range.end - range.start + 1 },
+    (_, index) => range.start - 1 + index,
+  );
 }
 
 function assertDocumentBytes(document: Uint8Array): void {

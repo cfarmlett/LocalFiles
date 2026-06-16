@@ -10,7 +10,7 @@ function pdfBuffer(base64: string): Buffer {
   return Buffer.from(base64, "base64");
 }
 
-test("LocalDocs web shell renders local-first placeholders", async ({
+test("LocalDocs web shell supports local-first PDF workflows", async ({
   page,
 }) => {
   const externalRequests: string[] = [];
@@ -33,6 +33,46 @@ test("LocalDocs web shell renders local-first placeholders", async ({
   ).toBeVisible();
   await expect(
     page.getByText("Files stay local in the browser."),
+  ).toBeVisible();
+
+  await page.getByRole("link", { name: "Split PDF" }).click();
+  await expect(page.getByText("Current section: Split PDF")).toBeVisible();
+
+  const splitFileInput = page.locator("#split-file-input");
+
+  await splitFileInput.setInputFiles({
+    name: "split-source.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(twoPagePdf),
+  });
+
+  await expect(page.getByText("split-source.pdf, 2 pages.")).toBeVisible();
+
+  await page.getByRole("button", { name: "Split PDF" }).click();
+  await expect(page.getByText("page-1.pdf")).toBeVisible();
+  await expect(page.getByText("page-2.pdf")).toBeVisible();
+
+  const splitDownloadPromise = page.waitForEvent("download");
+  await page
+    .getByRole("list", { name: "Generated split PDFs" })
+    .getByRole("link", { name: "Download" })
+    .first()
+    .click();
+  const splitDownload = await splitDownloadPromise;
+  const splitDownloadPath = await splitDownload.path();
+
+  expect(splitDownload.suggestedFilename()).toBe("page-1.pdf");
+  expect(splitDownloadPath).not.toBeNull();
+  expect(
+    (await readFile(splitDownloadPath ?? "")).subarray(0, 5).toString(),
+  ).toBe("%PDF-");
+
+  await page.getByRole("radio", { name: "Every N Pages" }).check();
+  await expect(page.getByText("page-1.pdf")).toHaveCount(0);
+  await page.getByLabel("Pages per file").fill("0");
+  await page.getByRole("button", { name: "Split PDF" }).click();
+  await expect(
+    page.getByText("Enter a positive whole number of pages per file."),
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Merge PDF" }).click();

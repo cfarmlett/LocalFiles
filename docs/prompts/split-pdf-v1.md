@@ -1,6 +1,7 @@
 Implement the LocalDocs V1 Split PDF workflow.
 
 Context:
+
 - LocalDocs is a privacy-first, local-only browser PDF tool.
 - Merge PDF is already implemented and should be treated as the implementation pattern.
 - CI, testing, TypeScript separation, and repository hygiene are already in place.
@@ -9,6 +10,7 @@ Context:
 - Do not implement compression, PDF-to-images, text extraction, OCR, AI, accounts, subscriptions, telemetry, analytics, backend upload paths, cloud processing, or any V1.5 features.
 
 Core principles:
+
 - All processing must happen locally in the browser.
 - No document data may be uploaded, logged, tracked, stored remotely, or sent over the network.
 - Preserve existing package boundaries.
@@ -18,18 +20,21 @@ Core principles:
 
 Design goal:
 The Split PDF implementation should establish the reusable implementation pattern for future page-based tools such as:
+
 - Reorder Pages
 - Delete Pages
 - Extract Pages (future)
 - Other page-selection workflows
 
 Favor:
+
 - reuse of existing utilities
 - reuse of existing validation
 - simple maintainable code
 - consistency with Merge PDF
 
 Avoid:
+
 - broad refactors
 - speculative abstractions
 - feature creep
@@ -60,6 +65,7 @@ Input:
 5-page PDF
 
 Output:
+
 - page-1.pdf
 - page-2.pdf
 - page-3.pdf
@@ -79,6 +85,7 @@ Chunk size:
 5
 
 Output:
+
 - pages-1-5.pdf
 - pages-6-10.pdf
 - pages-11-15.pdf
@@ -102,6 +109,7 @@ Ranges:
 11-20
 
 Output:
+
 - part-1-pages-1-3.pdf
 - part-2-pages-4-10.pdf
 - part-3-pages-11-20.pdf

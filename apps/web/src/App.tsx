@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 
 import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
-import type { PageRange } from "@localdocs/core";
 
 import { MergePdfPage } from "./MergePdfPage";
+import { SplitPdfPage } from "./SplitPdfPage";
 import "./styles.css";
 
 type SectionId = "home" | "split" | "merge" | "redact" | "privacy";
@@ -20,11 +20,6 @@ export const appSections: readonly AppSection[] = [
   { id: "redact", label: "Redact PDF" },
   { id: "privacy", label: "Privacy" },
 ];
-
-const exampleRange: PageRange = {
-  start: 1,
-  end: 3,
-};
 
 export function App() {
   const [activeSection, setActiveSection] = useState<SectionId>("home");
@@ -78,10 +73,7 @@ export function App() {
       </div>
 
       <Section id="split" title="Split PDF">
-        <PlaceholderPanel title="Split PDF" status="Placeholder">
-          Future split workflows can use page ranges like {exampleRange.start}-
-          {exampleRange.end}. No file picker or PDF processing is enabled yet.
-        </PlaceholderPanel>
+        <SplitPdfPage />
       </Section>
 
       <Section id="merge" title="Merge PDF">

@@ -20,6 +20,7 @@ describe("App shell", () => {
     expect(markup).toContain("LocalDocs.org");
     expect(markup).toContain("Files stay local in the browser.");
     expect(markup).toContain("No backend, no accounts, no analytics");
+    expect(markup).toContain("Choose one PDF or drop it here");
     expect(markup).toContain("Redaction is high risk");
   });
 });

@@ -39,6 +39,38 @@ describe("LocalPdfAdapter", () => {
     expect(metadata.pageCount).toBe(3);
   });
 
+  it("splits PDFs into one output per requested range", async () => {
+    const adapter = new LocalPdfAdapter();
+    const outputs = await adapter.split({
+      document: await createPdf(4),
+      ranges: [
+        { start: 1, end: 1 },
+        { start: 2, end: 4 },
+      ],
+    });
+
+    await expect(adapter.readMetadata(outputs[0])).resolves.toMatchObject({
+      pageCount: 1,
+    });
+    await expect(adapter.readMetadata(outputs[1])).resolves.toMatchObject({
+      pageCount: 3,
+    });
+  });
+
+  it("rejects split ranges outside the document bounds", async () => {
+    const adapter = new LocalPdfAdapter();
+
+    await expect(
+      adapter.split({
+        document: await createPdf(2),
+        ranges: [{ start: 1, end: 3 }],
+      }),
+    ).rejects.toMatchObject({
+      code: "invalid-page-range",
+      message: "Page range end must be less than or equal to page count (2).",
+    });
+  });
+
   it("rejects non-PDF bytes before parsing", async () => {
     const adapter = new LocalPdfAdapter();
 
