@@ -41,13 +41,13 @@ LocalDocs is intended for people who need simple document manipulation but are u
 
 Likely early users include:
 
-* Individuals handling tax, legal, mortgage, insurance, or medical documents
-* Small law firms
-* Accountants and bookkeepers
-* Consultants
-* Administrative staff
-* Small business owners
-* Privacy-conscious technical users
+- Individuals handling tax, legal, mortgage, insurance, or medical documents
+- Small law firms
+- Accountants and bookkeepers
+- Consultants
+- Administrative staff
+- Small business owners
+- Privacy-conscious technical users
 
 The product should not initially try to serve large enterprises with complex compliance procurement needs, though the architecture should avoid decisions that would make that impossible later.
 
@@ -55,25 +55,25 @@ The product should not initially try to serve large enterprises with complex com
 
 The first useful version should focus on a small set of PDF tools:
 
-* Split PDF by page range
-* Extract selected pages
-* Merge PDFs
-* Reorder pages
-* Delete pages
-* Basic redaction exploration, if technically feasible and safe
+- Split PDF by page range
+- Extract selected pages
+- Merge PDFs
+- Reorder pages
+- Delete pages
+- Basic redaction exploration, if technically feasible and safe
 
 The first version does not need:
 
-* User accounts
-* Subscriptions
-* Cloud storage
-* Team management
-* Mobile apps
-* AI features
-* OCR
-* E-signatures
-* Complex document management
-* Enterprise admin features
+- User accounts
+- Subscriptions
+- Cloud storage
+- Team management
+- Mobile apps
+- AI features
+- OCR
+- E-signatures
+- Complex document management
+- Enterprise admin features
 
 Those may be considered later, but they should not distract from the initial goal: prove that LocalDocs can provide useful, trustworthy, local-first PDF tools.
 
@@ -83,11 +83,11 @@ The application should initially be a browser-based web app using TypeScript.
 
 The architecture should separate:
 
-* UI and user interaction
-* Core document workflow logic
-* PDF-processing adapters
-* Tests and fixtures
-* Documentation and security decisions
+- UI and user interaction
+- Core document workflow logic
+- PDF-processing adapters
+- Tests and fixtures
+- Documentation and security decisions
 
 The rest of the app should depend on stable internal interfaces rather than directly depending on a specific PDF library wherever possible.
 
@@ -113,14 +113,14 @@ LocalDocs should assume users may process sensitive documents.
 
 Security and privacy expectations:
 
-* Do not upload documents unless explicitly required and clearly disclosed.
-* Do not add analytics that track document names, document contents, or detailed user behavior.
-* Do not log file contents.
-* Do not retain documents without explicit user action.
-* Avoid unnecessary third-party scripts.
-* Keep dependencies limited and reviewable.
-* Treat redaction as high risk and avoid unsafe “fake redaction.”
-* Make privacy claims technically accurate.
+- Do not upload documents unless explicitly required and clearly disclosed.
+- Do not add analytics that track document names, document contents, or detailed user behavior.
+- Do not log file contents.
+- Do not retain documents without explicit user action.
+- Avoid unnecessary third-party scripts.
+- Keep dependencies limited and reviewable.
+- Treat redaction as high risk and avoid unsafe “fake redaction.”
+- Make privacy claims technically accurate.
 
 The product should never imply more security than it actually provides.
 
@@ -128,20 +128,20 @@ The product should never imply more security than it actually provides.
 
 The likely business model is:
 
-* Free local browser tools for common individual use
-* Premium paid features for convenience, scale, and workflow efficiency
+- Free local browser tools for common individual use
+- Premium paid features for convenience, scale, and workflow efficiency
 
 Possible premium features later:
 
-* Batch processing
-* Larger file workflows
-* Saved presets
-* Desktop app
-* Team features
-* Priority support
-* Advanced automation
-* Private hosted processing for users who explicitly opt in
-* Compliance-oriented offerings for professional offices
+- Batch processing
+- Larger file workflows
+- Saved presets
+- Desktop app
+- Team features
+- Priority support
+- Advanced automation
+- Private hosted processing for users who explicitly opt in
+- Compliance-oriented offerings for professional offices
 
 The free tier should build trust. Premium should feel earned.
 
@@ -151,12 +151,12 @@ Open sourcing the project is likely attractive because it supports trust, audita
 
 However, open source does not automatically prove that the deployed site is running the published code. If LocalDocs leans on open source as part of its trust strategy, it should eventually consider:
 
-* Reproducible builds
-* Public release artifacts
-* Signed releases
-* Independent audits
-* Clear deployment transparency
-* Simple self-hosting instructions
+- Reproducible builds
+- Public release artifacts
+- Signed releases
+- Independent audits
+- Clear deployment transparency
+- Simple self-hosting instructions
 
 This does not need to be solved in the first version, but early architecture should avoid making it impossible.
 
@@ -164,14 +164,14 @@ This does not need to be solved in the first version, but early architecture sho
 
 LocalDocs v0.1 should not attempt to be:
 
-* Google Drive
-* Dropbox
-* DocuSign
-* Adobe Acrobat
-* A full document management system
-* An AI document analysis platform
-* An enterprise compliance platform
-* A file hosting service
+- Google Drive
+- Dropbox
+- DocuSign
+- Adobe Acrobat
+- A full document management system
+- An AI document analysis platform
+- An enterprise compliance platform
+- A file hosting service
 
 The first milestone is narrower:
 
@@ -181,13 +181,13 @@ The first milestone is narrower:
 
 The early project is successful if:
 
-* A user can open the site and understand the privacy model quickly.
-* Basic PDF tasks work locally in the browser.
-* The codebase is organized enough for future contributors to understand.
-* The app has tests for core logic.
-* Security and privacy assumptions are documented.
-* The project can be run locally by a developer without special knowledge.
-* The product feels credible rather than gimmicky.
+- A user can open the site and understand the privacy model quickly.
+- Basic PDF tasks work locally in the browser.
+- The codebase is organized enough for future contributors to understand.
+- The app has tests for core logic.
+- Security and privacy assumptions are documented.
+- The project can be run locally by a developer without special knowledge.
+- The product feels credible rather than gimmicky.
 
 ## Guiding Question
 

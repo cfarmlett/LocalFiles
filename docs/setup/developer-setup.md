@@ -110,16 +110,16 @@ code --version
 
 Install recommended extensions:
 
-* ESLint
-* Prettier
-* GitLens
-* Markdown All in One
+- ESLint
+- Prettier
+- GitLens
+- Markdown All in One
 
 Optional:
 
-* Error Lens
-* Docker
-* Playwright Test
+- Error Lens
+- Docker
+- Playwright Test
 
 AI extensions intentionally deferred until a need emerges.
 
@@ -129,9 +129,9 @@ AI extensions intentionally deferred until a need emerges.
 
 Configuration:
 
-* All Users Installation
-* WSL2 Backend Enabled
-* Windows Containers Disabled
+- All Users Installation
+- WSL2 Backend Enabled
+- Windows Containers Disabled
 
 Verify:
 
@@ -308,14 +308,14 @@ docs/decisions/0001-local-first-processing.md
 
 # Development Philosophy
 
-* Local-first processing whenever feasible
-* No surprise uploads
-* Generous free tier
-* Premium convenience features
-* No ads
-* No dark patterns
-* Security and privacy prioritized over feature count
-* Keep architecture simple until complexity is justified
+- Local-first processing whenever feasible
+- No surprise uploads
+- Generous free tier
+- Premium convenience features
+- No ads
+- No dark patterns
+- Security and privacy prioritized over feature count
+- Keep architecture simple until complexity is justified
 
 Primary question:
 

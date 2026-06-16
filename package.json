@@ -5,7 +5,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "echo \"No tests configured yet\""
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
