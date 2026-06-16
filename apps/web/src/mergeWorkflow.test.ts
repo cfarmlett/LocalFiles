@@ -118,4 +118,10 @@ describe("mergeFiles", () => {
       ),
     ).toBe("Password-protected PDFs are not supported yet.");
   });
+
+  it("does not expose unexpected raw error messages", () => {
+    expect(getPdfErrorMessage(new Error("internal parser exploded"))).toBe(
+      "The PDF operation failed. Try again with different PDF files.",
+    );
+  });
 });

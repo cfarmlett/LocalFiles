@@ -74,6 +74,19 @@ test("LocalDocs web shell renders local-first placeholders", async ({
     .allTextContents();
   expect(fileNames).toEqual(["second.pdf", "first.pdf"]);
 
+  await page.getByRole("button", { name: "Merge PDFs" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download merged PDF" }),
+  ).toBeVisible();
+
+  const firstRow = page.locator(".file-list__item").filter({
+    hasText: "second.pdf",
+  });
+  await firstRow.getByRole("button", { name: "Move down" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download merged PDF" }),
+  ).toHaveCount(0);
+
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Merge PDFs" }).click();
   await page.getByRole("link", { name: "Download merged PDF" }).click();
@@ -85,6 +98,7 @@ test("LocalDocs web shell renders local-first placeholders", async ({
 
   const downloadedBytes = await readFile(downloadPath ?? "");
 
+  expect(downloadedBytes.byteLength).toBeGreaterThan(0);
   expect(downloadedBytes.subarray(0, 5).toString()).toBe("%PDF-");
 
   expect(externalRequests).toEqual([]);

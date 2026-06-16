@@ -130,8 +130,13 @@ export function getPdfErrorMessage(error: unknown): string {
   }
 
   if (error instanceof Error) {
-    return error.message;
+    if (
+      error.message === "Add at least one PDF before merging." ||
+      error.message.endsWith(" is not a PDF file.")
+    ) {
+      return error.message;
+    }
   }
 
-  return "The PDF operation failed.";
+  return "The PDF operation failed. Try again with different PDF files.";
 }

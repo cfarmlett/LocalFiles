@@ -180,22 +180,24 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
               <div className="file-actions">
                 <button
                   disabled={index === 0}
-                  onClick={() =>
+                  onClick={() => {
                     setFiles((currentFiles) =>
                       moveMergeFile(currentFiles, file.id, "up"),
-                    )
-                  }
+                    );
+                    setMergeResult(undefined);
+                  }}
                   type="button"
                 >
                   Move up
                 </button>
                 <button
                   disabled={index === files.length - 1}
-                  onClick={() =>
+                  onClick={() => {
                     setFiles((currentFiles) =>
                       moveMergeFile(currentFiles, file.id, "down"),
-                    )
-                  }
+                    );
+                    setMergeResult(undefined);
+                  }}
                   type="button"
                 >
                   Move down
