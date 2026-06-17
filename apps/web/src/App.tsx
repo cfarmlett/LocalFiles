@@ -74,9 +74,9 @@ export function App() {
           <p className="eyebrow">Local-first document tools</p>
           <h1>PDF utilities that stay on your device.</h1>
           <p className="hero-copy">
-            LocalDocs.org is a browser app for common PDF workflows. Merge PDF
-            is available now, and the product direction is clear: your files
-            should stay local in your browser by default.
+            LocalDocs.org is a browser app for common PDF workflows. Merge,
+            split, reorder, rotate, delete, and metadata removal tools run
+            locally in your browser by default.
           </p>
         </div>
         <PrivacyNote>
@@ -127,7 +127,7 @@ export function App() {
             No login, tracking, analytics, or telemetry.
           </PrivacyNote>
           <PrivacyNote>
-            No server upload behavior exists in this first shell.
+            No server upload behavior exists in the current local workflows.
           </PrivacyNote>
         </div>
       </Section>

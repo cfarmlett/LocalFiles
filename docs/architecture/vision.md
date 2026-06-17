@@ -51,16 +51,30 @@ Likely early users include:
 
 The product should not initially try to serve large enterprises with complex compliance procurement needs, though the architecture should avoid decisions that would make that impossible later.
 
-## Initial Feature Scope
+## Current V1 Scope
 
-The first useful version should focus on a small set of PDF tools:
+The first useful version focuses on a small set of local PDF tools. These V1
+workflows are implemented and hardened:
 
-- Split PDF by page range
-- Extract selected pages
 - Merge PDFs
+- Split PDF by page range
 - Reorder pages
+- Rotate pages
 - Delete pages
-- Basic redaction exploration, if technically feasible and safe
+- Metadata removal
+
+V1 polish remains focused on release readiness:
+
+- ZIP export for Split PDF multi-output downloads
+- Privacy page and processing-model explanation
+- Accessibility review and improvements
+- Error-message and success-message consistency review
+- Documentation alignment
+
+Browser redaction is intentionally excluded from V1. The completed redaction
+research found that the current browser-only stack cannot satisfy the project's
+definition of successful redaction, and a partial implementation would create
+false confidence.
 
 The first version does not need:
 
@@ -74,6 +88,7 @@ The first version does not need:
 - E-signatures
 - Complex document management
 - Enterprise admin features
+- Browser redaction
 
 Those may be considered later, but they should not distract from the initial goal: prove that LocalDocs can provide useful, trustworthy, local-first PDF tools.
 
@@ -94,18 +109,23 @@ The rest of the app should depend on stable internal interfaces rather than dire
 A rough structure:
 
 ```text
-apps/web         - main web application
+apps/web        - main web application
 packages/core   - pure business logic and shared types
 packages/pdf    - PDF adapter interfaces and implementations
 packages/ui     - reusable UI components
 packages/config - shared TypeScript, lint, and test config
 tests/e2e       - browser-level tests
-docs            - architecture, security, and decision records
+docs            - architecture, product, security, prompts, and reviews
 ```
 
 Core business logic should be deterministic, well-tested, and independent of the browser where possible.
 
 PDF processing should be isolated behind adapter interfaces so that implementation details can change later.
+
+The current PDF adapter boundary owns metadata reading, splitting, merging,
+reordering, rotating, page deletion, and supported metadata removal. Browser app
+code should continue to call the adapter rather than importing PDF libraries
+directly.
 
 ## Privacy and Security Posture
 
@@ -121,6 +141,14 @@ Security and privacy expectations:
 - Keep dependencies limited and reviewable.
 - Treat redaction as high risk and avoid unsafe “fake redaction.”
 - Make privacy claims technically accurate.
+
+For current local workflows, the processing model is:
+
+```text
+User PDF -> Browser memory -> Local processing -> Download
+```
+
+There is no upload step in this model.
 
 The product should never imply more security than it actually provides.
 

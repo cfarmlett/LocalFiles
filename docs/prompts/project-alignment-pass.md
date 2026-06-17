@@ -21,30 +21,30 @@ The goal is to align the repository documentation, roadmap, architecture descrip
 
 Implemented and hardened features:
 
-* Merge PDF
-* Split PDF
-* Reorder Pages
-* Rotate Pages
-* Delete Pages
-* Metadata Removal
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
+- Metadata Removal
 
 Completed infrastructure:
 
-* Local-only processing architecture
-* PdfAdapter boundary
-* CI pipeline
-* Hardening review workflow
-* Independent Claude review workflow
-* Privacy-first project positioning
+- Local-only processing architecture
+- PdfAdapter boundary
+- CI pipeline
+- Hardening review workflow
+- Independent Claude review workflow
+- Privacy-first project positioning
 
 Redaction research has been completed.
 
 Current project position:
 
-* Browser redaction is intentionally excluded from V1.
-* Browser redaction does not meet the project's definition of successful redaction.
-* Future desktop/native research may occur.
-* Browser redaction should not appear as planned V1 work.
+- Browser redaction is intentionally excluded from V1.
+- Browser redaction does not meet the project's definition of successful redaction.
+- Future desktop/native research may occur.
+- Browser redaction should not appear as planned V1 work.
 
 ---
 
@@ -54,12 +54,12 @@ Bring the repository into alignment with reality.
 
 A new contributor should be able to read the documentation and accurately understand:
 
-* what has been completed
-* what is currently planned
-* what is intentionally excluded
-* how development works
-* how reviews work
-* where the project is going next
+- what has been completed
+- what is currently planned
+- what is intentionally excluded
+- how development works
+- how reviews work
+- where the project is going next
 
 ---
 
@@ -69,7 +69,7 @@ Documentation alignment takes priority over creating new planning documents.
 
 When an existing document can be updated to accurately reflect the current project state:
 
-* update the existing document
+- update the existing document
 
 Do not create duplicate documents that contain overlapping information.
 
@@ -83,26 +83,26 @@ Minimize documentation sprawl.
 
 Review project documentation, including but not limited to:
 
-* README files
-* architecture documents
-* roadmap documents
-* product documents
-* planning documents
-* prompt documents
-* review documents
-* onboarding/contributor documents
-* vision documents
+- README files
+- architecture documents
+- roadmap documents
+- product documents
+- planning documents
+- prompt documents
+- review documents
+- onboarding/contributor documents
+- vision documents
 
 Before making changes, identify:
 
-* stale assumptions
-* outdated roadmap items
-* V1 features incorrectly listed as incomplete
-* V1 features incorrectly listed as future work
-* references to browser redaction as a planned feature
-* roadmap inconsistencies
-* architecture descriptions that no longer match the codebase
-* development workflow descriptions that no longer match reality
+- stale assumptions
+- outdated roadmap items
+- V1 features incorrectly listed as incomplete
+- V1 features incorrectly listed as future work
+- references to browser redaction as a planned feature
+- roadmap inconsistencies
+- architecture descriptions that no longer match the codebase
+- development workflow descriptions that no longer match reality
 
 Include a summary of these findings in the final output.
 
@@ -114,33 +114,33 @@ Update documentation so V1 accurately reflects:
 
 ### Implemented
 
-* Merge PDF
-* Split PDF
-* Reorder Pages
-* Rotate Pages
-* Delete Pages
-* Metadata Removal
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
+- Metadata Removal
 
 ### V1 Polish
 
-* ZIP export for Split PDF
-* Privacy page
-* Processing model explanation
-* Accessibility review and improvements
-* Error-message consistency review
-* Success-message consistency review
-* Documentation alignment
+- ZIP export for Split PDF
+- Privacy page
+- Processing model explanation
+- Accessibility review and improvements
+- Error-message consistency review
+- Success-message consistency review
+- Documentation alignment
 
 ### Explicitly Excluded
 
-* Browser Redaction
+- Browser Redaction
 
 Document why:
 
-* trust
-* false-confidence risk
-* capability assessment results
-* project definition of successful redaction
+- trust
+- false-confidence risk
+- capability assessment results
+- project definition of successful redaction
 
 The documentation should clearly communicate that browser redaction is intentionally omitted, not forgotten.
 
@@ -152,10 +152,10 @@ Update roadmap documentation so V1.5 accurately reflects current priorities.
 
 Expected examples:
 
-* PDF → Images
-* Images → PDF
-* Text Extraction
-* Compression
+- PDF → Images
+- Images → PDF
+- Text Extraction
+- Compression
 
 If current roadmap documents differ, update them to match current project direction.
 
@@ -171,11 +171,11 @@ Review whether the repository contains clear documentation describing:
 
 ### Privacy Model
 
-* local processing
-* no uploads
-* no telemetry
-* no analytics
-* no cloud processing
+- local processing
+- no uploads
+- no telemetry
+- no analytics
+- no cloud processing
 
 ### Processing Model
 
@@ -192,10 +192,10 @@ Never leaves device.
 
 Explain:
 
-* browser redaction is intentionally unavailable
-* why
-* future possibilities
-* trust-first philosophy
+- browser redaction is intentionally unavailable
+- why
+- future possibilities
+- trust-first philosophy
 
 If these topics already exist, improve them.
 
@@ -211,9 +211,9 @@ If none exists, create a small planning document.
 
 Document:
 
-* current accessibility posture
-* keyboard-navigation expectations
-* future review items
+- current accessibility posture
+- keyboard-navigation expectations
+- future review items
 
 Do not perform a full accessibility implementation pass.
 
@@ -227,11 +227,11 @@ Review current implemented workflows.
 
 Identify inconsistencies involving:
 
-* success messages
-* error messages
-* terminology
-* output naming
-* empty states
+- success messages
+- error messages
+- terminology
+- output naming
+- empty states
 
 Create a prioritized polish checklist.
 
@@ -247,11 +247,11 @@ ZIP export is now considered V1 polish.
 
 Create or update planning documentation describing:
 
-* why ZIP export belongs in V1
-* user workflow improvements
-* expected UX
-* expected constraints
-* interaction with Split PDF
+- why ZIP export belongs in V1
+- user workflow improvements
+- expected UX
+- expected constraints
+- interaction with Split PDF
 
 Do not implement ZIP export.
 
@@ -265,22 +265,22 @@ Ensure documentation accurately describes:
 
 ### Repository Structure
 
-* apps/web
-* packages/core
-* packages/pdf
+- apps/web
+- packages/core
+- packages/pdf
 
 ### Architecture
 
-* PdfAdapter responsibilities
-* browser/application boundaries
-* local-processing model
+- PdfAdapter responsibilities
+- browser/application boundaries
+- local-processing model
 
 ### Development Workflow
 
-* feature implementation workflow
-* hardening workflow
-* Claude review workflow
-* validation expectations
+- feature implementation workflow
+- hardening workflow
+- Claude review workflow
+- validation expectations
 
 A new contributor should be able to understand the project from the documentation alone.
 
@@ -290,20 +290,20 @@ A new contributor should be able to understand the project from the documentatio
 
 Do not:
 
-* implement ZIP export
-* implement accessibility changes
-* implement V1.5 features
-* implement redaction
-* redesign the UI
-* perform architectural rewrites
+- implement ZIP export
+- implement accessibility changes
+- implement V1.5 features
+- implement redaction
+- redesign the UI
+- perform architectural rewrites
 
 Keep changes focused on:
 
-* documentation
-* roadmap alignment
-* planning
-* contributor understanding
-* project positioning
+- documentation
+- roadmap alignment
+- planning
+- contributor understanding
+- project positioning
 
 ---
 
@@ -311,11 +311,11 @@ Keep changes focused on:
 
 Run:
 
-* pnpm format:check
-* pnpm typecheck
-* pnpm lint
-* pnpm test
-* pnpm build
+- pnpm format:check
+- pnpm typecheck
+- pnpm lint
+- pnpm test
+- pnpm build
 
 Fix any issues caused by documentation updates.
 

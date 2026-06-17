@@ -293,8 +293,7 @@ Containing:
 - Metadata types
 - Error types
 - StubLocalPdfAdapter
-
-No real PDF processing implementation.
+- LocalPdfAdapter implementation
 
 ### Why
 
@@ -309,6 +308,10 @@ Possible future implementations include:
 - WASM-based tooling
 
 The interface was intentionally created before selecting a concrete backend.
+
+The current adapter supports metadata reading, split, merge, reorder, rotate,
+delete pages, and supported metadata removal. It uses `pdf-lib` behind the
+adapter boundary.
 
 ---
 
@@ -339,6 +342,10 @@ Included:
 The purpose was to establish application structure and user-facing messaging without prematurely implementing document processing.
 
 The web shell exists to validate architecture, not features.
+
+The shell later grew into the current V1 browser app with implemented Merge,
+Split, Reorder Pages, Rotate Pages, Delete Pages, and Metadata Removal
+workflows. Redaction remains a placeholder by design.
 
 ---
 
@@ -434,3 +441,41 @@ The primary question remains:
 > Does this make LocalDocs more trustworthy, useful, and maintainable without adding unnecessary complexity?
 
 If the answer is no, the change should generally be deferred.
+
+---
+
+# Current V1 Alignment
+
+Implemented and hardened workflows:
+
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
+- Metadata Removal
+
+Completed infrastructure:
+
+- Local-only browser processing architecture
+- PdfAdapter boundary
+- CI pipeline for format, typecheck, lint, test, and build
+- Feature implementation prompts
+- Focused hardening prompts
+- Independent Claude review workflow
+- Privacy-first project positioning
+
+Current V1 polish:
+
+- ZIP export for Split PDF
+- Privacy page and processing-model explanation
+- Accessibility review and improvements
+- Error-message consistency review
+- Success-message consistency review
+- Documentation alignment
+
+Browser redaction is intentionally excluded from V1. Research found that the
+current browser stack cannot meet the project's definition of successful
+redaction, so shipping browser redaction would create false confidence. Future
+desktop or native research may revisit the idea with stronger tooling and
+verification.

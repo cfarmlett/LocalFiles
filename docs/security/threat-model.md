@@ -79,6 +79,8 @@ Any server-side feature should be opt-in, clearly labeled before upload, technic
 - Do not upload files unless a feature clearly requires it and the user explicitly chooses it.
 - Keep UI copy plain about what happens to files.
 - Treat PDF redaction as high risk and avoid fake redaction.
+- Do not ship browser redaction unless the implementation can satisfy the
+  project's definition of successful redaction.
 - Avoid rendering untrusted filenames or metadata as HTML.
 - Keep PDF processing behind adapter interfaces.
 - Keep dependencies small, reviewable, and documented.
@@ -94,3 +96,26 @@ Any server-side feature should be opt-in, clearly labeled before upload, technic
 - Guarantees that all future workflows will be local-only
 
 The goal is a technically honest, understandable privacy posture: local by default, explicit when not local, and conservative about claims.
+
+## Current Processing Model
+
+For implemented V1 workflows, the expected data flow is:
+
+```text
+User PDF -> Browser memory -> Local processing -> Download
+```
+
+There is no upload step, backend processing step, analytics pipeline, telemetry
+pipeline, or cloud storage step in current local workflows.
+
+## Redaction Position
+
+Browser redaction is intentionally unavailable in V1. The completed capability
+assessment concluded that the current browser-only stack cannot confidently
+remove targeted information from all recoverable PDF representations or verify
+that removal afterward.
+
+LocalDocs should not imply that drawing boxes, hiding content visually, or
+removing only some PDF structures is successful redaction. Future desktop or
+native research may revisit redaction, but any implementation must be reviewed
+against the project's redaction definition before it becomes product work.

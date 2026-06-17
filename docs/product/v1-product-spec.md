@@ -2,7 +2,9 @@
 
 ## Vision
 
-LocalDocs provides privacy-first document tools that run entirely on the user's device. Users can solve common PDF problems without uploading files, creating accounts, or sacrificing privacy.
+LocalDocs provides privacy-first PDF tools that run entirely on the user's
+device. Users can complete common PDF workflows without uploading files,
+creating accounts, or sacrificing privacy.
 
 ## Product Principles
 
@@ -10,92 +12,197 @@ LocalDocs provides privacy-first document tools that run entirely on the user's 
 - No document uploads to LocalDocs servers.
 - No user accounts required.
 - No advertisements.
+- No analytics or telemetry.
 - Open-source first.
 - Fast, simple, and trustworthy user experience.
 
 ---
 
-## Included Features
+## Current V1 Status
+
+The core V1 workflows are implemented and hardened:
+
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
+- Metadata Removal
+
+V1 is now in polish and release-readiness work rather than core workflow
+implementation.
+
+---
+
+## Implemented Features
 
 ### Merge PDF
 
 Combine multiple PDF files into a single PDF.
 
-Requirements:
+Implemented behavior:
 
-- Support multiple PDF uploads.
-- Support drag-and-drop file selection.
-- Allow file reordering before merge.
-- Generate a downloadable merged PDF.
+- Supports multiple PDF uploads.
+- Supports drag-and-drop file selection.
+- Allows file reordering before merge.
+- Generates a downloadable merged PDF.
 
 ### Split PDF
 
 Create new PDFs from selected page ranges.
 
-Requirements:
+Implemented behavior:
 
-- Support custom page ranges.
-- Export selected pages into one or more PDFs.
+- Supports splitting every page.
+- Supports splitting every N pages.
+- Supports custom page ranges.
+- Exports selected pages into one or more PDFs.
 
 ### Reorder Pages
 
 Change the page order within a PDF.
 
-Requirements:
+Implemented behavior:
 
-- Visual page ordering interface.
-- Save reordered document.
+- Loads page count through the PDF adapter.
+- Provides per-page move controls.
+- Generates one downloadable reordered PDF.
 
 ### Rotate Pages
 
 Rotate one or more pages.
 
-Requirements:
+Implemented behavior:
 
-- Support 90°, 180°, and 270° rotation.
-- Save updated document.
+- Supports per-page 90-degree left and right rotation.
+- Preserves page order and count.
+- Generates one downloadable rotated PDF.
 
 ### Delete Pages
 
 Remove pages from a PDF.
 
-Requirements:
+Implemented behavior:
 
-- Support deleting one or multiple pages.
-- Save updated document.
-
-### Extract Pages
-
-Create a new PDF containing selected pages.
-
-Requirements:
-
-- Support arbitrary page selection.
-- Export selected pages as a new PDF.
+- Supports marking one or more pages for deletion.
+- Prevents deleting every page.
+- Generates one downloadable PDF containing the kept pages.
 
 ### Metadata Removal
 
-Remove embedded document metadata.
+Remove common embedded document metadata.
 
-Requirements:
+Implemented behavior:
 
-- Remove common metadata fields.
-- Produce a sanitized PDF for download.
+- Reads supported metadata fields before removal.
+- Removes supported standard document metadata fields.
+- Generates a downloadable metadata-removed PDF.
 
-### Redaction
+Limitations:
 
-Permanently remove sensitive content from a PDF.
-
-Requirements:
-
-- Redactions must be irreversible in exported files.
-- Redacted content must not remain recoverable in document structure.
+- Metadata Removal is not a forensic sanitizer.
+- It does not claim to remove every possible PDF artifact, XMP packet,
+  attachment, hidden stream, object history, or embedded content reference.
 
 ---
 
-## Explicitly Excluded from V1
+## V1 Polish
 
-The following features are intentionally out of scope:
+The following items remain V1 polish and release-readiness work.
+
+### ZIP Export For Split PDF
+
+Split PDF can produce many output files. ZIP export belongs in V1 polish because
+it improves the existing Split workflow without adding a new product category.
+
+Expected UX:
+
+- Continue supporting individual output downloads.
+- Add a local ZIP download when Split PDF produces multiple outputs.
+- Preserve generated filenames inside the archive.
+- Keep ZIP creation entirely local.
+
+Expected constraints:
+
+- No server-side ZIP creation.
+- No cloud processing.
+- No dependency should be added without a focused dependency review.
+- The first implementation should serve Split PDF only.
+
+### Privacy Page
+
+The Privacy page should explain the local-processing model plainly:
+
+```text
+User PDF -> Browser memory -> Local processing -> Download
+```
+
+The page should state that files never leave the device in current local
+workflows and that the app has no backend, accounts, analytics, telemetry, or
+server upload path.
+
+### Accessibility Review
+
+Current posture:
+
+- Workflows use ordinary form controls, buttons, labels, and status regions.
+- Page actions are available through buttons rather than drag-only controls.
+- Accessibility has not received a full release-readiness review.
+
+Future review items:
+
+- Keyboard navigation through all workflows.
+- Focus order after file selection, processing, and errors.
+- Screen-reader clarity for page lists and multi-output results.
+- Status announcement consistency.
+- Color contrast and visible focus states.
+
+### UX Consistency Review
+
+Prioritized polish checklist:
+
+1. Review success messages across Merge, Split, Reorder, Rotate, Delete, and
+   Metadata Removal.
+2. Review error-message tone and specificity across invalid file, encrypted
+   file, corrupted file, empty selection, and invalid page-state paths.
+3. Align output naming patterns for generated PDFs and future Split ZIP output.
+4. Confirm empty states use consistent terminology for selecting or dropping
+   files.
+5. Confirm Redact PDF placeholder copy remains explicit that redaction is not
+   implemented.
+
+### Documentation Alignment
+
+Keep README, product specs, architecture notes, security docs, prompts, and
+review artifacts clear about which items are implemented, planned, or
+intentionally excluded.
+
+---
+
+## Explicitly Excluded From V1
+
+### Browser Redaction
+
+Browser redaction is intentionally excluded from V1.
+
+Reason:
+
+- The current browser stack does not meet the project's definition of
+  successful redaction.
+- A visual overlay or partial removal would create false confidence.
+- Successful redaction must remove targeted information from all recoverable
+  representations, including viewing, searching, copying, extraction,
+  inspection, and file analysis paths.
+- The completed capability assessment concluded that browser redaction should
+  not be shipped as V1 work.
+
+Future desktop or native research may revisit redaction with stronger tooling
+and verification. Until then, LocalDocs should communicate that browser
+redaction is intentionally unavailable, not forgotten.
+
+### Other Exclusions
+
+The following features are also out of scope for V1:
 
 - OCR
 - AI-assisted features
@@ -106,6 +213,7 @@ The following features are intentionally out of scope:
 - E-signatures
 - Cloud processing
 - Team collaboration
+- Extract Pages
 
 ---
 
@@ -113,27 +221,30 @@ The following features are intentionally out of scope:
 
 ### Privacy
 
-- Documents never leave the user's device.
+- Documents never leave the user's device in current local workflows.
 - No document contents are transmitted to LocalDocs servers.
+- No analytics, telemetry, trackers, external fonts, or CDN assets.
 
 ### Reliability
 
-- Graceful handling of invalid or corrupted PDFs.
+- Graceful handling of invalid, corrupted, and encrypted PDFs.
 - Clear user-facing error messages.
 
 ### Accessibility
 
 - Keyboard-accessible interfaces.
 - Screen-reader-friendly controls where practical.
+- A dedicated accessibility review remains V1 polish.
 
 ### Performance
 
 - Responsive UI during processing.
-- Efficient handling of typical consumer PDF sizes.
+- Efficient handling of typical consumer PDF sizes within browser limits.
 
 ### Offline Compatibility
 
-- Processing continues to function without an internet connection after initial application load.
+- Processing continues to function without an internet connection after initial
+  application load.
 
 ---
 
@@ -141,8 +252,9 @@ The following features are intentionally out of scope:
 
 A V1 release is considered complete when:
 
-- All included features are implemented.
-- All processing occurs locally.
-- Automated tests pass.
+- Implemented V1 workflows remain local-only and pass validation.
+- V1 polish items are completed or explicitly deferred.
+- Browser redaction remains excluded unless a future architecture can meet the
+  project's redaction definition.
 - No unexpected network requests occur during document processing.
 - The application is suitable for public alpha testing.

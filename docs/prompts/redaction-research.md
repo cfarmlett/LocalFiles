@@ -21,29 +21,29 @@ LocalDocs is a privacy-first, local-only browser PDF tool.
 
 Core principles:
 
-* all document processing happens locally in the browser
-* no uploads
-* no telemetry
-* no analytics
-* no cloud processing
-* no backend processing
-* trust and claim accuracy matter more than feature count
+- all document processing happens locally in the browser
+- no uploads
+- no telemetry
+- no analytics
+- no cloud processing
+- no backend processing
+- trust and claim accuracy matter more than feature count
 
 Current V1 features already implemented:
 
-* Merge PDF
-* Split PDF
-* Reorder Pages
-* Rotate Pages
-* Delete Pages
-* Metadata Removal
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
+- Metadata Removal
 
 Current architecture:
 
-* web app must not import pdf-lib directly
-* PDF internals belong behind the PdfAdapter abstraction in packages/pdf
-* LocalPdfAdapter currently uses pdf-lib
-* the app has existing workflow, adapter, testing, hardening, and review patterns
+- web app must not import pdf-lib directly
+- PDF internals belong behind the PdfAdapter abstraction in packages/pdf
+- LocalPdfAdapter currently uses pdf-lib
+- the app has existing workflow, adapter, testing, hardening, and review patterns
 
 ---
 
@@ -79,10 +79,10 @@ Explicitly identify any implementation approaches that could create this risk.
 
 Assess:
 
-* likelihood of user misunderstanding
-* likelihood of incomplete removal
-* difficulty of communicating limitations
-* severity of potential information disclosure
+- likelihood of user misunderstanding
+- likelihood of incomplete removal
+- difficulty of communicating limitations
+- severity of potential information disclosure
 
 ---
 
@@ -113,35 +113,35 @@ Evaluate capabilities separately for:
 
 Examples:
 
-* digitally generated PDFs
-* office documents exported to PDF
-* PDFs with selectable text
+- digitally generated PDFs
+- office documents exported to PDF
+- PDFs with selectable text
 
 ### 2. Scanned / Image PDFs
 
 Examples:
 
-* scanned contracts
-* photographed documents
-* image-only PDFs
+- scanned contracts
+- photographed documents
+- image-only PDFs
 
 ### 3. OCR PDFs
 
 Examples:
 
-* scanned documents
-* hidden OCR text layer
-* searchable scans
+- scanned documents
+- hidden OCR text layer
+- searchable scans
 
 ### 4. Mixed-Content PDFs
 
 Examples:
 
-* text plus images
-* text plus scanned pages
-* forms
-* annotations
-* complex generated PDFs
+- text plus images
+- text plus scanned pages
+- forms
+- annotations
+- complex generated PDFs
 
 Do not assume a capability available for one category applies to the others.
 
@@ -199,10 +199,10 @@ The redacted information does not remain in embedded files or attachments.
 
 The redacted information does not remain in:
 
-* accessibility tags
-* alternate text
-* structure trees
-* semantic document representations
+- accessibility tags
+- alternate text
+- structure trees
+- semantic document representations
 
 ### 13. JavaScript / Actions Cleanup
 
@@ -212,26 +212,26 @@ The redacted information does not remain in embedded JavaScript, actions, or scr
 
 The redacted information does not remain recoverable from:
 
-* prior document revisions
-* incremental update history
-* retained PDF objects
+- prior document revisions
+- incremental update history
+- retained PDF objects
 
 ### 15. Image Redaction
 
 The redacted information is removed from:
 
-* raster images
-* scans
-* screenshots
-* image-based PDFs
+- raster images
+- scans
+- screenshots
+- image-based PDFs
 
 ### 16. Vector Graphics Redaction
 
 The redacted information is removed from:
 
-* vector graphics
-* drawn text converted to paths
-* graphic representations of text
+- vector graphics
+- drawn text converted to paths
+- graphic representations of text
 
 ### 17. Verification
 
@@ -243,25 +243,25 @@ LocalDocs can automatically verify that the redacted target is no longer recover
 
 Produce a matrix with columns similar to:
 
-* Requirement / capability area
-* Current stack feasibility
-* Additional browser-library feasibility
-* Desktop/native feasibility
-* Server-side feasibility
-* Automated verification feasibility
-* Risk level
-* Confidence level
-* Notes
+- Requirement / capability area
+- Current stack feasibility
+- Additional browser-library feasibility
+- Desktop/native feasibility
+- Server-side feasibility
+- Automated verification feasibility
+- Risk level
+- Confidence level
+- Notes
 
 Use statuses such as:
 
-* Achievable now
-* Achievable with constraints
-* Possibly achievable with additional browser tooling
-* Likely requires desktop/native tooling
-* Likely requires server-side tooling
-* Not reliably achievable
-* Unknown / needs deeper research
+- Achievable now
+- Achievable with constraints
+- Possibly achievable with additional browser tooling
+- Likely requires desktop/native tooling
+- Likely requires server-side tooling
+- Not reliably achievable
+- Unknown / needs deeper research
 
 ---
 
@@ -269,35 +269,36 @@ Use statuses such as:
 
 Specifically assess whether the current stack can support safe redaction:
 
-* React / browser UI
-* pdf-lib
-* LocalPdfAdapter
-* current testing setup
-* no backend
-* no uploads
-* no cloud processing
+- React / browser UI
+- pdf-lib
+- LocalPdfAdapter
+- current testing setup
+- no backend
+- no uploads
+- no cloud processing
 
 Answer:
 
-* What can pdf-lib safely do?
-* What can pdf-lib not safely do?
-* Can pdf-lib remove or rewrite content streams in a way suitable for redaction?
-* Can pdf-lib identify text positions reliably enough for user-selected redaction?
-* Can pdf-lib handle:
+- What can pdf-lib safely do?
+- What can pdf-lib not safely do?
+- Can pdf-lib remove or rewrite content streams in a way suitable for redaction?
+- Can pdf-lib identify text positions reliably enough for user-selected redaction?
+- Can pdf-lib handle:
 
-  * annotations
-  * forms
-  * XMP
-  * embedded files
-  * OCR layers
-  * previous revisions
-* Would using pdf-lib for redaction create a false sense of security?
+  - annotations
+  - forms
+  - XMP
+  - embedded files
+  - OCR layers
+  - previous revisions
+
+- Would using pdf-lib for redaction create a false sense of security?
 
 If a capability cannot be confirmed from:
 
-* the current codebase
-* pdf-lib documentation
-* established PDF behavior
+- the current codebase
+- pdf-lib documentation
+- established PDF behavior
 
 identify it as uncertain rather than assuming it exists.
 
@@ -311,14 +312,14 @@ Evaluate possible strategies without implementing them.
 
 Example:
 
-* draw black rectangles
-* hide content visually
+- draw black rectangles
+- hide content visually
 
 Assess:
 
-* security
-* recoverability
-* trustworthiness
+- security
+- recoverability
+- trustworthiness
 
 Explicitly evaluate whether this creates false confidence.
 
@@ -326,73 +327,73 @@ Explicitly evaluate whether this creates false confidence.
 
 Example:
 
-* remove text objects
-* rewrite page content streams
+- remove text objects
+- rewrite page content streams
 
 Assess:
 
-* feasibility
-* limitations
-* verification potential
+- feasibility
+- limitations
+- verification potential
 
 ### Strategy 3: Partial Rasterization
 
 Example:
 
-* rasterize redacted regions
+- rasterize redacted regions
 
 Assess:
 
-* privacy benefits
-* limitations
-* browser feasibility
+- privacy benefits
+- limitations
+- browser feasibility
 
 Assess impacts on:
 
-* accessibility
-* screen readers
-* selectable text
-* searchability
-* file size
-* print quality
+- accessibility
+- screen readers
+- selectable text
+- searchability
+- file size
+- print quality
 
 ### Strategy 4: Full-Page Rasterization
 
 Example:
 
-* rasterize entire redacted pages
+- rasterize entire redacted pages
 
 Assess:
 
-* security benefits
-* limitations
-* browser feasibility
+- security benefits
+- limitations
+- browser feasibility
 
 Assess impacts on:
 
-* accessibility
-* screen readers
-* selectable text
-* searchability
-* file size
-* print quality
+- accessibility
+- screen readers
+- selectable text
+- searchability
+- file size
+- print quality
 
 ### Strategy 5: Hybrid Approach
 
 Example:
 
-* remove supported metadata
-* remove supported text content
-* remove supported annotations/forms
-* rasterize where necessary
-* verify where practical
+- remove supported metadata
+- remove supported text content
+- remove supported annotations/forms
+- rasterize where necessary
+- verify where practical
 
 Assess:
 
-* complexity
-* safety
-* maintainability
-* trustworthiness
+- complexity
+- safety
+- maintainability
+- trustworthiness
 
 ### Strategy 6: No Browser Redaction
 
@@ -408,11 +409,11 @@ Assess whether redaction belongs in a future desktop application rather than the
 
 For each candidate implementation strategy, rank:
 
-* Trustworthiness
-* Safety
-* Complexity
-* Browser feasibility
-* Verification feasibility
+- Trustworthiness
+- Safety
+- Complexity
+- Browser feasibility
+- Verification feasibility
 
 Provide a strongest-to-weakest ranking with explanations.
 
@@ -424,18 +425,18 @@ Evaluate what LocalDocs could automatically verify.
 
 Examples:
 
-* extracted text no longer contains target strings
-* PDF search text no longer contains target strings
-* metadata no longer contains target strings
-* annotations/forms no longer contain target strings
-* target region is visually obscured
-* content streams do not contain literal target strings where inspectable
+- extracted text no longer contains target strings
+- PDF search text no longer contains target strings
+- metadata no longer contains target strings
+- annotations/forms no longer contain target strings
+- target region is visually obscured
+- content streams do not contain literal target strings where inspectable
 
 Also identify:
 
-* what cannot be fully verified
-* what would require manual review
-* what could create false confidence if reported as verified
+- what cannot be fully verified
+- what would require manual review
+- what could create false confidence if reported as verified
 
 ---
 
@@ -453,20 +454,20 @@ Include:
 
 Especially for:
 
-* partial redaction
-* constrained redaction
-* experimental approaches
+- partial redaction
+- constrained redaction
+- experimental approaches
 
 ### 4. Naming Guidance
 
 Assess whether the feature should be called:
 
-* Redaction
-* Secure Redaction
-* Text Redaction
-* Visual Redaction
-* Experimental Redaction
-* Not Implemented
+- Redaction
+- Secure Redaction
+- Text Redaction
+- Visual Redaction
+- Experimental Redaction
+- Not Implemented
 
 Prioritize honesty over marketing.
 
@@ -476,10 +477,10 @@ Prioritize honesty over marketing.
 
 Identify:
 
-* risks
-* blind spots
-* unsupported PDF structures
-* categories of information that may remain recoverable
+- risks
+- blind spots
+- unsupported PDF structures
+- categories of information that may remain recoverable
 
 Explicitly identify situations where LocalDocs should refuse to claim successful redaction.
 
