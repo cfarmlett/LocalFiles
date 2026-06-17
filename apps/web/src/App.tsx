@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
 
+import { DeletePagesPage } from "./DeletePagesPage";
 import { MergePdfPage } from "./MergePdfPage";
 import { ReorderPagesPage } from "./ReorderPagesPage";
 import { RotatePagesPage } from "./RotatePagesPage";
@@ -14,6 +15,7 @@ type SectionId =
   | "merge"
   | "reorder"
   | "rotate"
+  | "delete"
   | "redact"
   | "privacy";
 
@@ -28,6 +30,7 @@ export const appSections: readonly AppSection[] = [
   { id: "merge", label: "Merge PDF" },
   { id: "reorder", label: "Reorder Pages" },
   { id: "rotate", label: "Rotate Pages" },
+  { id: "delete", label: "Delete Pages" },
   { id: "redact", label: "Redact PDF" },
   { id: "privacy", label: "Privacy" },
 ];
@@ -97,6 +100,10 @@ export function App() {
 
       <Section id="rotate" title="Rotate Pages">
         <RotatePagesPage />
+      </Section>
+
+      <Section id="delete" title="Delete Pages">
+        <DeletePagesPage />
       </Section>
 
       <Section id="redact" title="Redact PDF">

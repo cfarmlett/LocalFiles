@@ -2,19 +2,19 @@
 
 ## Context
 
-* LocalDocs is a privacy-first, local-only browser PDF tool.
-* Merge PDF, Split PDF, Reorder Pages, and Rotate Pages are already implemented.
-* This task is product development for Delete Pages only.
-* Do not implement Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.
+- LocalDocs is a privacy-first, local-only browser PDF tool.
+- Merge PDF, Split PDF, Reorder Pages, and Rotate Pages are already implemented.
+- This task is product development for Delete Pages only.
+- Do not implement Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.
 
 ## Core Principles
 
-* All processing must happen locally in the browser.
-* No document data may be uploaded, logged, tracked, stored remotely, or sent over the network.
-* Preserve existing package boundaries.
-* The web app must not import pdf-lib directly.
-* PDF implementation details belong in packages/pdf behind the PdfAdapter abstraction.
-* Reuse existing workflow, validation, page-list, and download patterns wherever practical.
+- All processing must happen locally in the browser.
+- No document data may be uploaded, logged, tracked, stored remotely, or sent over the network.
+- Preserve existing package boundaries.
+- The web app must not import pdf-lib directly.
+- PDF implementation details belong in packages/pdf behind the PdfAdapter abstraction.
+- Reuse existing workflow, validation, page-list, and download patterns wherever practical.
 
 ---
 
@@ -24,16 +24,16 @@ Delete Pages should reuse the page-list pattern established by Reorder Pages and
 
 Favor:
 
-* reuse of page-list state
-* reuse of page-row UI
-* reuse of output lifecycle management
-* consistency with Reorder/Rotate Pages
+- reuse of page-list state
+- reuse of page-row UI
+- reuse of output lifecycle management
+- consistency with Reorder/Rotate Pages
 
 Avoid:
 
-* broad refactors
-* speculative abstractions
-* new dependencies
+- broad refactors
+- speculative abstractions
+- new dependencies
 
 ---
 
@@ -45,11 +45,11 @@ Delete Pages means:
 
 The generated PDF must:
 
-* preserve the original order of remaining pages
-* preserve the original page contents
-* include each remaining page exactly once
-* omit only pages explicitly marked for deletion
-* never rasterize pages
+- preserve the original order of remaining pages
+- preserve the original page contents
+- include each remaining page exactly once
+- omit only pages explicitly marked for deletion
+- never rasterize pages
 
 Remaining pages must appear in the same relative order as the source document.
 
@@ -59,19 +59,19 @@ Remaining pages must appear in the same relative order as the source document.
 
 ## 1. Navigation / Page
 
-* Add or complete a Delete Pages route/page.
-* Match the existing application structure and styling.
+- Add or complete a Delete Pages route/page.
+- Match the existing application structure and styling.
 
 ---
 
 ## 2. File Selection
 
-* Allow selecting exactly one PDF.
-* Support drag-and-drop if consistent with existing tools.
-* Display:
+- Allow selecting exactly one PDF.
+- Support drag-and-drop if consistent with existing tools.
+- Display:
 
-  * filename
-  * page count
+  - filename
+  - page count
 
 ---
 
@@ -81,8 +81,8 @@ Display pages using the established page-list pattern.
 
 Each row should clearly identify:
 
-* page number
-* whether the page is marked for deletion
+- page number
+- whether the page is marked for deletion
 
 Page numbers must remain 1-based.
 
@@ -100,24 +100,24 @@ The UI should preserve original page identifiers during editing, while generated
 
 Provide a simple control per page:
 
-* Delete
-* Restore
+- Delete
+- Restore
 
 V1 behavior:
 
-* Pages are not removed from the visible list immediately.
-* Marked pages remain visible with a clear deleted/selected state.
-* Users can restore a marked page before generating the output.
+- Pages are not removed from the visible list immediately.
+- Marked pages remain visible with a clear deleted/selected state.
+- Users can restore a marked page before generating the output.
 
 Do not implement:
 
-* page thumbnails
-* previews
-* drag-and-drop
-* multi-page selection
-* select all
-* delete all
-* range delete
+- page thumbnails
+- previews
+- drag-and-drop
+- multi-page selection
+- select all
+- delete all
+- range delete
 
 in this pass.
 
@@ -129,8 +129,8 @@ The workflow must prevent generating a zero-page PDF.
 
 If the user marks every page for deletion:
 
-* output generation must not proceed
-* the UI must clearly communicate why generation is blocked
+- output generation must not proceed
+- the UI must clearly communicate why generation is blocked
 
 A valid output must contain at least one page.
 
@@ -140,21 +140,21 @@ A valid output must contain at least one page.
 
 Before adding a new PdfAdapter method:
 
-* Inspect the existing adapter surface.
-* Reuse existing capabilities if practical.
-* Add a narrow delete/remove operation only if it materially improves clarity and maintainability.
+- Inspect the existing adapter surface.
+- Reuse existing capabilities if practical.
+- Add a narrow delete/remove operation only if it materially improves clarity and maintainability.
 
 Requirements:
 
-* Use PdfAdapter.
-* Keep PDF manipulation inside packages/pdf.
-* Produce one output PDF.
-* Produce a deterministic output filename.
+- Use PdfAdapter.
+- Keep PDF manipulation inside packages/pdf.
+- Produce one output PDF.
+- Produce a deterministic output filename.
 
 Examples:
 
-* document-pages-deleted.pdf
-* original-name-pages-deleted.pdf
+- document-pages-deleted.pdf
+- original-name-pages-deleted.pdf
 
 ---
 
@@ -162,12 +162,12 @@ Examples:
 
 Handle:
 
-* no file selected
-* invalid file
-* corrupted PDF
-* encrypted/password-protected PDF
-* all pages selected for deletion
-* adapter failures
+- no file selected
+- invalid file
+- corrupted PDF
+- encrypted/password-protected PDF
+- all pages selected for deletion
+- adapter failures
 
 Use clear user-facing error messages.
 
@@ -177,17 +177,17 @@ Use clear user-facing error messages.
 
 Avoid stale:
 
-* deletion state
-* outputs
-* download links
-* errors
+- deletion state
+- outputs
+- download links
+- errors
 
 when:
 
-* files change
-* invalid file selection occurs
-* output is regenerated
-* PDF load fails
+- files change
+- invalid file selection occurs
+- output is regenerated
+- PDF load fails
 
 ---
 
@@ -203,15 +203,15 @@ Avoid memory leaks.
 
 Confirm no new:
 
-* fetch calls
-* XMLHttpRequest calls
-* navigator.sendBeacon usage
-* analytics
-* telemetry
-* external assets
-* upload paths
-* server processing
-* browser storage of document contents
+- fetch calls
+- XMLHttpRequest calls
+- navigator.sendBeacon usage
+- analytics
+- telemetry
+- external assets
+- upload paths
+- server processing
+- browser storage of document contents
 
 ---
 
@@ -219,46 +219,46 @@ Confirm no new:
 
 ## Unit Tests
 
-* default delete state
-* mark page for deletion
-* restore page
-* preserve remaining page order
-* prevent deleting all pages
-* output filename generation
-* adapter success path
-* adapter error path
+- default delete state
+- mark page for deletion
+- restore page
+- preserve remaining page order
+- prevent deleting all pages
+- output filename generation
+- adapter success path
+- adapter error path
 
 ## Workflow / Component Tests
 
-* file selection
-* page count display
-* deletion state display
-* delete/restore behavior
-* delete-all guard
-* output generation
-* stale-state cleanup
+- file selection
+- page count display
+- deletion state display
+- delete/restore behavior
+- delete-all guard
+- output generation
+- stale-state cleanup
 
 ## E2E Tests
 
-* upload/select PDF
-* mark at least one page for deletion
-* generate output PDF
-* download output
-* verify downloaded bytes begin with %PDF-
-* verify no-external-requests assertion still passes
-* cover delete-all guard if practical
+- upload/select PDF
+- mark at least one page for deletion
+- generate output PDF
+- download output
+- verify downloaded bytes begin with %PDF-
+- verify no-external-requests assertion still passes
+- cover delete-all guard if practical
 
 ---
 
 # Implementation Notes
 
-* Reuse Reorder/Rotate Pages patterns wherever practical.
-* Do not implement thumbnails.
-* Do not implement previews.
-* Do not implement drag-and-drop.
-* Do not implement select all, delete all, or range delete.
-* Do not implement Extract Pages.
-* Keep implementation simple enough to serve as another page-action workflow pattern.
+- Reuse Reorder/Rotate Pages patterns wherever practical.
+- Do not implement thumbnails.
+- Do not implement previews.
+- Do not implement drag-and-drop.
+- Do not implement select all, delete all, or range delete.
+- Do not implement Extract Pages.
+- Keep implementation simple enough to serve as another page-action workflow pattern.
 
 ---
 
@@ -266,12 +266,12 @@ Confirm no new:
 
 Run and fix issues from:
 
-* pnpm format:check
-* pnpm typecheck
-* pnpm lint
-* pnpm test
-* pnpm test:e2e
-* pnpm build
+- pnpm format:check
+- pnpm typecheck
+- pnpm lint
+- pnpm test
+- pnpm test:e2e
+- pnpm build
 
 ---
 

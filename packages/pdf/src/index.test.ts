@@ -171,6 +171,42 @@ describe("LocalPdfAdapter", () => {
     await expect(readPageRotations(rotated)).resolves.toEqual([90, 180, 0]);
   });
 
+  it("deletes selected PDF pages while preserving remaining page order", async () => {
+    const adapter = new LocalPdfAdapter();
+    const pageSizes = [
+      [200, 300],
+      [400, 500],
+      [600, 700],
+      [800, 900],
+    ] as const;
+    const output = await adapter.deletePages({
+      document: await createPdfWithPageSizes(pageSizes),
+      pageNumbers: [2, 4],
+    });
+
+    await expect(adapter.readMetadata(output)).resolves.toMatchObject({
+      pageCount: 2,
+    });
+    await expect(readPageSizes(output)).resolves.toEqual([
+      pageSizes[0],
+      pageSizes[2],
+    ]);
+  });
+
+  it("rejects delete requests that remove every page", async () => {
+    const adapter = new LocalPdfAdapter();
+
+    await expect(
+      adapter.deletePages({
+        document: await createPdf(2),
+        pageNumbers: [1, 2],
+      }),
+    ).rejects.toMatchObject({
+      code: "invalid-page-range",
+      message: "At least one page must remain in the output PDF.",
+    });
+  });
+
   it("rejects invalid rotate requests", async () => {
     const adapter = new LocalPdfAdapter();
     const document = await createPdf(2);
@@ -246,6 +282,7 @@ describe("StubLocalPdfAdapter", () => {
     expect(typeof adapter.merge).toBe("function");
     expect(typeof adapter.reorder).toBe("function");
     expect(typeof adapter.rotate).toBe("function");
+    expect(typeof adapter.deletePages).toBe("function");
   });
 
   it("exposes a metadata shape for future adapters", () => {
@@ -375,6 +412,29 @@ describe("StubLocalPdfAdapter", () => {
     ).rejects.toMatchObject({
       code: "unsupported-operation",
       message: "Rotating PDF pages is not implemented yet.",
+    });
+  });
+
+  it("validates delete inputs before reporting unsupported processing", async () => {
+    const adapter = new StubLocalPdfAdapter();
+
+    await expect(
+      adapter.deletePages(
+        null as unknown as Parameters<PdfAdapter["deletePages"]>[0],
+      ),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "PDF delete pages request must be an object.",
+    });
+
+    await expect(
+      adapter.deletePages({
+        document: await createPdf(2),
+        pageNumbers: [1],
+      }),
+    ).rejects.toMatchObject({
+      code: "unsupported-operation",
+      message: "Deleting PDF pages is not implemented yet.",
     });
   });
 });

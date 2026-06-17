@@ -190,6 +190,60 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     (await readFile(rotateDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
 
+  await page.getByRole("link", { name: "Delete Pages" }).click();
+  await expect(page.getByText("Current section: Delete Pages")).toBeVisible();
+
+  const deleteFileInput = page.locator("#delete-file-input");
+
+  await deleteFileInput.setInputFiles({
+    name: "delete-source.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(twoPagePdf),
+  });
+
+  await expect(
+    page.locator("#delete").getByText("delete-source.pdf, 2 pages."),
+  ).toBeVisible();
+  await expect(page.locator("#delete").getByText("Kept in output")).toHaveCount(
+    2,
+  );
+
+  const deletePageOneRow = page.locator("#delete .file-list__item").filter({
+    hasText: "Page 1",
+  });
+  const deletePageTwoRow = page.locator("#delete .file-list__item").filter({
+    hasText: "Page 2",
+  });
+
+  await deletePageOneRow.getByRole("button", { name: "Delete page 1" }).click();
+  await expect(deletePageOneRow.getByText("Marked for deletion")).toBeVisible();
+
+  await deletePageTwoRow.getByRole("button", { name: "Delete page 2" }).click();
+  await expect(
+    page.getByText("Restore at least one page before generating a PDF."),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Delete Pages" }),
+  ).toBeDisabled();
+
+  await deletePageTwoRow
+    .getByRole("button", { name: "Restore page 2" })
+    .click();
+
+  const deleteDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Delete Pages" }).click();
+  await page.getByRole("link", { name: "Download PDF" }).click();
+  const deleteDownload = await deleteDownloadPromise;
+  const deleteDownloadPath = await deleteDownload.path();
+
+  expect(deleteDownload.suggestedFilename()).toBe(
+    "delete-source-pages-deleted.pdf",
+  );
+  expect(deleteDownloadPath).not.toBeNull();
+  expect(
+    (await readFile(deleteDownloadPath ?? "")).subarray(0, 5).toString(),
+  ).toBe("%PDF-");
+
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
 

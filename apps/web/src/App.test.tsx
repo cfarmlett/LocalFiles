@@ -11,6 +11,7 @@ describe("App shell", () => {
       "Merge PDF",
       "Reorder Pages",
       "Rotate Pages",
+      "Delete Pages",
       "Redact PDF",
       "Privacy",
     ]);
@@ -25,6 +26,7 @@ describe("App shell", () => {
     expect(markup).toContain("Choose one PDF or drop it here");
     expect(markup).toContain("Reorder Pages");
     expect(markup).toContain("Rotate Pages");
+    expect(markup).toContain("Delete Pages");
     expect(markup).toContain("Redaction is high risk");
   });
 });

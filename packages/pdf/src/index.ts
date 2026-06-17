@@ -58,6 +58,11 @@ export type PdfRotateRequest = Readonly<{
   rotations: readonly PdfPageRotation[];
 }>;
 
+export type PdfDeletePagesRequest = Readonly<{
+  document: Uint8Array;
+  pageNumbers: readonly number[];
+}>;
+
 export interface PdfAdapter {
   readonly name: string;
 
@@ -66,6 +71,7 @@ export interface PdfAdapter {
   merge(request: PdfMergeRequest): Promise<Uint8Array>;
   reorder(request: PdfReorderRequest): Promise<Uint8Array>;
   rotate(request: PdfRotateRequest): Promise<Uint8Array>;
+  deletePages(request: PdfDeletePagesRequest): Promise<Uint8Array>;
 }
 
 export class LocalPdfAdapter implements PdfAdapter {
@@ -175,6 +181,29 @@ export class LocalPdfAdapter implements PdfAdapter {
 
     return pdfDocument.save();
   }
+
+  async deletePages(request: PdfDeletePagesRequest): Promise<Uint8Array> {
+    assertDeletePagesRequest(request);
+    assertDocumentBytes(request.document);
+
+    const sourceDocument = await loadPdfDocument(request.document);
+    const pageCount = sourceDocument.getPageCount();
+    assertPagesToDelete(request.pageNumbers, pageCount);
+
+    const pagesToDelete = new Set(request.pageNumbers);
+    const keptPageIndexes = sourceDocument
+      .getPageIndices()
+      .filter((pageIndex) => !pagesToDelete.has(pageIndex + 1));
+    const outputDocument = await PDFDocument.create();
+    const copiedPages = await outputDocument.copyPages(
+      sourceDocument,
+      keptPageIndexes,
+    );
+
+    copiedPages.forEach((page) => outputDocument.addPage(page));
+
+    return outputDocument.save();
+  }
 }
 
 export class StubLocalPdfAdapter implements PdfAdapter {
@@ -208,6 +237,12 @@ export class StubLocalPdfAdapter implements PdfAdapter {
     assertRotateRequest(request);
     assertDocumentBytes(request.document);
     throw this.unsupported("Rotating PDF pages is not implemented yet.");
+  }
+
+  async deletePages(request: PdfDeletePagesRequest): Promise<Uint8Array> {
+    assertDeletePagesRequest(request);
+    assertDocumentBytes(request.document);
+    throw this.unsupported("Deleting PDF pages is not implemented yet.");
   }
 
   private assertSplitRequest(request: PdfSplitRequest): void {
@@ -281,6 +316,52 @@ function assertRotateRequest(request: PdfRotateRequest): void {
     throw new PdfProcessingError(
       "invalid-document",
       "PDF rotate request must be an object.",
+    );
+  }
+}
+
+function assertDeletePagesRequest(request: PdfDeletePagesRequest): void {
+  if (!isRecord(request)) {
+    throw new PdfProcessingError(
+      "invalid-document",
+      "PDF delete pages request must be an object.",
+    );
+  }
+}
+
+function assertPagesToDelete(
+  pageNumbers: readonly number[],
+  pageCount: number,
+): void {
+  if (!Array.isArray(pageNumbers) || pageNumbers.length === 0) {
+    throw new PdfProcessingError(
+      "invalid-page-range",
+      "At least one page must be selected for deletion.",
+    );
+  }
+
+  const seen = new Set<number>();
+
+  for (const pageNumber of pageNumbers) {
+    if (
+      !Number.isInteger(pageNumber) ||
+      pageNumber < 1 ||
+      pageNumber > pageCount ||
+      seen.has(pageNumber)
+    ) {
+      throw new PdfProcessingError(
+        "invalid-page-range",
+        "Pages selected for deletion must be unique valid page numbers.",
+      );
+    }
+
+    seen.add(pageNumber);
+  }
+
+  if (seen.size >= pageCount) {
+    throw new PdfProcessingError(
+      "invalid-page-range",
+      "At least one page must remain in the output PDF.",
     );
   }
 }
