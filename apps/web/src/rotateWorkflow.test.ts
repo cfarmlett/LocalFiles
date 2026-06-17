@@ -73,6 +73,15 @@ describe("rotation controls", () => {
     expect(rotatePage(pages, "page-1", "left")[0].rotation).toBe(180);
   });
 
+  it("applies repeated rotations from existing rotation state", () => {
+    const pages = createDefaultRotatePages(1, [90]);
+    const rotatedOnce = rotatePage(pages, "page-1", "right");
+    const rotatedTwice = rotatePage(rotatedOnce, "page-1", "right");
+
+    expect(rotatedOnce[0].rotation).toBe(180);
+    expect(rotatedTwice[0].rotation).toBe(270);
+  });
+
   it("normalizes positive and negative rotations", () => {
     expect(normalizeRotation(450)).toBe(90);
     expect(normalizeRotation(-90)).toBe(270);

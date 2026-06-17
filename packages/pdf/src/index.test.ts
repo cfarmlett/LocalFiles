@@ -60,6 +60,19 @@ describe("LocalPdfAdapter", () => {
     expect(metadata.pageRotations).toEqual([0, 0]);
   });
 
+  it("reads existing page rotations in metadata", async () => {
+    const adapter = new LocalPdfAdapter();
+    const document = await PDFDocument.create();
+    document.addPage();
+    document.addPage().setRotation(degrees(90));
+    document.addPage().setRotation(degrees(270));
+
+    const metadata = await adapter.readMetadata(await document.save());
+
+    expect(metadata.pageCount).toBe(3);
+    expect(metadata.pageRotations).toEqual([0, 90, 270]);
+  });
+
   it("merges PDFs in request order", async () => {
     const adapter = new LocalPdfAdapter();
     const first = await createPdf(1);
