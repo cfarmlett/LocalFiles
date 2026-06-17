@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { ExportResultPanel } from "./ExportResultPanel";
+import { useExportResultUrls, type ExportResult } from "./exportResults";
 import { validatePdfFile } from "./mergeWorkflow";
-import { createPdfObjectUrl } from "./pdfObjectUrl";
 import {
   buildSplitFileItem,
   getSplitErrorMessage,
@@ -17,11 +18,6 @@ export type SplitPdfPageProps = Readonly<{
   adapter?: PdfAdapter;
 }>;
 
-type DownloadableSplitOutput = SplitOutput &
-  Readonly<{
-    url: string;
-  }>;
-
 const defaultAdapter = new LocalPdfAdapter();
 
 export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
@@ -32,19 +28,24 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
   const [isSplitting, setIsSplitting] = useState(false);
-  const [outputs, setOutputs] = useState<readonly DownloadableSplitOutput[]>(
-    [],
-  );
+  const [outputs, setOutputs] = useState<readonly SplitOutput[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canSplit = file !== undefined && !isReading && !isSplitting;
-
-  useEffect(
-    () => () => {
-      outputs.forEach((output) => URL.revokeObjectURL(output.url));
-    },
+  const exportResults = useMemo(
+    () =>
+      outputs.map<ExportResult>((output) => ({
+        id: output.filename,
+        filename: output.filename,
+        bytes: output.bytes,
+        mimeType: "application/pdf",
+        detail: `Pages ${output.range.start}${
+          output.range.end === output.range.start ? "" : `-${output.range.end}`
+        }`,
+      })),
     [outputs],
   );
+  const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
     const selected = Array.from(selectedFiles);
@@ -109,12 +110,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         customRanges,
       });
 
-      setOutputs(
-        nextOutputs.map((output) => ({
-          ...output,
-          url: createPdfObjectUrl(output.bytes),
-        })),
-      );
+      setOutputs(nextOutputs);
     } catch (error) {
       setErrors([getSplitErrorMessage(error)]);
     } finally {
@@ -264,32 +260,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         </button>
       </div>
 
-      {outputs.length > 0 ? (
-        <ol className="file-list" aria-label="Generated split PDFs">
-          {outputs.map((output) => (
-            <li className="file-list__item" key={output.filename}>
-              <div>
-                <strong>{output.filename}</strong>
-                <span>
-                  Pages {output.range.start}
-                  {output.range.end === output.range.start
-                    ? ""
-                    : `-${output.range.end}`}
-                </span>
-              </div>
-              <div className="merge-actions">
-                <a
-                  aria-label={`Download ${output.filename}`}
-                  download={output.filename}
-                  href={output.url}
-                >
-                  Download
-                </a>
-              </div>
-            </li>
-          ))}
-        </ol>
-      ) : null}
+      <ExportResultPanel results={downloadableResults} />
 
       {isReading ? (
         <p aria-live="polite" className="loading-note">

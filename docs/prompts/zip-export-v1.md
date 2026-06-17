@@ -137,6 +137,7 @@ Preserve existing generated filenames.
 Example:
 
 ZIP:
+
 - contract-page-001.pdf
 - contract-page-002.pdf
 - contract-page-003.pdf
@@ -156,6 +157,7 @@ Display the number of generated outputs.
 Examples:
 
 Generated:
+
 - 47 PDFs
 
 or

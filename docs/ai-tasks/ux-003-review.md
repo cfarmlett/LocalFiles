@@ -14,9 +14,9 @@ Introduce a reusable persistent export result panel that improves the current ex
 
 Reference documentation:
 
-* docs/product/v1-product-spec.md
-* docs/product/v1.5-product-spec.md
-* docs/product/feature-backlog.md
+- docs/product/v1-product-spec.md
+- docs/product/v1.5-product-spec.md
+- docs/product/feature-backlog.md
 
 Review objectives:
 
@@ -28,22 +28,23 @@ Review objectives:
 6. Identify any risks, architectural concerns, or edge cases.
 7. Evaluate how the implementation can support future:
 
-   * ZIP export
-   * Multiple generated outputs
-   * Batch-processing results
+   - ZIP export
+   - Multiple generated outputs
+   - Batch-processing results
+
 8. Evaluate compatibility with the planned V1.5 feature-header direction:
 
-   * Export
-   * Clear
-   * Collapse
+   - Export
+   - Clear
+   - Collapse
 
 Deliverables:
 
-* Current architecture summary
-* Recommended implementation approach
-* Proposed component/state ownership
-* Risks and mitigations
-* Suggested implementation sequence
+- Current architecture summary
+- Recommended implementation approach
+- Proposed component/state ownership
+- Risks and mitigations
+- Suggested implementation sequence
 
 Do not implement changes.
 

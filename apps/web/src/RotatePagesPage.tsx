@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { validatePdfFile } from "./mergeWorkflow";
-import { createPdfObjectUrl } from "./pdfObjectUrl";
+import { ExportResultPanel } from "./ExportResultPanel";
+import { useExportResultUrls, type ExportResult } from "./exportResults";
 import {
   buildRotateFileItem,
   createDefaultRotatePages,
@@ -30,22 +31,24 @@ export function RotatePagesPage({
   const [isReading, setIsReading] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
   const [rotateResult, setRotateResult] = useState<RotateResult>();
-  const [downloadUrl, setDownloadUrl] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canRotate = file !== undefined && !isReading && !isRotating;
-
-  useEffect(() => {
-    if (rotateResult === undefined) {
-      setDownloadUrl(undefined);
-      return undefined;
-    }
-
-    const objectUrl = createPdfObjectUrl(rotateResult.bytes);
-    setDownloadUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [rotateResult]);
+  const exportResults = useMemo<readonly ExportResult[]>(
+    () =>
+      rotateResult === undefined
+        ? []
+        : [
+            {
+              id: rotateResult.filename,
+              filename: rotateResult.filename,
+              bytes: rotateResult.bytes,
+              mimeType: "application/pdf",
+            },
+          ],
+    [rotateResult],
+  );
+  const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
     const selected = Array.from(selectedFiles);
@@ -230,12 +233,9 @@ export function RotatePagesPage({
         >
           {isRotating ? "Rotating..." : "Rotate Pages"}
         </button>
-        {downloadUrl !== undefined && rotateResult !== undefined ? (
-          <a download={rotateResult.filename} href={downloadUrl}>
-            Download rotated PDF
-          </a>
-        ) : null}
       </div>
+
+      <ExportResultPanel results={downloadableResults} />
 
       {isReading ? (
         <p aria-live="polite" className="loading-note">

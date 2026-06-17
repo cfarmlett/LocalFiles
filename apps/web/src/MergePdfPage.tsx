@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
@@ -12,7 +12,8 @@ import {
   type MergeFileItem,
   type MergeResult,
 } from "./mergeWorkflow";
-import { createPdfObjectUrl } from "./pdfObjectUrl";
+import { ExportResultPanel } from "./ExportResultPanel";
+import { useExportResultUrls, type ExportResult } from "./exportResults";
 
 export type MergePdfPageProps = Readonly<{
   adapter?: PdfAdapter;
@@ -26,22 +27,24 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   const [isReading, setIsReading] = useState(false);
   const [isMerging, setIsMerging] = useState(false);
   const [mergeResult, setMergeResult] = useState<MergeResult>();
-  const [downloadUrl, setDownloadUrl] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canMerge = files.length > 0 && !isReading && !isMerging;
-
-  useEffect(() => {
-    if (mergeResult === undefined) {
-      setDownloadUrl(undefined);
-      return undefined;
-    }
-
-    const objectUrl = createPdfObjectUrl(mergeResult.bytes);
-    setDownloadUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [mergeResult]);
+  const exportResults = useMemo<readonly ExportResult[]>(
+    () =>
+      mergeResult === undefined
+        ? []
+        : [
+            {
+              id: mergeResult.filename,
+              filename: mergeResult.filename,
+              bytes: mergeResult.bytes,
+              mimeType: "application/pdf",
+            },
+          ],
+    [mergeResult],
+  );
+  const downloadableResults = useExportResultUrls(exportResults);
 
   const totalPages = useMemo(
     () => files.reduce((sum, file) => sum + (file.metadata?.pageCount ?? 0), 0),
@@ -224,12 +227,9 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
         <button disabled={!canMerge} onClick={mergeSelectedFiles} type="button">
           {isMerging ? "Merging..." : "Merge PDFs"}
         </button>
-        {downloadUrl !== undefined && mergeResult !== undefined ? (
-          <a download={mergeResult.filename} href={downloadUrl}>
-            Download merged PDF
-          </a>
-        ) : null}
       </div>
+
+      <ExportResultPanel results={downloadableResults} />
 
       {isReading ? (
         <p aria-live="polite" className="loading-note">

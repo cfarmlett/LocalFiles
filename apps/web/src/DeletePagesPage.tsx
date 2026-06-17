@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { validatePdfFile } from "./mergeWorkflow";
-import { createPdfObjectUrl } from "./pdfObjectUrl";
+import { ExportResultPanel } from "./ExportResultPanel";
+import { useExportResultUrls, type ExportResult } from "./exportResults";
 import {
   allPagesDeleted,
   buildDeleteFileItem,
@@ -32,7 +33,6 @@ export function DeletePagesPage({
   const [isReading, setIsReading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteResult, setDeleteResult] = useState<DeleteResult>();
-  const [downloadUrl, setDownloadUrl] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const hasDeletedPages = pages.some((page) => page.deleted);
@@ -43,18 +43,21 @@ export function DeletePagesPage({
     !isDeleteAllBlocked &&
     !isReading &&
     !isDeleting;
-
-  useEffect(() => {
-    if (deleteResult === undefined) {
-      setDownloadUrl(undefined);
-      return undefined;
-    }
-
-    const objectUrl = createPdfObjectUrl(deleteResult.bytes);
-    setDownloadUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [deleteResult]);
+  const exportResults = useMemo<readonly ExportResult[]>(
+    () =>
+      deleteResult === undefined
+        ? []
+        : [
+            {
+              id: deleteResult.filename,
+              filename: deleteResult.filename,
+              bytes: deleteResult.bytes,
+              mimeType: "application/pdf",
+            },
+          ],
+    [deleteResult],
+  );
+  const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
     const selected = Array.from(selectedFiles);
@@ -251,12 +254,9 @@ export function DeletePagesPage({
         >
           {isDeleting ? "Deleting..." : "Delete Pages"}
         </button>
-        {downloadUrl !== undefined && deleteResult !== undefined ? (
-          <a download={deleteResult.filename} href={downloadUrl}>
-            Download PDF
-          </a>
-        ) : null}
       </div>
+
+      <ExportResultPanel results={downloadableResults} />
 
       {isReading ? (
         <p aria-live="polite" className="loading-note">

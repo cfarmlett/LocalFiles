@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { validatePdfFile } from "./mergeWorkflow";
-import { createPdfObjectUrl } from "./pdfObjectUrl";
+import { ExportResultPanel } from "./ExportResultPanel";
+import { useExportResultUrls, type ExportResult } from "./exportResults";
 import {
   buildReorderFileItem,
   createDefaultPageOrder,
@@ -30,22 +31,24 @@ export function ReorderPagesPage({
   const [isReading, setIsReading] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
   const [reorderResult, setReorderResult] = useState<ReorderResult>();
-  const [downloadUrl, setDownloadUrl] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canReorder = file !== undefined && !isReading && !isReordering;
-
-  useEffect(() => {
-    if (reorderResult === undefined) {
-      setDownloadUrl(undefined);
-      return undefined;
-    }
-
-    const objectUrl = createPdfObjectUrl(reorderResult.bytes);
-    setDownloadUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [reorderResult]);
+  const exportResults = useMemo<readonly ExportResult[]>(
+    () =>
+      reorderResult === undefined
+        ? []
+        : [
+            {
+              id: reorderResult.filename,
+              filename: reorderResult.filename,
+              bytes: reorderResult.bytes,
+              mimeType: "application/pdf",
+            },
+          ],
+    [reorderResult],
+  );
+  const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
     const selected = Array.from(selectedFiles);
@@ -227,12 +230,9 @@ export function ReorderPagesPage({
         >
           {isReordering ? "Reordering..." : "Reorder Pages"}
         </button>
-        {downloadUrl !== undefined && reorderResult !== undefined ? (
-          <a download={reorderResult.filename} href={downloadUrl}>
-            Download reordered PDF
-          </a>
-        ) : null}
       </div>
+
+      <ExportResultPanel results={downloadableResults} />
 
       {isReading ? (
         <p aria-live="polite" className="loading-note">

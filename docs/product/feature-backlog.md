@@ -6,12 +6,12 @@ Inclusion in this backlog does not imply approval, scheduling, or commitment.
 
 Status values:
 
-* Backlog
-* Considering
-* Planned
-* Deferred
-* Rejected
-* Implemented
+- Backlog
+- Considering
+- Planned
+- Deferred
+- Rejected
+- Implemented
 
 ---
 
@@ -39,10 +39,10 @@ Users may experiment with page ordering and want a quick way to return to the or
 
 Notes:
 
-* Should restore the original page order only.
-* Should not require reloading the PDF.
-* Should clear any generated output PDF, consistent with other workflow state changes.
-* Simple usability enhancement with low implementation complexity.
+- Should restore the original page order only.
+- Should not require reloading the PDF.
+- Should clear any generated output PDF, consistent with other workflow state changes.
+- Simple usability enhancement with low implementation complexity.
 
 ---
 
@@ -80,11 +80,11 @@ For many reordering operations, expressing the desired order as ranges is dramat
 
 Notes:
 
-* Could reuse concepts from Split PDF custom range parsing.
-* Should validate page references.
-* Should clearly preview the resulting order before generating output.
-* May eventually support drag-and-drop, but this feature would remain useful even if drag-and-drop is added.
-* Particularly valuable for large documents (50+ pages).
+- Could reuse concepts from Split PDF custom range parsing.
+- Should validate page references.
+- Should clearly preview the resulting order before generating output.
+- May eventually support drag-and-drop, but this feature would remain useful even if drag-and-drop is added.
+- Particularly valuable for large documents (50+ pages).
 
 Potential Future Enhancement:
 Allow importing an entire page ordering sequence generated externally or pasted from another tool.
@@ -125,12 +125,12 @@ Drag-and-drop provides a faster and more intuitive workflow for many common reor
 
 Notes:
 
-* Should coexist with Move Up / Move Down controls initially.
-* Move Up / Move Down remains valuable for keyboard accessibility and precise adjustments.
-* Should preserve existing output-generation workflow and validation behavior.
-* Should clear generated output when page order changes, consistent with other workflow state changes.
-* Should support large documents reasonably well.
-* Accessibility considerations should be evaluated before implementation.
+- Should coexist with Move Up / Move Down controls initially.
+- Move Up / Move Down remains valuable for keyboard accessibility and precise adjustments.
+- Should preserve existing output-generation workflow and validation behavior.
+- Should clear generated output when page order changes, consistent with other workflow state changes.
+- Should support large documents reasonably well.
+- Accessibility considerations should be evaluated before implementation.
 
 Potential Future Enhancement:
 Multi-page drag-and-drop selection.
@@ -167,11 +167,11 @@ For most document operations, the user's actual goal is obtaining the modified f
 
 Notes:
 
-* Intended for simple document transformation workflows.
-* Applicable to Split PDF, Merge PDF, Reorder Pages, Rotate Pages, Remove Pages, Remove Metadata, Compress PDF, and similar tools.
-* Processing indicators should remain visible while work is in progress.
-* Some tools may still require a review or preview stage before export.
-* Export action naming should remain consistent across the application.
+- Intended for simple document transformation workflows.
+- Applicable to Split PDF, Merge PDF, Reorder Pages, Rotate Pages, Remove Pages, Remove Metadata, Compress PDF, and similar tools.
+- Processing indicators should remain visible while work is in progress.
+- Some tools may still require a review or preview stage before export.
+- Export action naming should remain consistent across the application.
 
 Potential Future Enhancement:
 Allow advanced workflows to optionally expose both Preview and Export actions when intermediate review is beneficial.
@@ -199,11 +199,11 @@ Users should not need to learn a different completion workflow for every tool. C
 
 Notes:
 
-* Export actions should appear in consistent locations.
-* Export terminology should remain consistent across tools.
-* Processing states should behave consistently.
-* Success states should behave consistently.
-* New tools should follow the established export model unless a documented exception exists.
+- Export actions should appear in consistent locations.
+- Export terminology should remain consistent across tools.
+- Processing states should behave consistently.
+- Success states should behave consistently.
+- New tools should follow the established export model unless a documented exception exists.
 
 Potential Future Enhancement:
 Create formal design-system guidelines covering workflow completion patterns across the entire application.
@@ -234,10 +234,10 @@ Rotation is inherently visual. Adding standard rotation icons improves recogniti
 
 Notes:
 
-* Icons should supplement text rather than replace it.
-* Should remain fully accessible to keyboard and screen-reader users.
-* Should use widely recognized clockwise and counterclockwise rotation symbols.
-* Should be applied consistently anywhere page rotation controls appear.
+- Icons should supplement text rather than replace it.
+- Should remain fully accessible to keyboard and screen-reader users.
+- Should use widely recognized clockwise and counterclockwise rotation symbols.
+- Should be applied consistently anywhere page rotation controls appear.
 
 Potential Future Enhancement:
 Display the current page rotation state directly within the page thumbnail or page list.
@@ -270,23 +270,23 @@ A persistent result panel gives users more control over what happens next while 
 
 Notes:
 
-* Should appear after successful document generation.
-* Should clearly indicate success or failure.
-* Should provide an obvious Download action.
-* Should remain available until the document configuration changes or a new export is generated.
-* Should work consistently across all document-processing tools.
-* May reduce the need for automatic download behavior in some workflows.
-* Could coexist with configurable export preferences.
+- Should appear after successful document generation.
+- Should clearly indicate success or failure.
+- Should provide an obvious Download action.
+- Should remain available until the document configuration changes or a new export is generated.
+- Should work consistently across all document-processing tools.
+- May reduce the need for automatic download behavior in some workflows.
+- Could coexist with configurable export preferences.
 
 Potential Future Enhancement:
 Expand the result panel to support:
 
-* Multiple generated files.
-* ZIP exports.
-* Batch processing results.
-* Export history within the current session.
-* File statistics (size, page count, processing time).
-* Direct integration with future desktop application workflows.
+- Multiple generated files.
+- ZIP exports.
+- Batch processing results.
+- Export history within the current session.
+- File statistics (size, page count, processing time).
+- Direct integration with future desktop application workflows.
 
 ## UX-004: Clear Loaded Document
 
@@ -314,11 +314,11 @@ Currently, resetting a feature may require reloading the page or manually naviga
 
 Notes:
 
-* Should remove the loaded document from the current feature only.
-* Should clear generated output associated with that document.
-* Should reset feature-specific state to its initial condition.
-* Should not affect documents loaded into other features.
-* Should be visually obvious and easy to discover.
+- Should remove the loaded document from the current feature only.
+- Should clear generated output associated with that document.
+- Should reset feature-specific state to its initial condition.
+- Should not affect documents loaded into other features.
+- Should be visually obvious and easy to discover.
 
 Potential Future Enhancement:
 Allow replacing the loaded document directly through a "Replace Document" action without requiring a separate clear step.
@@ -349,20 +349,19 @@ Collapsible sections improve navigation and reduce visual clutter.
 
 Notes:
 
-* Collapse state should preserve loaded documents and current work.
-* Users should be able to expand sections without losing changes.
-* Collapsed sections should clearly indicate whether a document is loaded.
-* Consider displaying summary information while collapsed.
+- Collapse state should preserve loaded documents and current work.
+- Users should be able to expand sections without losing changes.
+- Collapsed sections should clearly indicate whether a document is loaded.
+- Consider displaying summary information while collapsed.
 
 Example collapsed header:
 
 ▶ Reorder Pages (example.pdf, 100 pages)
 
-* Should work consistently across all applicable features.
+- Should work consistently across all applicable features.
 
 Potential Future Enhancement:
 Provide global "Collapse All" and "Expand All" actions for managing multiple loaded documents simultaneously.
-
 
 # Merge PDF
 
@@ -403,4 +402,3 @@ Reserved for PLAT-xxx entries.
 # Trust & Transparency
 
 Reserved for TT-xxx entries.
-

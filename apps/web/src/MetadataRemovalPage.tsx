@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
@@ -11,7 +11,8 @@ import {
   type MetadataRemovalResult,
 } from "./metadataRemovalWorkflow";
 import { validatePdfFile } from "./mergeWorkflow";
-import { createPdfObjectUrl } from "./pdfObjectUrl";
+import { ExportResultPanel } from "./ExportResultPanel";
+import { useExportResultUrls, type ExportResult } from "./exportResults";
 
 export type MetadataRemovalPageProps = Readonly<{
   adapter?: PdfAdapter;
@@ -27,7 +28,6 @@ export function MetadataRemovalPage({
   const [isReading, setIsReading] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
   const [removalResult, setRemovalResult] = useState<MetadataRemovalResult>();
-  const [downloadUrl, setDownloadUrl] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canRemove = file !== undefined && !isReading && !isRemoving;
@@ -35,18 +35,21 @@ export function MetadataRemovalPage({
     () => (file === undefined ? [] : getMetadataDisplayFields(file.metadata)),
     [file],
   );
-
-  useEffect(() => {
-    if (removalResult === undefined) {
-      setDownloadUrl(undefined);
-      return undefined;
-    }
-
-    const objectUrl = createPdfObjectUrl(removalResult.bytes);
-    setDownloadUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [removalResult]);
+  const exportResults = useMemo<readonly ExportResult[]>(
+    () =>
+      removalResult === undefined
+        ? []
+        : [
+            {
+              id: removalResult.filename,
+              filename: removalResult.filename,
+              bytes: removalResult.bytes,
+              mimeType: "application/pdf",
+            },
+          ],
+    [removalResult],
+  );
+  const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
     const selected = Array.from(selectedFiles);
@@ -213,12 +216,9 @@ export function MetadataRemovalPage({
         >
           {isRemoving ? "Removing..." : "Remove Metadata"}
         </button>
-        {downloadUrl !== undefined && removalResult !== undefined ? (
-          <a download={removalResult.filename} href={downloadUrl}>
-            Download cleaned PDF
-          </a>
-        ) : null}
       </div>
+
+      <ExportResultPanel results={downloadableResults} />
 
       {isReading ? (
         <p aria-live="polite" className="loading-note">

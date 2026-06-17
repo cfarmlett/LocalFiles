@@ -18,44 +18,46 @@ Review objectives:
 9. Confirm affected workflows behave consistently.
 10. Confirm accessibility basics:
 
-    * keyboard accessibility
-    * meaningful labels
-    * sensible status messaging
-    * no icon-only controls without accessible labels
+    - keyboard accessibility
+    - meaningful labels
+    - sensible status messaging
+    - no icon-only controls without accessible labels
+
 11. Confirm error states do not leave misleading successful output visible.
 12. Confirm generated PDFs remain correct.
 13. Evaluate whether the implementation can reasonably support future:
 
-    * ZIP export
-    * Multiple generated outputs
-    * Batch-processing results
+    - ZIP export
+    - Multiple generated outputs
+    - Batch-processing results
       without major redesign.
+
 14. Confirm the implementation does not accidentally implement unrelated V1.5 features.
 
 Scope boundaries:
 
 Do not implement:
 
-* UX-004 Clear Loaded Document
-* UX-005 Collapsible Feature Content
-* RP-001 Reset Page Order
-* RP-003 Drag-and-Drop Page Reordering
-* RP-004 Rotation Button Iconography
+- UX-004 Clear Loaded Document
+- UX-005 Collapsible Feature Content
+- RP-001 Reset Page Order
+- RP-003 Drag-and-Drop Page Reordering
+- RP-004 Rotation Button Iconography
 
 Limit changes to fixes, hardening, cleanup, and maintainability improvements directly related to UX-003.
 
 Run:
 
-* pnpm format:check
-* pnpm typecheck
-* pnpm lint
-* pnpm test
-* pnpm test:e2e
+- pnpm format:check
+- pnpm typecheck
+- pnpm lint
+- pnpm test
+- pnpm test:e2e
 
 Report:
 
-* Issues found
-* Fixes applied
-* Remaining risks
-* Future considerations
-* Whether UX-003 is ready to commit
+- Issues found
+- Fixes applied
+- Remaining risks
+- Future considerations
+- Whether UX-003 is ready to commit
