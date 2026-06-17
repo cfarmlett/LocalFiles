@@ -26,6 +26,15 @@ V1 polish still planned:
 - Error-message and success-message consistency review
 - Documentation alignment
 
+Planned V1.5 work focuses on UX polish and workflow refinement for the
+implemented V1 toolset:
+
+- Persistent export result panel
+- Collapsible feature content
+- Clear loaded document
+- Reset Page Order
+- Drag-and-drop page reordering
+
 Browser redaction is intentionally excluded from V1. The current browser-only
 architecture does not meet the project's definition of successful redaction, and
 offering partial redaction would create false confidence.

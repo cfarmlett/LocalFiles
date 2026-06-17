@@ -19,7 +19,7 @@ Status values:
 
 ## RP-001: Reset Page Order
 
-Status: Backlog
+Status: Planned
 
 Description:
 Add a Reset button that restores the page list to its original document order.
@@ -93,7 +93,7 @@ Allow importing an entire page ordering sequence generated externally or pasted 
 
 ## RP-003: Drag-and-Drop Page Reordering
 
-Status: Backlog
+Status: Planned
 
 Description:
 Allow users to reorder pages by dragging page rows directly within the page list.
@@ -212,7 +212,7 @@ Create formal design-system guidelines covering workflow completion patterns acr
 
 ## RP-004: Rotation Button Iconography
 
-Status: Backlog
+Status: Planned
 
 Description:
 Add rotation icons to page rotation controls in addition to text labels.
@@ -244,7 +244,7 @@ Display the current page rotation state directly within the page thumbnail or pa
 
 ## UX-003: Persistent Export Result Panel
 
-Status: Backlog
+Status: Planned
 
 Description:
 Display a persistent export result panel after document processing completes, allowing users to interact with the generated output without immediately triggering a download.
@@ -290,7 +290,7 @@ Expand the result panel to support:
 
 ## UX-004: Clear Loaded Document
 
-Status: Backlog
+Status: Planned
 
 Description:
 Allow users to remove the currently loaded document from a feature without refreshing the page.
@@ -325,7 +325,7 @@ Allow replacing the loaded document directly through a "Replace Document" action
 
 ## UX-005: Collapsible Feature Content
 
-Status: Backlog
+Status: Planned
 
 Description:
 Allow users to collapse and expand feature content areas to reduce scrolling and improve navigation when working with large documents.
