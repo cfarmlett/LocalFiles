@@ -77,6 +77,7 @@ Review tests and determine whether page-order correctness is being verified stro
 Confirm at least one meaningful test can distinguish:
 
 Original:
+
 - Page 1
 - Page 2
 - Page 3
@@ -84,6 +85,7 @@ Original:
 from:
 
 Reordered:
+
 - Page 3
 - Page 2
 - Page 1

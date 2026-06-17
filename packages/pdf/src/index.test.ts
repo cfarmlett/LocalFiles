@@ -19,6 +19,28 @@ async function createPdf(pageCount: number): Promise<Uint8Array> {
   return document.save();
 }
 
+async function createPdfWithPageSizes(
+  sizes: readonly (readonly [number, number])[],
+): Promise<Uint8Array> {
+  const document = await PDFDocument.create();
+
+  sizes.forEach(([width, height]) => document.addPage([width, height]));
+
+  return document.save();
+}
+
+async function readPageSizes(
+  documentBytes: Uint8Array,
+): Promise<readonly (readonly [number, number])[]> {
+  const document = await PDFDocument.load(documentBytes);
+
+  return document.getPages().map((page) => {
+    const size = page.getSize();
+
+    return [size.width, size.height] as const;
+  });
+}
+
 const invalidPdfBytes = new Uint8Array([37, 80, 68, 70, 45]);
 
 describe("LocalPdfAdapter", () => {
@@ -59,14 +81,24 @@ describe("LocalPdfAdapter", () => {
 
   it("reorders PDF pages into one output document", async () => {
     const adapter = new LocalPdfAdapter();
+    const pageSizes = [
+      [200, 300],
+      [400, 500],
+      [600, 700],
+    ] as const;
     const reordered = await adapter.reorder({
-      document: await createPdf(3),
-      pageOrder: [3, 1, 2],
+      document: await createPdfWithPageSizes(pageSizes),
+      pageOrder: [3, 2, 1],
     });
 
     await expect(adapter.readMetadata(reordered)).resolves.toMatchObject({
       pageCount: 3,
     });
+    await expect(readPageSizes(reordered)).resolves.toEqual([
+      pageSizes[2],
+      pageSizes[1],
+      pageSizes[0],
+    ]);
   });
 
   it("rejects reorder requests that duplicate or omit pages", async () => {
@@ -137,6 +169,7 @@ describe("StubLocalPdfAdapter", () => {
     expect(typeof adapter.readMetadata).toBe("function");
     expect(typeof adapter.split).toBe("function");
     expect(typeof adapter.merge).toBe("function");
+    expect(typeof adapter.reorder).toBe("function");
   });
 
   it("exposes a metadata shape for future adapters", () => {

@@ -14,21 +14,21 @@ Do not make changes solely because something could be improved.
 
 Only modify code when:
 
-* a bug exists
-* a stale state exists
-* a memory leak risk exists
-* an accessibility issue exists
-* a privacy issue exists
-* a test gap exists
-* a maintainability issue is concrete and low-risk to fix
+- a bug exists
+- a stale state exists
+- a memory leak risk exists
+- an accessibility issue exists
+- a privacy issue exists
+- a test gap exists
+- a maintainability issue is concrete and low-risk to fix
 
 Do not introduce:
 
-* new features
-* speculative abstractions
-* utility layers
-* helper frameworks
-* architectural patterns
+- new features
+- speculative abstractions
+- utility layers
+- helper frameworks
+- architectural patterns
 
 unless required to fix a concrete issue.
 
@@ -42,11 +42,11 @@ Preserve the existing workflow and user experience.
 
 Do not redesign:
 
-* navigation
-* workflow structure
-* output presentation
-* download behavior
-* page layout
+- navigation
+- workflow structure
+- output presentation
+- download behavior
+- page layout
 
 unless required to fix a specific issue.
 
@@ -60,11 +60,11 @@ Verify the feature behaves according to its specification.
 
 Review:
 
-* edge cases
-* invalid inputs
-* boundary conditions
-* state transitions
-* output correctness
+- edge cases
+- invalid inputs
+- boundary conditions
+- state transitions
+- output correctness
 
 Do not change intended behavior unless a clear defect exists.
 
@@ -74,9 +74,9 @@ Do not change intended behavior unless a clear defect exists.
 
 Inspect the implementation and confirm:
 
-* existing utilities are reused where appropriate
-* validation logic is not unnecessarily duplicated
-* architecture remains consistent with existing project patterns
+- existing utilities are reused where appropriate
+- validation logic is not unnecessarily duplicated
+- architecture remains consistent with existing project patterns
 
 ---
 
@@ -84,10 +84,10 @@ Inspect the implementation and confirm:
 
 Confirm:
 
-* the web application does not import pdf-lib directly
-* PDF manipulation remains inside packages/pdf
-* adapter boundaries remain intact
-* implementation follows established architecture
+- the web application does not import pdf-lib directly
+- PDF manipulation remains inside packages/pdf
+- adapter boundaries remain intact
+- implementation follows established architecture
 
 ---
 
@@ -95,22 +95,22 @@ Confirm:
 
 Confirm no new:
 
-* fetch calls
-* XMLHttpRequest calls
-* navigator.sendBeacon usage
-* analytics
-* telemetry
-* external assets
-* upload paths
-* server processing
-* browser storage of document contents
+- fetch calls
+- XMLHttpRequest calls
+- navigator.sendBeacon usage
+- analytics
+- telemetry
+- external assets
+- upload paths
+- server processing
+- browser storage of document contents
 
 Review newly added dependencies for:
 
-* telemetry capabilities
-* cloud integrations
-* hidden network behavior
-* unexpected browser storage behavior
+- telemetry capabilities
+- cloud integrations
+- hidden network behavior
+- unexpected browser storage behavior
 
 Only report concrete findings.
 
@@ -120,11 +120,11 @@ Only report concrete findings.
 
 Confirm generated output URLs are revoked appropriately when:
 
-* outputs are replaced
-* files change
-* inputs change
-* actions rerun
-* components unmount
+- outputs are replaced
+- files change
+- inputs change
+- actions rerun
+- components unmount
 
 Fix any memory leak risk with minimal changes.
 
@@ -134,19 +134,19 @@ Fix any memory leak risk with minimal changes.
 
 Check for stale:
 
-* validation errors
-* adapter errors
-* generated outputs
-* download links
-* selected file state
-* feature-specific workflow state
+- validation errors
+- adapter errors
+- generated outputs
+- download links
+- selected file state
+- feature-specific workflow state
 
 when:
 
-* files change
-* invalid input occurs
-* actions rerun
-* settings change
+- files change
+- invalid input occurs
+- actions rerun
+- settings change
 
 Fix confusing stale UI states with minimal changes.
 
@@ -156,10 +156,10 @@ Fix confusing stale UI states with minimal changes.
 
 Ensure user-facing errors are:
 
-* clear
-* sanitized
-* actionable
-* consistent with other LocalDocs tools
+- clear
+- sanitized
+- actionable
+- consistent with other LocalDocs tools
 
 ---
 
@@ -167,20 +167,20 @@ Ensure user-facing errors are:
 
 Review:
 
-* file inputs
-* drag-and-drop zones
-* buttons
-* controls
-* download links
-* status messages
-* error messages
+- file inputs
+- drag-and-drop zones
+- buttons
+- controls
+- download links
+- status messages
+- error messages
 
 Make small improvements such as:
 
-* labels
-* aria-labels
-* aria-describedby
-* role="alert"
+- labels
+- aria-labels
+- aria-describedby
+- role="alert"
 
 where appropriate.
 
@@ -192,12 +192,12 @@ Do not redesign the UI.
 
 Review tests for:
 
-* correctness
-* edge cases
-* invalid inputs
-* output generation
-* download behavior
-* no-external-requests assertions
+- correctness
+- edge cases
+- invalid inputs
+- output generation
+- download behavior
+- no-external-requests assertions
 
 Add or adjust tests only where there is a clear gap or brittleness.
 
@@ -221,11 +221,11 @@ Review whether the feature remains consistent with other LocalDocs tools.
 
 Consider:
 
-* file-selection behavior
-* error presentation
-* loading states
-* output presentation
-* download behavior
+- file-selection behavior
+- error presentation
+- loading states
+- output presentation
+- download behavior
 
 Only recommend changes if inconsistency creates user confusion.
 
@@ -235,12 +235,12 @@ Only recommend changes if inconsistency creates user confusion.
 
 Run and fix issues from:
 
-* pnpm format:check
-* pnpm typecheck
-* pnpm lint
-* pnpm test
-* pnpm test:e2e
-* pnpm build
+- pnpm format:check
+- pnpm typecheck
+- pnpm lint
+- pnpm test
+- pnpm test:e2e
+- pnpm build
 
 ---
 
