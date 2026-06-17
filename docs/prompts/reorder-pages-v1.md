@@ -1,12 +1,14 @@
 Implement the LocalDocs V1 Reorder Pages workflow.
 
 Context:
+
 - LocalDocs is a privacy-first, local-only browser PDF tool.
 - Merge PDF and Split PDF are already implemented and should be treated as implementation patterns.
 - This task is product development for Reorder Pages only.
 - Do not implement Rotate Pages, Delete Pages, Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.
 
 Core principles:
+
 - All processing must happen locally in the browser.
 - No document data may be uploaded, logged, tracked, stored remotely, or sent over the network.
 - Preserve existing package boundaries.
@@ -43,14 +45,17 @@ The page-list representation should be designed so future tools can attach actio
 Examples:
 
 Reorder Pages:
+
 - Move Up
 - Move Down
 
 Rotate Pages:
+
 - Rotate Left
 - Rotate Right
 
 Delete Pages:
+
 - Delete
 
 Do not build those future features now, but avoid creating a design that will fight them later.

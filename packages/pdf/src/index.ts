@@ -42,12 +42,18 @@ export type PdfMergeRequest = Readonly<{
   documents: readonly Uint8Array[];
 }>;
 
+export type PdfReorderRequest = Readonly<{
+  document: Uint8Array;
+  pageOrder: readonly number[];
+}>;
+
 export interface PdfAdapter {
   readonly name: string;
 
   readMetadata(document: Uint8Array): Promise<PdfDocumentMetadata>;
   split(request: PdfSplitRequest): Promise<readonly Uint8Array[]>;
   merge(request: PdfMergeRequest): Promise<Uint8Array>;
+  reorder(request: PdfReorderRequest): Promise<Uint8Array>;
 }
 
 export class LocalPdfAdapter implements PdfAdapter {
@@ -119,6 +125,25 @@ export class LocalPdfAdapter implements PdfAdapter {
 
     return mergedDocument.save();
   }
+
+  async reorder(request: PdfReorderRequest): Promise<Uint8Array> {
+    assertReorderRequest(request);
+    assertDocumentBytes(request.document);
+
+    const sourceDocument = await loadPdfDocument(request.document);
+    const pageCount = sourceDocument.getPageCount();
+    assertPageOrder(request.pageOrder, pageCount);
+
+    const reorderedDocument = await PDFDocument.create();
+    const copiedPages = await reorderedDocument.copyPages(
+      sourceDocument,
+      request.pageOrder.map((pageNumber) => pageNumber - 1),
+    );
+
+    copiedPages.forEach((page) => reorderedDocument.addPage(page));
+
+    return reorderedDocument.save();
+  }
 }
 
 export class StubLocalPdfAdapter implements PdfAdapter {
@@ -140,6 +165,12 @@ export class StubLocalPdfAdapter implements PdfAdapter {
     assertMergeRequest(request);
     request.documents.forEach((document) => assertDocumentBytes(document));
     throw this.unsupported("Merging PDFs is not implemented yet.");
+  }
+
+  async reorder(request: PdfReorderRequest): Promise<Uint8Array> {
+    assertReorderRequest(request);
+    assertDocumentBytes(request.document);
+    throw this.unsupported("Reordering PDF pages is not implemented yet.");
   }
 
   private assertSplitRequest(request: PdfSplitRequest): void {
@@ -196,6 +227,45 @@ function assertMergeRequest(request: PdfMergeRequest): void {
       "invalid-document",
       "At least one PDF document is required.",
     );
+  }
+}
+
+function assertReorderRequest(request: PdfReorderRequest): void {
+  if (!isRecord(request)) {
+    throw new PdfProcessingError(
+      "invalid-document",
+      "PDF reorder request must be an object.",
+    );
+  }
+}
+
+function assertPageOrder(
+  pageOrder: readonly number[],
+  pageCount: number,
+): void {
+  if (!Array.isArray(pageOrder) || pageOrder.length !== pageCount) {
+    throw new PdfProcessingError(
+      "invalid-page-range",
+      "Page order must include every page exactly once.",
+    );
+  }
+
+  const seen = new Set<number>();
+
+  for (const pageNumber of pageOrder) {
+    if (
+      !Number.isInteger(pageNumber) ||
+      pageNumber < 1 ||
+      pageNumber > pageCount ||
+      seen.has(pageNumber)
+    ) {
+      throw new PdfProcessingError(
+        "invalid-page-range",
+        "Page order must include every page exactly once.",
+      );
+    }
+
+    seen.add(pageNumber);
   }
 }
 

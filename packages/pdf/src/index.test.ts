@@ -57,6 +57,43 @@ describe("LocalPdfAdapter", () => {
     });
   });
 
+  it("reorders PDF pages into one output document", async () => {
+    const adapter = new LocalPdfAdapter();
+    const reordered = await adapter.reorder({
+      document: await createPdf(3),
+      pageOrder: [3, 1, 2],
+    });
+
+    await expect(adapter.readMetadata(reordered)).resolves.toMatchObject({
+      pageCount: 3,
+    });
+  });
+
+  it("rejects reorder requests that duplicate or omit pages", async () => {
+    const adapter = new LocalPdfAdapter();
+    const document = await createPdf(3);
+
+    await expect(
+      adapter.reorder({
+        document,
+        pageOrder: [1, 1, 3],
+      }),
+    ).rejects.toMatchObject({
+      code: "invalid-page-range",
+      message: "Page order must include every page exactly once.",
+    });
+
+    await expect(
+      adapter.reorder({
+        document,
+        pageOrder: [1, 2],
+      }),
+    ).rejects.toMatchObject({
+      code: "invalid-page-range",
+      message: "Page order must include every page exactly once.",
+    });
+  });
+
   it("rejects split ranges outside the document bounds", async () => {
     const adapter = new LocalPdfAdapter();
 
@@ -187,6 +224,27 @@ describe("StubLocalPdfAdapter", () => {
     ).rejects.toMatchObject({
       code: "unsupported-operation",
       message: "Merging PDFs is not implemented yet.",
+    });
+  });
+
+  it("validates reorder inputs before reporting unsupported processing", async () => {
+    const adapter = new StubLocalPdfAdapter();
+
+    await expect(
+      adapter.reorder(null as unknown as Parameters<PdfAdapter["reorder"]>[0]),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "PDF reorder request must be an object.",
+    });
+
+    await expect(
+      adapter.reorder({
+        document: await createPdf(1),
+        pageOrder: [1],
+      }),
+    ).rejects.toMatchObject({
+      code: "unsupported-operation",
+      message: "Reordering PDF pages is not implemented yet.",
     });
   });
 });

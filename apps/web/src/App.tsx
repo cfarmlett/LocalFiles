@@ -3,10 +3,11 @@ import { useMemo, useState } from "react";
 import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
 
 import { MergePdfPage } from "./MergePdfPage";
+import { ReorderPagesPage } from "./ReorderPagesPage";
 import { SplitPdfPage } from "./SplitPdfPage";
 import "./styles.css";
 
-type SectionId = "home" | "split" | "merge" | "redact" | "privacy";
+type SectionId = "home" | "split" | "merge" | "reorder" | "redact" | "privacy";
 
 type AppSection = Readonly<{
   id: SectionId;
@@ -17,6 +18,7 @@ export const appSections: readonly AppSection[] = [
   { id: "home", label: "Home" },
   { id: "split", label: "Split PDF" },
   { id: "merge", label: "Merge PDF" },
+  { id: "reorder", label: "Reorder Pages" },
   { id: "redact", label: "Redact PDF" },
   { id: "privacy", label: "Privacy" },
 ];
@@ -78,6 +80,10 @@ export function App() {
 
       <Section id="merge" title="Merge PDF">
         <MergePdfPage />
+      </Section>
+
+      <Section id="reorder" title="Reorder Pages">
+        <ReorderPagesPage />
       </Section>
 
       <Section id="redact" title="Redact PDF">

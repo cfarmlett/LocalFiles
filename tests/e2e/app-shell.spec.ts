@@ -75,6 +75,71 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     page.getByText("Enter a positive whole number of pages per file."),
   ).toBeVisible();
 
+  await page.getByRole("link", { name: "Reorder Pages" }).click();
+  await expect(page.getByText("Current section: Reorder Pages")).toBeVisible();
+
+  const reorderFileInput = page.locator("#reorder-file-input");
+
+  await reorderFileInput.setInputFiles({
+    name: "wrong.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("not a pdf"),
+  });
+  await expect(page.getByText("wrong.txt is not a PDF file.")).toBeVisible();
+
+  await reorderFileInput.setInputFiles({
+    name: "ordered.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(twoPagePdf),
+  });
+
+  await expect(
+    page.locator("#reorder").getByText("ordered.pdf, 2 pages."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder strong").getByText("Page 1"),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder strong").getByText("Page 2"),
+  ).toBeVisible();
+
+  const pageTwoRow = page.locator("#reorder .file-list__item").filter({
+    hasText: "Page 2",
+  });
+  await pageTwoRow.getByRole("button", { name: "Move page 2 up" }).click();
+
+  const reorderedPageNames = await page
+    .locator("#reorder .file-list__item strong")
+    .allTextContents();
+  expect(reorderedPageNames).toEqual(["Page 2", "Page 1"]);
+
+  await page.getByRole("button", { name: "Reorder Pages" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download reordered PDF" }),
+  ).toBeVisible();
+
+  const reorderedPageOneRow = page.locator("#reorder .file-list__item").filter({
+    hasText: "Page 1",
+  });
+  await reorderedPageOneRow
+    .getByRole("button", { name: "Move page 1 up" })
+    .click();
+  await expect(
+    page.getByRole("link", { name: "Download reordered PDF" }),
+  ).toHaveCount(0);
+
+  const reorderDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Reorder Pages" }).click();
+  await page.getByRole("link", { name: "Download reordered PDF" }).click();
+  const reorderDownload = await reorderDownloadPromise;
+  const reorderDownloadPath = await reorderDownload.path();
+
+  expect(reorderDownload.suggestedFilename()).toBe("ordered-reordered.pdf");
+  expect(reorderDownloadPath).not.toBeNull();
+  expect(
+    (await readFile(reorderDownloadPath ?? "")).subarray(0, 5).toString(),
+  ).toBe("%PDF-");
+
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
 
@@ -110,7 +175,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await secondRow.getByRole("button", { name: "Move second.pdf up" }).click();
 
   const fileNames = await page
-    .locator(".file-list__item strong")
+    .locator("#merge .file-list__item strong")
     .allTextContents();
   expect(fileNames).toEqual(["second.pdf", "first.pdf"]);
 

@@ -35,6 +35,7 @@ function createAdapter(): PdfAdapter {
       ranges.map((range) => new Uint8Array([range.start, range.end])),
     ),
     merge: vi.fn(),
+    reorder: vi.fn(),
   };
 }
 

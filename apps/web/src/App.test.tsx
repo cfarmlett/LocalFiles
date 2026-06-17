@@ -9,6 +9,7 @@ describe("App shell", () => {
       "Home",
       "Split PDF",
       "Merge PDF",
+      "Reorder Pages",
       "Redact PDF",
       "Privacy",
     ]);
@@ -21,6 +22,7 @@ describe("App shell", () => {
     expect(markup).toContain("Files stay local in the browser.");
     expect(markup).toContain("No backend, no accounts, no analytics");
     expect(markup).toContain("Choose one PDF or drop it here");
+    expect(markup).toContain("Reorder Pages");
     expect(markup).toContain("Redaction is high risk");
   });
 });
