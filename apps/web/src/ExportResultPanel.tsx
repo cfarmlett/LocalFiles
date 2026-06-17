@@ -37,11 +37,24 @@ export function ExportResultPanel({ results }: ExportResultPanelProps) {
               )}
             </div>
             <div className="export-result-actions">
-              <a download={result.filename} href={result.url}>
+              <a
+                aria-label={
+                  multipleResults ? `Download ${result.filename}` : undefined
+                }
+                download={result.filename}
+                href={result.url}
+              >
                 {multipleResults ? "Download" : "Download PDF"}
               </a>
               {result.mimeType === "application/pdf" ? (
-                <a href={result.url} rel="noreferrer" target="_blank">
+                <a
+                  aria-label={
+                    multipleResults ? `Open ${result.filename}` : undefined
+                  }
+                  href={result.url}
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   Open PDF
                 </a>
               ) : null}

@@ -61,8 +61,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await page
     .locator("#split")
     .getByLabel("Export result")
-    .getByRole("link", { name: "Download" })
-    .first()
+    .getByRole("link", { name: "Download page-1.pdf" })
     .click();
   const splitDownload = await splitDownloadPromise;
   const splitDownloadPath = await splitDownload.path();
@@ -360,6 +359,18 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#merge").getByRole("link", { name: "Download PDF" }),
   ).toBeVisible();
+
+  await fileInput.setInputFiles({
+    name: "not-a-pdf.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("not a pdf"),
+  });
+  await expect(
+    page.getByText("not-a-pdf.txt is not a PDF file."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#merge").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
 
   const firstRow = page.locator(".file-list__item").filter({
     hasText: "second.pdf",

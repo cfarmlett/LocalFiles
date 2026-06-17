@@ -52,6 +52,8 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   );
 
   async function addFiles(selectedFiles: FileList | readonly File[]) {
+    setMergeResult(undefined);
+
     const nextErrors: string[] = [];
     const pdfFiles = Array.from(selectedFiles).filter((file) => {
       const validation = validatePdfFile(file);
@@ -70,7 +72,6 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     }
 
     setIsReading(true);
-    setMergeResult(undefined);
 
     const nextItems: MergeFileItem[] = [];
 

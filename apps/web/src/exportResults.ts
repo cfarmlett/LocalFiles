@@ -17,12 +17,20 @@ export type DownloadableExportResult = ExportResult &
     url: string;
   }>;
 
+type DownloadableExportResultState = Readonly<{
+  sourceResults: readonly ExportResult[];
+  downloadableResults: readonly DownloadableExportResult[];
+}>;
+
 export function useExportResultUrls(
   results: readonly ExportResult[],
 ): readonly DownloadableExportResult[] {
-  const [downloadableResults, setDownloadableResults] = useState<
-    readonly DownloadableExportResult[]
-  >([]);
+  const [resultState, setResultState] = useState<DownloadableExportResultState>(
+    {
+      sourceResults: results,
+      downloadableResults: [],
+    },
+  );
 
   useEffect(() => {
     const nextResults = results.map((result) => ({
@@ -30,14 +38,21 @@ export function useExportResultUrls(
       url: createExportObjectUrl(result),
     }));
 
-    setDownloadableResults(nextResults);
+    setResultState({
+      sourceResults: results,
+      downloadableResults: nextResults,
+    });
 
     return () => {
       nextResults.forEach((result) => URL.revokeObjectURL(result.url));
     };
   }, [results]);
 
-  return downloadableResults;
+  if (resultState.sourceResults !== results) {
+    return [];
+  }
+
+  return resultState.downloadableResults;
 }
 
 function createExportObjectUrl(result: ExportResult): string {
