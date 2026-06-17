@@ -10,13 +10,13 @@ Your role is not to implement features.
 
 Your role is to evaluate:
 
-* architecture
-* correctness
-* maintainability
-* privacy claims
-* trustworthiness
-* testing strategy
-* future scalability
+- architecture
+- correctness
+- maintainability
+- privacy claims
+- trustworthiness
+- testing strategy
+- future scalability
 
 Approach this as if you were reviewing an open-source project that makes strong privacy and local-processing claims.
 
@@ -34,28 +34,28 @@ Prefer evidence-based findings over speculative concerns.
 
 Distinguish clearly between:
 
-* Must Fix
-* Should Fix
-* Nice to Have
-* Observations
+- Must Fix
+- Should Fix
+- Nice to Have
+- Observations
 
 Do not elevate speculative concerns into Must Fix findings.
 
 Reserve Must Fix for issues that:
 
-* block further feature development
-* undermine privacy claims
-* break correctness
-* create significant security concerns
-* would seriously harm open-source trust
+- block further feature development
+- undermine privacy claims
+- break correctness
+- create significant security concerns
+- would seriously harm open-source trust
 
 When identifying issues, include:
 
-* relevant file paths
-* relevant functions
-* relevant components
-* relevant tests
-* relevant configuration files
+- relevant file paths
+- relevant functions
+- relevant components
+- relevant tests
+- relevant configuration files
 
 where practical.
 
@@ -67,19 +67,19 @@ where practical.
 
 Evaluate:
 
-* package boundaries
-* adapter design
-* workflow design
-* code organization
-* separation of concerns
-* future maintainability
+- package boundaries
+- adapter design
+- workflow design
+- code organization
+- separation of concerns
+- future maintainability
 
 Identify:
 
-* duplication
-* architectural drift
-* unnecessary complexity
-* weak abstractions
+- duplication
+- architectural drift
+- unnecessary complexity
+- weak abstractions
 
 Only recommend architectural changes when justified by a concrete issue.
 
@@ -89,11 +89,11 @@ Only recommend architectural changes when justified by a concrete issue.
 
 Evaluate:
 
-* feature behavior
-* edge cases
-* state transitions
-* validation logic
-* output correctness
+- feature behavior
+- edge cases
+- state transitions
+- validation logic
+- output correctness
 
 Identify areas where tests may not fully prove correctness.
 
@@ -103,20 +103,20 @@ Identify areas where tests may not fully prove correctness.
 
 LocalDocs makes strong claims:
 
-* local processing
-* no uploads
-* no telemetry
-* no analytics
-* no cloud processing
+- local processing
+- no uploads
+- no telemetry
+- no analytics
+- no cloud processing
 
 Review whether the implementation supports those claims.
 
 Identify:
 
-* privacy risks
-* trust risks
-* misleading claims
-* dependency concerns
+- privacy risks
+- trust risks
+- misleading claims
+- dependency concerns
 
 Distinguish between actual risks and hypothetical risks.
 
@@ -126,11 +126,11 @@ Distinguish between actual risks and hypothetical risks.
 
 Review:
 
-* attack surface
-* dependency usage
-* browser APIs
-* file handling
-* error handling
+- attack surface
+- dependency usage
+- browser APIs
+- file handling
+- error handling
 
 Focus on realistic concerns.
 
@@ -142,10 +142,10 @@ Do not invent speculative threat models.
 
 Evaluate:
 
-* unit tests
-* workflow tests
-* E2E tests
-* verification quality
+- unit tests
+- workflow tests
+- E2E tests
+- verification quality
 
 Determine whether tests are proving the right properties.
 
@@ -159,10 +159,10 @@ Review accessibility at a practical level.
 
 Consider:
 
-* labels
-* keyboard navigation
-* screen-reader support
-* error communication
+- labels
+- keyboard navigation
+- screen-reader support
+- error communication
 
 Focus on concrete findings.
 
@@ -172,11 +172,11 @@ Focus on concrete findings.
 
 Review:
 
-* CI
-* build reproducibility
-* generated artifacts
-* dependency management
-* project structure
+- CI
+- build reproducibility
+- generated artifacts
+- dependency management
+- project structure
 
 Identify anything that would concern a professional reviewer.
 
@@ -188,9 +188,9 @@ Evaluate whether the current architecture appears capable of supporting upcoming
 
 Focus on:
 
-* maintainability
-* extensibility
-* risk accumulation
+- maintainability
+- extensibility
+- risk accumulation
 
 Do not recommend implementing future features.
 
@@ -226,10 +226,10 @@ Assess readiness for upcoming planned features.
 
 Conclude with:
 
-* Architecture Quality
-* Privacy Claim Credibility
-* Test Quality
-* Maintainability
-* Recommendation
+- Architecture Quality
+- Privacy Claim Credibility
+- Test Quality
+- Maintainability
+- Recommendation
 
 Be specific, evidence-based, and concise.

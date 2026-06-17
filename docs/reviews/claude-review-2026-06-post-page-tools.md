@@ -42,7 +42,7 @@ In `ReorderPagesPage.tsx` (line 196), the page list renders:
 <span>Original page {page.pageNumber}</span>
 ```
 
-Both the bold label and the description use `page.pageNumber`, which is the *original* page number and never changes. After moving page 3 to position 1, the item reads "Page 3 / Original page 3" in position 1, which is correct (the user sees the original page identifier). But the position label "Page 3" in position 1 of the list could mislead users into thinking this describes the output position rather than the page's identity.
+Both the bold label and the description use `page.pageNumber`, which is the _original_ page number and never changes. After moving page 3 to position 1, the item reads "Page 3 / Original page 3" in position 1, which is correct (the user sees the original page identifier). But the position label "Page 3" in position 1 of the list could mislead users into thinking this describes the output position rather than the page's identity.
 
 Rotate and Delete use "Page {page.pageNumber}" consistently, which is cleaner because they don't reorder. Reorder is the outlier where position and page identity diverge. The label could more clearly communicate that the number is the page's identity, not its output slot — for example, "Original page 3" with position derived implicitly from list order. This is a usability nuance, not a correctness bug, but it is the only place in the UI where the labeling model is ambiguous.
 
@@ -136,6 +136,7 @@ The `.prettierrc` and `.prettierignore` files are empty (0 bytes in the ZIP). Th
 Strengths: No network calls, no tracker scripts, no third-party analytics integrations, no CDN-loaded scripts visible in the source. The privacy copy is carefully worded to avoid over-claiming. The threat model document reads as honest and well-considered, including an explicit acknowledgment that open sourcing the code does not prove the deployed site runs the published code.
 
 Questions a skeptical reviewer would ask:
+
 - **"Is `pdf-lib` audited?"** The library is widely used and open source, but it bundles `pako` (zlib compression) and `@pdf-lib/standard-fonts`. A reviewer would want to confirm these don't have unexpected network calls. This is a supply-chain concern, not an accusation.
 - **"What is in the committed `apps/web/dist/` bundle?"** This is the most concrete trust risk. A 647 KB minified bundle with no clear connection to the source code is the first thing an auditor would question.
 - **"How do I know the deployed site runs this code?"** The vision document acknowledges this gap. It's an appropriate future concern, not a current failure.
@@ -146,12 +147,12 @@ The committed artifact is the one item that would cause immediate skepticism in 
 
 ## Overall Assessment
 
-| Dimension | Assessment |
-|---|---|
-| **Architecture Quality** | Strong. Clean adapter, coherent workflow pattern, clear separation of concerns. |
-| **Privacy Claim Credibility** | Accurate as stated. Claims are appropriately scoped and technically supported. |
-| **Test Quality** | Good. Workflow tests prove meaningful properties. UI tests are thin but not misleading. Blind spots are minor. |
-| **Maintainability** | Good. Minor duplication (`createPdfObjectUrl`) and a cross-dependency artifact (`validatePdfFile` in `mergeWorkflow.ts`) are low-risk today. |
+| Dimension                     | Assessment                                                                                                                                   |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Architecture Quality**      | Strong. Clean adapter, coherent workflow pattern, clear separation of concerns.                                                              |
+| **Privacy Claim Credibility** | Accurate as stated. Claims are appropriately scoped and technically supported.                                                               |
+| **Test Quality**              | Good. Workflow tests prove meaningful properties. UI tests are thin but not misleading. Blind spots are minor.                               |
+| **Maintainability**           | Good. Minor duplication (`createPdfObjectUrl`) and a cross-dependency artifact (`validatePdfFile` in `mergeWorkflow.ts`) are low-risk today. |
 
 ---
 

@@ -6,11 +6,11 @@ Review Scope:
 
 The LocalDocs codebase after implementation and hardening of:
 
-* Merge PDF
-* Split PDF
-* Reorder Pages
-* Rotate Pages
-* Delete Pages
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
 
 This review is intended to evaluate the architecture after the first major group of PDF tools has been completed.
 
@@ -28,18 +28,18 @@ Evaluate the current PdfAdapter design.
 
 Consider:
 
-* method design
-* cohesion
-* clarity
-* future maintainability
+- method design
+- cohesion
+- clarity
+- future maintainability
 
 Current capabilities include:
 
-* merge
-* split
-* reorder
-* rotate
-* deletePages
+- merge
+- split
+- reorder
+- rotate
+- deletePages
 
 Assess whether the adapter is evolving cleanly.
 
@@ -51,16 +51,16 @@ Identify any signs of architectural drift.
 
 Review the architecture shared by:
 
-* Reorder Pages
-* Rotate Pages
-* Delete Pages
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
 
 Evaluate:
 
-* reuse
-* duplication
-* maintainability
-* future flexibility
+- reuse
+- duplication
+- maintainability
+- future flexibility
 
 Determine whether this pattern appears healthy.
 
@@ -76,10 +76,10 @@ Do not recommend abstraction unless there is a concrete maintainability benefit.
 
 Evaluate whether the implementation continues to support LocalDocs' public claims:
 
-* local processing
-* no uploads
-* no telemetry
-* no analytics
+- local processing
+- no uploads
+- no telemetry
+- no analytics
 
 Assess whether a privacy-conscious reviewer would likely agree with those claims.
 
@@ -91,11 +91,11 @@ Evaluate whether the tests are proving the correct things.
 
 Pay particular attention to:
 
-* page order verification
-* rotation verification
-* deletion verification
-* output correctness
-* state cleanup behavior
+- page order verification
+- rotation verification
+- deletion verification
+- output correctness
+- state cleanup behavior
 
 Identify meaningful blind spots if they exist.
 
@@ -105,11 +105,11 @@ Identify meaningful blind spots if they exist.
 
 Review:
 
-* CI
-* dependency footprint
-* project organization
-* generated artifacts
-* reproducibility concerns
+- CI
+- dependency footprint
+- project organization
+- generated artifacts
+- reproducibility concerns
 
 Identify anything that would concern an experienced reviewer.
 
@@ -121,15 +121,15 @@ Review whether the existing bundle-size warning remains acceptable or is becomin
 
 Evaluate readiness for:
 
-* Metadata Removal
-* Redaction
+- Metadata Removal
+- Redaction
 
 Do not design those features.
 
 Instead assess:
 
-* whether the current architecture supports them
-* whether any architectural risks should be addressed before starting them
+- whether the current architecture supports them
+- whether any architectural risks should be addressed before starting them
 
 ---
 
@@ -139,9 +139,9 @@ Assume this repository were open-sourced today.
 
 Evaluate:
 
-* whether the privacy claims appear credible
-* whether the implementation appears trustworthy
-* what questions a skeptical reviewer would ask
+- whether the privacy claims appear credible
+- whether the implementation appears trustworthy
+- what questions a skeptical reviewer would ask
 
 Focus on realistic concerns.
 
@@ -151,9 +151,9 @@ Focus on realistic concerns.
 
 Recommend one of the following:
 
-* Proceed directly to Metadata Removal.
-* Address specific Should Fix items first.
-* Address specific Must Fix items first.
+- Proceed directly to Metadata Removal.
+- Address specific Should Fix items first.
+- Address specific Must Fix items first.
 
 Explain the reasoning.
 
@@ -163,9 +163,9 @@ Explain the reasoning.
 
 If you identify issues, classify them as:
 
-* Must Fix
-* Should Fix
-* Nice to Have
+- Must Fix
+- Should Fix
+- Nice to Have
 
 Do not inflate severity.
 

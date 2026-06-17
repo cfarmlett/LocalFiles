@@ -12,6 +12,7 @@ import {
   type MergeFileItem,
   type MergeResult,
 } from "./mergeWorkflow";
+import { createPdfObjectUrl } from "./pdfObjectUrl";
 
 export type MergePdfPageProps = Readonly<{
   adapter?: PdfAdapter;
@@ -36,13 +37,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
       return undefined;
     }
 
-    const pdfBytes = new ArrayBuffer(mergeResult.bytes.byteLength);
-    new Uint8Array(pdfBytes).set(mergeResult.bytes);
-
-    const blob = new Blob([pdfBytes], {
-      type: "application/pdf",
-    });
-    const objectUrl = URL.createObjectURL(blob);
+    const objectUrl = createPdfObjectUrl(mergeResult.bytes);
     setDownloadUrl(objectUrl);
 
     return () => URL.revokeObjectURL(objectUrl);
