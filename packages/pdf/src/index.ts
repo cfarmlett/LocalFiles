@@ -1,4 +1,4 @@
-import { PDFDocument, degrees } from "pdf-lib";
+import { PDFDict, PDFDocument, PDFName, degrees } from "pdf-lib";
 
 export type PdfDocumentMetadata = Readonly<{
   pageCount: number;
@@ -6,6 +6,7 @@ export type PdfDocumentMetadata = Readonly<{
   title?: string;
   author?: string;
   subject?: string;
+  keywords?: string;
   creator?: string;
   producer?: string;
   createdAt?: Date;
@@ -63,6 +64,10 @@ export type PdfDeletePagesRequest = Readonly<{
   pageNumbers: readonly number[];
 }>;
 
+export type PdfRemoveMetadataRequest = Readonly<{
+  document: Uint8Array;
+}>;
+
 export interface PdfAdapter {
   readonly name: string;
 
@@ -72,6 +77,7 @@ export interface PdfAdapter {
   reorder(request: PdfReorderRequest): Promise<Uint8Array>;
   rotate(request: PdfRotateRequest): Promise<Uint8Array>;
   deletePages(request: PdfDeletePagesRequest): Promise<Uint8Array>;
+  removeMetadata(request: PdfRemoveMetadataRequest): Promise<Uint8Array>;
 }
 
 export class LocalPdfAdapter implements PdfAdapter {
@@ -89,6 +95,7 @@ export class LocalPdfAdapter implements PdfAdapter {
       title: pdfDocument.getTitle() ?? undefined,
       author: pdfDocument.getAuthor() ?? undefined,
       subject: pdfDocument.getSubject() ?? undefined,
+      keywords: pdfDocument.getKeywords() ?? undefined,
       creator: pdfDocument.getCreator() ?? undefined,
       producer: pdfDocument.getProducer() ?? undefined,
       createdAt: pdfDocument.getCreationDate() ?? undefined,
@@ -204,6 +211,16 @@ export class LocalPdfAdapter implements PdfAdapter {
 
     return outputDocument.save();
   }
+
+  async removeMetadata(request: PdfRemoveMetadataRequest): Promise<Uint8Array> {
+    assertRemoveMetadataRequest(request);
+    assertDocumentBytes(request.document);
+
+    const pdfDocument = await loadPdfDocument(request.document);
+    removeStandardInfoMetadata(pdfDocument);
+
+    return pdfDocument.save();
+  }
 }
 
 export class StubLocalPdfAdapter implements PdfAdapter {
@@ -243,6 +260,12 @@ export class StubLocalPdfAdapter implements PdfAdapter {
     assertDeletePagesRequest(request);
     assertDocumentBytes(request.document);
     throw this.unsupported("Deleting PDF pages is not implemented yet.");
+  }
+
+  async removeMetadata(request: PdfRemoveMetadataRequest): Promise<Uint8Array> {
+    assertRemoveMetadataRequest(request);
+    assertDocumentBytes(request.document);
+    throw this.unsupported("Removing PDF metadata is not implemented yet.");
   }
 
   private assertSplitRequest(request: PdfSplitRequest): void {
@@ -327,6 +350,40 @@ function assertDeletePagesRequest(request: PdfDeletePagesRequest): void {
       "PDF delete pages request must be an object.",
     );
   }
+}
+
+function assertRemoveMetadataRequest(request: PdfRemoveMetadataRequest): void {
+  if (!isRecord(request)) {
+    throw new PdfProcessingError(
+      "invalid-document",
+      "PDF remove metadata request must be an object.",
+    );
+  }
+}
+
+function removeStandardInfoMetadata(pdfDocument: PDFDocument): void {
+  const infoRef = pdfDocument.context.trailerInfo.Info;
+
+  if (infoRef === undefined) {
+    return;
+  }
+
+  const info = pdfDocument.context.lookup(infoRef);
+
+  if (!(info instanceof PDFDict)) {
+    return;
+  }
+
+  [
+    "Title",
+    "Author",
+    "Subject",
+    "Keywords",
+    "Creator",
+    "Producer",
+    "CreationDate",
+    "ModDate",
+  ].forEach((key) => info.delete(PDFName.of(key)));
 }
 
 function assertPagesToDelete(
@@ -505,6 +562,7 @@ async function loadPdfDocument(document: Uint8Array): Promise<PDFDocument> {
   try {
     return await PDFDocument.load(document, {
       ignoreEncryption: false,
+      updateMetadata: false,
     });
   } catch (error) {
     if (isLikelyEncryptedPdfError(error)) {

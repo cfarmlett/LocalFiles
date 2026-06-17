@@ -12,6 +12,7 @@ describe("App shell", () => {
       "Reorder Pages",
       "Rotate Pages",
       "Delete Pages",
+      "Remove Metadata",
       "Redact PDF",
       "Privacy",
     ]);
@@ -27,6 +28,7 @@ describe("App shell", () => {
     expect(markup).toContain("Reorder Pages");
     expect(markup).toContain("Rotate Pages");
     expect(markup).toContain("Delete Pages");
+    expect(markup).toContain("Remove Metadata");
     expect(markup).toContain("Redaction is high risk");
   });
 });

@@ -37,6 +37,7 @@ function createAdapter(): PdfAdapter {
     reorder: vi.fn(),
     rotate: vi.fn(),
     deletePages: vi.fn(async () => new Uint8Array([9, 8, 7])),
+    removeMetadata: vi.fn(),
   };
 }
 

@@ -4,6 +4,7 @@ import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
 
 import { DeletePagesPage } from "./DeletePagesPage";
 import { MergePdfPage } from "./MergePdfPage";
+import { MetadataRemovalPage } from "./MetadataRemovalPage";
 import { ReorderPagesPage } from "./ReorderPagesPage";
 import { RotatePagesPage } from "./RotatePagesPage";
 import { SplitPdfPage } from "./SplitPdfPage";
@@ -16,6 +17,7 @@ type SectionId =
   | "reorder"
   | "rotate"
   | "delete"
+  | "metadata"
   | "redact"
   | "privacy";
 
@@ -31,6 +33,7 @@ export const appSections: readonly AppSection[] = [
   { id: "reorder", label: "Reorder Pages" },
   { id: "rotate", label: "Rotate Pages" },
   { id: "delete", label: "Delete Pages" },
+  { id: "metadata", label: "Remove Metadata" },
   { id: "redact", label: "Redact PDF" },
   { id: "privacy", label: "Privacy" },
 ];
@@ -104,6 +107,10 @@ export function App() {
 
       <Section id="delete" title="Delete Pages">
         <DeletePagesPage />
+      </Section>
+
+      <Section id="metadata" title="Remove Metadata">
+        <MetadataRemovalPage />
       </Section>
 
       <Section id="redact" title="Redact PDF">

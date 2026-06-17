@@ -5,6 +5,8 @@ const onePagePdf =
   "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDI2Nwo+PgpzdHJlYW0KeJzVkslqwzAQhu96ijm2l2gsa3MxhtTLpRRC6KmhBxGLYChR8ALt23dkpS09lJ6L+NEy32j7JwMEAVJCDsaCBJULKEvGn94vHvjOnfzE+MPQT3CgKMIeXhivw3KeIWNVxb7Z2s3uNZxYSoIswp/Ebgz9cvQjlF3bdYgGEbUkaUTRUF+TCpKgOcWEpTHJyKtozeSI+ZZiXZI2KSfGV1Zd81vqidWRaRIrbZp/nRvPatMe4q/7FBXjj6Fv3OzhprkTKDTqTKOSVuLzLX3H6N0c/u/j1vsP4fzrC3/4HO2NJo8+1sDqMt/7KSzjkWwnror/5fvB3Yc3qhqkpgq1ERaszDa2oAoi5AOeoo8rCmVuZHN0cmVhbQplbmRvYmoKCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM0Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDcgXQo+PgpzdHJlYW0KeJwVxDEOACAIBLAext0v+3IIHYructmy1XbikXwGQ54CtQplbmRzdHJlYW0KZW5kb2JqCgpzdGFydHhyZWYKMzg1CiUlRU9G";
 const twoPagePdf =
   "JVBERi0xLjcKJYGBgYEKCjYgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA1Ci9GaXJzdCAyNgovTGVuZ3RoIDI3Ngo+PgpzdHJlYW0KeJzVkk1LxDAQhu/5FXPUy2aSJmkipaD9uIiwLJ4UD2EbloJspB+g/97JZlU8iCcPEt6k6TyTr3cEIEjQCAVYBQp0YUGDEQ6qivH7t5cAfOsPYWb8dhxmeCQGYUdM6p8Yb+J6XECyumZfGY1f/HM8sJwKIsEfxHaKw7oPE1R91/eIJSIaRTKIsqWxITmSpDnFpKVvUqnOon9lgVhcU6zPMmXOSfETq8/5HY3EmsS0mVU2zz/3TXt1eQ3523lczfhdHFq/BLhoryRKg0YY1MoqfLik55iCX+L/vdzp/GM8/njDbz4ne5PJU6AayC7zXZjjOu3JduLq9F5hGP1NfKXaQWra6Y20VG1iYx1V0F8s+A644KZgCmVuZHN0cmVhbQplbmRvYmoKCjcgMCBvYmoKPDwKL1NpemUgOAovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM2Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDggXQo+PgpzdHJlYW0KeJwVxLENACAMAzCnIGbu5umiejC6y2HKVNOadlySxwdPXALOCmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgozOTQKJSVFT0Y=";
+const metadataPdf =
+  "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDI2Ngo+PgpzdHJlYW0KeJxlkdFqgzAUhu/zFOcJmhMTjYIIm9WbMhjd7sYuXBs6S2mGRra+/U6aqIwhP8Fz/v87JyoAIQGlQILOQYFICyhLxl9vXwb4c3cyI+O7/jjCG1kQ9vDOeG2nqwPBqoqt3rpz3cWeWAiB8Oa/Dt/w7cH49L3P92a003CgAPnIzZ/Mse8e7Q/NQ3rSIt0kOeRKbPKCZs/A3l0MlG3TtohKImZ0Zg0pIxUkRUpDTatYE6QaMUHKNCGjo09Lmv0wuU87LNg6YuUaVWqtaRlQ6YLwOMK8TB9nc3ALZxv7KnLiOb/fGUlcdxvXyuaZxNuZ27cd6BdEoKaATsKdZuN8Dw/L/i1e+e/2CwBucYUKZW5kc3RyZWFtCmVuZG9iagoKNiAwIG9iago8PAovU2l6ZSA3Ci9Sb290IDIgMCBSCi9JbmZvIDQgMCBSCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9UeXBlIC9YUmVmCi9MZW5ndGggMzQKL1cgWyAxIDIgMiBdCi9JbmRleCBbIDAgNyBdCj4+CnN0cmVhbQp4nBXEMQ4AIAgEsB7G3Sf7cwgdiu5y2bLVduKRfAZDmwK0CmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgozODQKJSVFT0Y=";
 
 function pdfBuffer(base64: string): Buffer {
   return Buffer.from(base64, "base64");
@@ -248,6 +250,45 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .getByRole("button", { name: "Restore page 1" })
     .click();
   await expect(page.getByRole("link", { name: "Download PDF" })).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Remove Metadata" }).click();
+  await expect(
+    page.getByText("Current section: Remove Metadata"),
+  ).toBeVisible();
+
+  const metadataFileInput = page.locator("#metadata-file-input");
+
+  await metadataFileInput.setInputFiles({
+    name: "metadata-source.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(metadataPdf),
+  });
+
+  await expect(
+    page.locator("#metadata").getByText("metadata-source.pdf, 1 page."),
+  ).toBeVisible();
+  await expect(page.locator("#metadata").getByText("Title")).toBeVisible();
+  await expect(
+    page.locator("#metadata").getByText("Confidential Notes"),
+  ).toBeVisible();
+  await expect(page.locator("#metadata").getByText("Author")).toBeVisible();
+  await expect(
+    page.locator("#metadata").getByText("LocalDocs Test"),
+  ).toBeVisible();
+
+  const metadataDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Remove Metadata" }).click();
+  await page.getByRole("link", { name: "Download cleaned PDF" }).click();
+  const metadataDownload = await metadataDownloadPromise;
+  const metadataDownloadPath = await metadataDownload.path();
+
+  expect(metadataDownload.suggestedFilename()).toBe(
+    "metadata-source-metadata-removed.pdf",
+  );
+  expect(metadataDownloadPath).not.toBeNull();
+  expect(
+    (await readFile(metadataDownloadPath ?? "")).subarray(0, 5).toString(),
+  ).toBe("%PDF-");
 
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();

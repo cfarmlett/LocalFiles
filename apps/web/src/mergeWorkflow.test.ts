@@ -35,6 +35,7 @@ function createAdapter(): PdfAdapter {
     reorder: vi.fn(),
     rotate: vi.fn(),
     deletePages: vi.fn(),
+    removeMetadata: vi.fn(),
   };
 }
 

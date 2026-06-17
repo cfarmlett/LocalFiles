@@ -29,6 +29,22 @@ async function createPdfWithPageSizes(
   return document.save();
 }
 
+async function createPdfWithMetadata(): Promise<Uint8Array> {
+  const document = await PDFDocument.create({ updateMetadata: false });
+  document.addPage([200, 300]);
+  document.addPage([400, 500]).setRotation(degrees(90));
+  document.setTitle("Private Title");
+  document.setAuthor("Private Author");
+  document.setSubject("Private Subject");
+  document.setKeywords(["private", "local"]);
+  document.setCreator("Private Creator");
+  document.setProducer("Private Producer");
+  document.setCreationDate(new Date("2025-01-02T03:04:05.000Z"));
+  document.setModificationDate(new Date("2025-02-03T04:05:06.000Z"));
+
+  return document.save();
+}
+
 async function readPageSizes(
   documentBytes: Uint8Array,
 ): Promise<readonly (readonly [number, number])[]> {
@@ -58,6 +74,27 @@ describe("LocalPdfAdapter", () => {
 
     expect(metadata.pageCount).toBe(2);
     expect(metadata.pageRotations).toEqual([0, 0]);
+  });
+
+  it("does not add metadata while reading documents without metadata", async () => {
+    const document = await PDFDocument.create({ updateMetadata: false });
+    document.addPage();
+
+    const adapter = new LocalPdfAdapter();
+    const metadata = await adapter.readMetadata(await document.save());
+
+    expect(metadata).toMatchObject({
+      pageCount: 1,
+      pageRotations: [0],
+    });
+    expect(metadata.title).toBeUndefined();
+    expect(metadata.author).toBeUndefined();
+    expect(metadata.subject).toBeUndefined();
+    expect(metadata.keywords).toBeUndefined();
+    expect(metadata.creator).toBeUndefined();
+    expect(metadata.producer).toBeUndefined();
+    expect(metadata.createdAt).toBeUndefined();
+    expect(metadata.modifiedAt).toBeUndefined();
   });
 
   it("reads existing page rotations in metadata", async () => {
@@ -195,6 +232,31 @@ describe("LocalPdfAdapter", () => {
     ]);
   });
 
+  it("removes standard PDF metadata while preserving pages", async () => {
+    const adapter = new LocalPdfAdapter();
+    const output = await adapter.removeMetadata({
+      document: await createPdfWithMetadata(),
+    });
+    const metadata = await adapter.readMetadata(output);
+
+    expect(metadata).toMatchObject({
+      pageCount: 2,
+      pageRotations: [0, 90],
+    });
+    expect(metadata.title).toBeUndefined();
+    expect(metadata.author).toBeUndefined();
+    expect(metadata.subject).toBeUndefined();
+    expect(metadata.keywords).toBeUndefined();
+    expect(metadata.creator).toBeUndefined();
+    expect(metadata.producer).toBeUndefined();
+    expect(metadata.createdAt).toBeUndefined();
+    expect(metadata.modifiedAt).toBeUndefined();
+    await expect(readPageSizes(output)).resolves.toEqual([
+      [200, 300],
+      [400, 500],
+    ]);
+  });
+
   it("rejects delete requests that remove every page", async () => {
     const adapter = new LocalPdfAdapter();
 
@@ -285,6 +347,7 @@ describe("StubLocalPdfAdapter", () => {
     expect(typeof adapter.reorder).toBe("function");
     expect(typeof adapter.rotate).toBe("function");
     expect(typeof adapter.deletePages).toBe("function");
+    expect(typeof adapter.removeMetadata).toBe("function");
   });
 
   it("exposes a metadata shape for future adapters", () => {
@@ -437,6 +500,28 @@ describe("StubLocalPdfAdapter", () => {
     ).rejects.toMatchObject({
       code: "unsupported-operation",
       message: "Deleting PDF pages is not implemented yet.",
+    });
+  });
+
+  it("validates remove metadata inputs before reporting unsupported processing", async () => {
+    const adapter = new StubLocalPdfAdapter();
+
+    await expect(
+      adapter.removeMetadata(
+        null as unknown as Parameters<PdfAdapter["removeMetadata"]>[0],
+      ),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "PDF remove metadata request must be an object.",
+    });
+
+    await expect(
+      adapter.removeMetadata({
+        document: await createPdf(1),
+      }),
+    ).rejects.toMatchObject({
+      code: "unsupported-operation",
+      message: "Removing PDF metadata is not implemented yet.",
     });
   });
 });
