@@ -10,6 +10,7 @@ describe("App shell", () => {
       "Split PDF",
       "Merge PDF",
       "Reorder Pages",
+      "Rotate Pages",
       "Redact PDF",
       "Privacy",
     ]);
@@ -23,6 +24,7 @@ describe("App shell", () => {
     expect(markup).toContain("No backend, no accounts, no analytics");
     expect(markup).toContain("Choose one PDF or drop it here");
     expect(markup).toContain("Reorder Pages");
+    expect(markup).toContain("Rotate Pages");
     expect(markup).toContain("Redaction is high risk");
   });
 });

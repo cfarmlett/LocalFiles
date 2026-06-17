@@ -4,10 +4,18 @@ import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
 
 import { MergePdfPage } from "./MergePdfPage";
 import { ReorderPagesPage } from "./ReorderPagesPage";
+import { RotatePagesPage } from "./RotatePagesPage";
 import { SplitPdfPage } from "./SplitPdfPage";
 import "./styles.css";
 
-type SectionId = "home" | "split" | "merge" | "reorder" | "redact" | "privacy";
+type SectionId =
+  | "home"
+  | "split"
+  | "merge"
+  | "reorder"
+  | "rotate"
+  | "redact"
+  | "privacy";
 
 type AppSection = Readonly<{
   id: SectionId;
@@ -19,6 +27,7 @@ export const appSections: readonly AppSection[] = [
   { id: "split", label: "Split PDF" },
   { id: "merge", label: "Merge PDF" },
   { id: "reorder", label: "Reorder Pages" },
+  { id: "rotate", label: "Rotate Pages" },
   { id: "redact", label: "Redact PDF" },
   { id: "privacy", label: "Privacy" },
 ];
@@ -84,6 +93,10 @@ export function App() {
 
       <Section id="reorder" title="Reorder Pages">
         <ReorderPagesPage />
+      </Section>
+
+      <Section id="rotate" title="Rotate Pages">
+        <RotatePagesPage />
       </Section>
 
       <Section id="redact" title="Redact PDF">

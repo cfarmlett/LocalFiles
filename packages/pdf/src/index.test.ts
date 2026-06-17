@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 
 import {
   LocalPdfAdapter,
@@ -41,6 +41,14 @@ async function readPageSizes(
   });
 }
 
+async function readPageRotations(
+  documentBytes: Uint8Array,
+): Promise<readonly number[]> {
+  const document = await PDFDocument.load(documentBytes);
+
+  return document.getPages().map((page) => page.getRotation().angle);
+}
+
 const invalidPdfBytes = new Uint8Array([37, 80, 68, 70, 45]);
 
 describe("LocalPdfAdapter", () => {
@@ -49,6 +57,7 @@ describe("LocalPdfAdapter", () => {
     const metadata = await adapter.readMetadata(await createPdf(2));
 
     expect(metadata.pageCount).toBe(2);
+    expect(metadata.pageRotations).toEqual([0, 0]);
   });
 
   it("merges PDFs in request order", async () => {
@@ -126,6 +135,59 @@ describe("LocalPdfAdapter", () => {
     });
   });
 
+  it("rotates selected PDF pages without reordering pages", async () => {
+    const adapter = new LocalPdfAdapter();
+    const document = await PDFDocument.create();
+    document.addPage([200, 300]);
+    document.addPage([400, 500]).setRotation(degrees(90));
+    document.addPage([600, 700]);
+
+    const rotated = await adapter.rotate({
+      document: await document.save(),
+      rotations: [
+        { pageNumber: 1, rotation: 90 },
+        { pageNumber: 2, rotation: -180 },
+      ],
+    });
+
+    await expect(readPageSizes(rotated)).resolves.toEqual([
+      [200, 300],
+      [400, 500],
+      [600, 700],
+    ]);
+    await expect(readPageRotations(rotated)).resolves.toEqual([90, 180, 0]);
+  });
+
+  it("rejects invalid rotate requests", async () => {
+    const adapter = new LocalPdfAdapter();
+    const document = await createPdf(2);
+
+    await expect(
+      adapter.rotate({
+        document,
+        rotations: [{ pageNumber: 1, rotation: 45 }],
+      }),
+    ).rejects.toMatchObject({
+      code: "invalid-page-range",
+      message:
+        "Page rotations must use unique page numbers and quarter-turn rotations.",
+    });
+
+    await expect(
+      adapter.rotate({
+        document,
+        rotations: [
+          { pageNumber: 1, rotation: 90 },
+          { pageNumber: 1, rotation: 180 },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "invalid-page-range",
+      message:
+        "Page rotations must use unique page numbers and quarter-turn rotations.",
+    });
+  });
+
   it("rejects split ranges outside the document bounds", async () => {
     const adapter = new LocalPdfAdapter();
 
@@ -170,6 +232,7 @@ describe("StubLocalPdfAdapter", () => {
     expect(typeof adapter.split).toBe("function");
     expect(typeof adapter.merge).toBe("function");
     expect(typeof adapter.reorder).toBe("function");
+    expect(typeof adapter.rotate).toBe("function");
   });
 
   it("exposes a metadata shape for future adapters", () => {
@@ -278,6 +341,27 @@ describe("StubLocalPdfAdapter", () => {
     ).rejects.toMatchObject({
       code: "unsupported-operation",
       message: "Reordering PDF pages is not implemented yet.",
+    });
+  });
+
+  it("validates rotate inputs before reporting unsupported processing", async () => {
+    const adapter = new StubLocalPdfAdapter();
+
+    await expect(
+      adapter.rotate(null as unknown as Parameters<PdfAdapter["rotate"]>[0]),
+    ).rejects.toMatchObject({
+      code: "invalid-document",
+      message: "PDF rotate request must be an object.",
+    });
+
+    await expect(
+      adapter.rotate({
+        document: await createPdf(1),
+        rotations: [{ pageNumber: 1, rotation: 90 }],
+      }),
+    ).rejects.toMatchObject({
+      code: "unsupported-operation",
+      message: "Rotating PDF pages is not implemented yet.",
     });
   });
 });

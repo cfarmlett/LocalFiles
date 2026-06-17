@@ -33,6 +33,7 @@ function createAdapter(): PdfAdapter {
     split: vi.fn(),
     merge: vi.fn(async () => new Uint8Array([1, 2, 3])),
     reorder: vi.fn(),
+    rotate: vi.fn(),
   };
 }
 

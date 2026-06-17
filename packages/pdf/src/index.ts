@@ -1,7 +1,8 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 
 export type PdfDocumentMetadata = Readonly<{
   pageCount: number;
+  pageRotations?: readonly number[];
   title?: string;
   author?: string;
   subject?: string;
@@ -47,6 +48,16 @@ export type PdfReorderRequest = Readonly<{
   pageOrder: readonly number[];
 }>;
 
+export type PdfPageRotation = Readonly<{
+  pageNumber: number;
+  rotation: number;
+}>;
+
+export type PdfRotateRequest = Readonly<{
+  document: Uint8Array;
+  rotations: readonly PdfPageRotation[];
+}>;
+
 export interface PdfAdapter {
   readonly name: string;
 
@@ -54,6 +65,7 @@ export interface PdfAdapter {
   split(request: PdfSplitRequest): Promise<readonly Uint8Array[]>;
   merge(request: PdfMergeRequest): Promise<Uint8Array>;
   reorder(request: PdfReorderRequest): Promise<Uint8Array>;
+  rotate(request: PdfRotateRequest): Promise<Uint8Array>;
 }
 
 export class LocalPdfAdapter implements PdfAdapter {
@@ -65,6 +77,9 @@ export class LocalPdfAdapter implements PdfAdapter {
 
     return {
       pageCount: pdfDocument.getPageCount(),
+      pageRotations: pdfDocument
+        .getPages()
+        .map((page) => normalizeRotation(page.getRotation().angle)),
       title: pdfDocument.getTitle() ?? undefined,
       author: pdfDocument.getAuthor() ?? undefined,
       subject: pdfDocument.getSubject() ?? undefined,
@@ -144,6 +159,22 @@ export class LocalPdfAdapter implements PdfAdapter {
 
     return reorderedDocument.save();
   }
+
+  async rotate(request: PdfRotateRequest): Promise<Uint8Array> {
+    assertRotateRequest(request);
+    assertDocumentBytes(request.document);
+
+    const pdfDocument = await loadPdfDocument(request.document);
+    assertPageRotations(request.rotations, pdfDocument.getPageCount());
+
+    request.rotations.forEach((rotation) => {
+      pdfDocument
+        .getPage(rotation.pageNumber - 1)
+        .setRotation(degrees(normalizeRotation(rotation.rotation)));
+    });
+
+    return pdfDocument.save();
+  }
 }
 
 export class StubLocalPdfAdapter implements PdfAdapter {
@@ -171,6 +202,12 @@ export class StubLocalPdfAdapter implements PdfAdapter {
     assertReorderRequest(request);
     assertDocumentBytes(request.document);
     throw this.unsupported("Reordering PDF pages is not implemented yet.");
+  }
+
+  async rotate(request: PdfRotateRequest): Promise<Uint8Array> {
+    assertRotateRequest(request);
+    assertDocumentBytes(request.document);
+    throw this.unsupported("Rotating PDF pages is not implemented yet.");
   }
 
   private assertSplitRequest(request: PdfSplitRequest): void {
@@ -239,6 +276,52 @@ function assertReorderRequest(request: PdfReorderRequest): void {
   }
 }
 
+function assertRotateRequest(request: PdfRotateRequest): void {
+  if (!isRecord(request)) {
+    throw new PdfProcessingError(
+      "invalid-document",
+      "PDF rotate request must be an object.",
+    );
+  }
+}
+
+function assertPageRotations(
+  rotations: readonly PdfPageRotation[],
+  pageCount: number,
+): void {
+  if (!Array.isArray(rotations)) {
+    throw new PdfProcessingError(
+      "invalid-page-range",
+      "Page rotations must be an array.",
+    );
+  }
+
+  const seen = new Set<number>();
+
+  for (const rotation of rotations) {
+    const pageNumber = isRecord(rotation) ? rotation.pageNumber : undefined;
+    const degreesValue = isRecord(rotation) ? rotation.rotation : undefined;
+
+    if (
+      typeof pageNumber !== "number" ||
+      !Number.isInteger(pageNumber) ||
+      pageNumber < 1 ||
+      pageNumber > pageCount ||
+      typeof degreesValue !== "number" ||
+      !Number.isInteger(degreesValue) ||
+      !isQuarterTurnRotation(degreesValue) ||
+      seen.has(pageNumber)
+    ) {
+      throw new PdfProcessingError(
+        "invalid-page-range",
+        "Page rotations must use unique page numbers and quarter-turn rotations.",
+      );
+    }
+
+    seen.add(pageNumber);
+  }
+}
+
 function assertPageOrder(
   pageOrder: readonly number[],
   pageCount: number,
@@ -267,6 +350,14 @@ function assertPageOrder(
 
     seen.add(pageNumber);
   }
+}
+
+function normalizeRotation(rotation: number): number {
+  return ((rotation % 360) + 360) % 360;
+}
+
+function isQuarterTurnRotation(rotation: number): boolean {
+  return rotation % 90 === 0;
 }
 
 function assertSplitRequest(request: PdfSplitRequest): void {

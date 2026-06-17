@@ -36,6 +36,7 @@ function createAdapter(): PdfAdapter {
     ),
     merge: vi.fn(),
     reorder: vi.fn(),
+    rotate: vi.fn(),
   };
 }
 

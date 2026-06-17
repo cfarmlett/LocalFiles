@@ -2,19 +2,19 @@
 
 ## Context
 
-* LocalDocs is a privacy-first, local-only browser PDF tool.
-* Merge PDF, Split PDF, and Reorder Pages are already implemented.
-* This task is product development for Rotate Pages only.
-* Do not implement Delete Pages, Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.
+- LocalDocs is a privacy-first, local-only browser PDF tool.
+- Merge PDF, Split PDF, and Reorder Pages are already implemented.
+- This task is product development for Rotate Pages only.
+- Do not implement Delete Pages, Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.
 
 ## Core Principles
 
-* All processing must happen locally in the browser.
-* No document data may be uploaded, logged, tracked, stored remotely, or sent over the network.
-* Preserve existing package boundaries.
-* The web app must not import pdf-lib directly.
-* PDF implementation details belong in packages/pdf behind the PdfAdapter abstraction.
-* Reuse existing workflow, validation, page-list, and download patterns wherever practical.
+- All processing must happen locally in the browser.
+- No document data may be uploaded, logged, tracked, stored remotely, or sent over the network.
+- Preserve existing package boundaries.
+- The web app must not import pdf-lib directly.
+- PDF implementation details belong in packages/pdf behind the PdfAdapter abstraction.
+- Reuse existing workflow, validation, page-list, and download patterns wherever practical.
 
 ---
 
@@ -24,16 +24,16 @@ Rotate Pages should prove that the page-list pattern established by Reorder Page
 
 Favor:
 
-* reuse of page-list state
-* reuse of page-row UI
-* reuse of output lifecycle management
-* consistency with Reorder Pages
+- reuse of page-list state
+- reuse of page-row UI
+- reuse of output lifecycle management
+- consistency with Reorder Pages
 
 Avoid:
 
-* broad refactors
-* speculative abstractions
-* new dependencies
+- broad refactors
+- speculative abstractions
+- new dependencies
 
 ---
 
@@ -49,11 +49,11 @@ Only page rotation should change.
 
 Do not:
 
-* duplicate pages
-* omit pages
-* reorder pages
-* rasterize pages
-* alter page contents
+- duplicate pages
+- omit pages
+- reorder pages
+- rasterize pages
+- alter page contents
 
 except as necessary to update page rotation.
 
@@ -63,19 +63,19 @@ except as necessary to update page rotation.
 
 ## 1. Navigation / Page
 
-* Add or complete a Rotate Pages route/page.
-* Match the existing application structure and styling.
+- Add or complete a Rotate Pages route/page.
+- Match the existing application structure and styling.
 
 ---
 
 ## 2. File Selection
 
-* Allow selecting exactly one PDF.
-* Support drag-and-drop if consistent with existing tools.
-* Display:
+- Allow selecting exactly one PDF.
+- Support drag-and-drop if consistent with existing tools.
+- Display:
 
-  * filename
-  * page count
+  - filename
+  - page count
 
 ---
 
@@ -85,15 +85,15 @@ Display pages using the established page-list pattern.
 
 Each row should clearly identify:
 
-* page number
-* working rotation state
+- page number
+- working rotation state
 
 Page numbers must remain 1-based.
 
 Existing page rotation handling:
 
-* If existing page rotation can be read through the adapter cleanly, initialize from actual page rotation.
-* Otherwise initialize to 0° and clearly document the limitation.
+- If existing page rotation can be read through the adapter cleanly, initialize from actual page rotation.
+- Otherwise initialize to 0° and clearly document the limitation.
 
 Do not introduce significant complexity solely to support existing page rotation detection.
 
@@ -103,35 +103,35 @@ Do not introduce significant complexity solely to support existing page rotation
 
 Provide:
 
-* Rotate Left (-90°)
-* Rotate Right (+90°)
+- Rotate Left (-90°)
+- Rotate Right (+90°)
 
 Controls should operate on individual pages.
 
 Do not implement:
 
-* Rotate All
-* batch rotation
-* multi-page selection
+- Rotate All
+- batch rotation
+- multi-page selection
 
 in this pass.
 
 Rotation should cycle correctly:
 
-* 0°
-* 90°
-* 180°
-* 270°
-* back to 0°
+- 0°
+- 90°
+- 180°
+- 270°
+- back to 0°
 
 Negative rotations should normalize correctly.
 
 Final rotations should normalize to:
 
-* 0°
-* 90°
-* 180°
-* 270°
+- 0°
+- 90°
+- 180°
+- 270°
 
 ---
 
@@ -139,21 +139,21 @@ Final rotations should normalize to:
 
 Before adding a new PdfAdapter method:
 
-* Inspect the existing adapter surface.
-* Reuse existing capabilities if practical.
-* Add a narrow rotate operation only if it materially improves clarity and maintainability.
+- Inspect the existing adapter surface.
+- Reuse existing capabilities if practical.
+- Add a narrow rotate operation only if it materially improves clarity and maintainability.
 
 Requirements:
 
-* Use PdfAdapter.
-* Keep PDF manipulation inside packages/pdf.
-* Produce one output PDF.
-* Produce a deterministic output filename.
+- Use PdfAdapter.
+- Keep PDF manipulation inside packages/pdf.
+- Produce one output PDF.
+- Produce a deterministic output filename.
 
 Examples:
 
-* document-rotated.pdf
-* original-name-rotated.pdf
+- document-rotated.pdf
+- original-name-rotated.pdf
 
 ---
 
@@ -161,11 +161,11 @@ Examples:
 
 Handle:
 
-* no file selected
-* invalid file
-* corrupted PDF
-* encrypted/password-protected PDF
-* adapter failures
+- no file selected
+- invalid file
+- corrupted PDF
+- encrypted/password-protected PDF
+- adapter failures
 
 Use clear user-facing error messages.
 
@@ -175,17 +175,17 @@ Use clear user-facing error messages.
 
 Avoid stale:
 
-* rotation state
-* outputs
-* download links
-* errors
+- rotation state
+- outputs
+- download links
+- errors
 
 when:
 
-* files change
-* invalid file selection occurs
-* output is regenerated
-* PDF load fails
+- files change
+- invalid file selection occurs
+- output is regenerated
+- PDF load fails
 
 ---
 
@@ -201,14 +201,14 @@ Avoid memory leaks.
 
 Confirm no new:
 
-* fetch calls
-* XMLHttpRequest calls
-* navigator.sendBeacon usage
-* analytics
-* telemetry
-* external assets
-* upload paths
-* server processing
+- fetch calls
+- XMLHttpRequest calls
+- navigator.sendBeacon usage
+- analytics
+- telemetry
+- external assets
+- upload paths
+- server processing
 
 ---
 
@@ -216,44 +216,44 @@ Confirm no new:
 
 ## Unit Tests
 
-* rotate left
-* rotate right
-* rotation wraparound
-* rotation normalization
-* output filename generation
-* adapter success path
-* adapter error path
+- rotate left
+- rotate right
+- rotation wraparound
+- rotation normalization
+- output filename generation
+- adapter success path
+- adapter error path
 
 ## Workflow / Component Tests
 
-* file selection
-* page count display
-* rotation display
-* rotate left
-* rotate right
-* output generation
-* stale-state cleanup
+- file selection
+- page count display
+- rotation display
+- rotate left
+- rotate right
+- output generation
+- stale-state cleanup
 
 ## E2E Tests
 
-* upload/select PDF
-* rotate at least one page
-* generate output PDF
-* download output
-* verify downloaded bytes begin with %PDF-
-* verify no-external-requests assertion still passes
+- upload/select PDF
+- rotate at least one page
+- generate output PDF
+- download output
+- verify downloaded bytes begin with %PDF-
+- verify no-external-requests assertion still passes
 
 ---
 
 # Implementation Notes
 
-* Reuse Reorder Pages patterns wherever practical.
-* Do not implement thumbnails.
-* Do not implement previews.
-* Do not implement drag-and-drop page reordering.
-* Do not implement Rotate All.
-* Do not implement Delete Pages or Extract Pages.
-* Keep implementation simple enough to serve as the reusable page-action pattern for future tools.
+- Reuse Reorder Pages patterns wherever practical.
+- Do not implement thumbnails.
+- Do not implement previews.
+- Do not implement drag-and-drop page reordering.
+- Do not implement Rotate All.
+- Do not implement Delete Pages or Extract Pages.
+- Keep implementation simple enough to serve as the reusable page-action pattern for future tools.
 
 ---
 
@@ -261,12 +261,12 @@ Confirm no new:
 
 Run and fix issues from:
 
-* pnpm format:check
-* pnpm typecheck
-* pnpm lint
-* pnpm test
-* pnpm test:e2e
-* pnpm build
+- pnpm format:check
+- pnpm typecheck
+- pnpm lint
+- pnpm test
+- pnpm test:e2e
+- pnpm build
 
 ---
 

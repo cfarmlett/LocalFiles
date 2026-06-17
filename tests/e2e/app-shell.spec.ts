@@ -140,6 +140,56 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     (await readFile(reorderDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
 
+  await page.getByRole("link", { name: "Rotate Pages" }).click();
+  await expect(page.getByText("Current section: Rotate Pages")).toBeVisible();
+
+  const rotateFileInput = page.locator("#rotate-file-input");
+
+  await rotateFileInput.setInputFiles({
+    name: "rotatable.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(twoPagePdf),
+  });
+
+  await expect(
+    page.locator("#rotate").getByText("rotatable.pdf, 2 pages."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#rotate").getByText("Rotation 0 degrees"),
+  ).toHaveCount(2);
+
+  const rotatePageOneRow = page.locator("#rotate .file-list__item").filter({
+    hasText: "Page 1",
+  });
+  await rotatePageOneRow
+    .getByRole("button", { name: "Rotate page 1 right" })
+    .click();
+  await expect(rotatePageOneRow.getByText("Rotation 90 degrees")).toBeVisible();
+
+  await page.getByRole("button", { name: "Rotate Pages" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download rotated PDF" }),
+  ).toBeVisible();
+
+  await rotatePageOneRow
+    .getByRole("button", { name: "Rotate page 1 left" })
+    .click();
+  await expect(
+    page.getByRole("link", { name: "Download rotated PDF" }),
+  ).toHaveCount(0);
+
+  const rotateDownloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Rotate Pages" }).click();
+  await page.getByRole("link", { name: "Download rotated PDF" }).click();
+  const rotateDownload = await rotateDownloadPromise;
+  const rotateDownloadPath = await rotateDownload.path();
+
+  expect(rotateDownload.suggestedFilename()).toBe("rotatable-rotated.pdf");
+  expect(rotateDownloadPath).not.toBeNull();
+  expect(
+    (await readFile(rotateDownloadPath ?? "")).subarray(0, 5).toString(),
+  ).toBe("%PDF-");
+
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
 
