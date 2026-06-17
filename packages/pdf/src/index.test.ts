@@ -257,6 +257,31 @@ describe("LocalPdfAdapter", () => {
     ]);
   });
 
+  it("handles metadata removal for documents without removable metadata", async () => {
+    const document = await PDFDocument.create({ updateMetadata: false });
+    document.addPage([200, 300]);
+
+    const adapter = new LocalPdfAdapter();
+    const output = await adapter.removeMetadata({
+      document: await document.save(),
+    });
+    const metadata = await adapter.readMetadata(output);
+
+    expect(metadata).toMatchObject({
+      pageCount: 1,
+      pageRotations: [0],
+    });
+    expect(metadata.title).toBeUndefined();
+    expect(metadata.author).toBeUndefined();
+    expect(metadata.subject).toBeUndefined();
+    expect(metadata.keywords).toBeUndefined();
+    expect(metadata.creator).toBeUndefined();
+    expect(metadata.producer).toBeUndefined();
+    expect(metadata.createdAt).toBeUndefined();
+    expect(metadata.modifiedAt).toBeUndefined();
+    await expect(readPageSizes(output)).resolves.toEqual([[200, 300]]);
+  });
+
   it("rejects delete requests that remove every page", async () => {
     const adapter = new LocalPdfAdapter();
 

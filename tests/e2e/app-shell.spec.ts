@@ -290,6 +290,15 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     (await readFile(metadataDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
 
+  await metadataFileInput.setInputFiles({
+    name: "metadata-empty.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(onePagePdf),
+  });
+  await expect(
+    page.getByRole("link", { name: "Download cleaned PDF" }),
+  ).toHaveCount(0);
+
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
 
