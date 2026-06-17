@@ -244,6 +244,11 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     (await readFile(deleteDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
 
+  await deletePageOneRow
+    .getByRole("button", { name: "Restore page 1" })
+    .click();
+  await expect(page.getByRole("link", { name: "Download PDF" })).toHaveCount(0);
+
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
 

@@ -61,6 +61,18 @@ describe("delete page state", () => {
     expect(pages[0].deleted).toBe(false);
   });
 
+  it("keeps state correct after repeated delete and restore actions", () => {
+    const pages = createDefaultDeletePages(2);
+    const marked = markPageDeleted(pages, "page-1");
+    const restored = restorePage(marked, "page-1");
+    const markedAgain = markPageDeleted(restored, "page-1");
+
+    expect(markedAgain).toEqual([
+      { id: "page-1", pageNumber: 1, deleted: true },
+      { id: "page-2", pageNumber: 2, deleted: false },
+    ]);
+  });
+
   it("preserves remaining page order", () => {
     const pages = markPageDeleted(createDefaultDeletePages(4), "page-2");
 

@@ -178,6 +178,7 @@ describe("LocalPdfAdapter", () => {
       [400, 500],
       [600, 700],
       [800, 900],
+      [1000, 1100],
     ] as const;
     const output = await adapter.deletePages({
       document: await createPdfWithPageSizes(pageSizes),
@@ -185,11 +186,12 @@ describe("LocalPdfAdapter", () => {
     });
 
     await expect(adapter.readMetadata(output)).resolves.toMatchObject({
-      pageCount: 2,
+      pageCount: 3,
     });
     await expect(readPageSizes(output)).resolves.toEqual([
       pageSizes[0],
       pageSizes[2],
+      pageSizes[4],
     ]);
   });
 
