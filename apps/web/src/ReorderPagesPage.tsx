@@ -77,6 +77,7 @@ export function ReorderPagesPage({
     const operationToken = asyncOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
+    clearDragState();
     clearOutput();
 
     if (selected.length === 0) {
@@ -220,6 +221,7 @@ export function ReorderPagesPage({
   }
 
   function clearSelection() {
+    clearDragState();
     setFile(undefined);
     setPages([]);
     setOriginalPages([]);
@@ -266,9 +268,17 @@ export function ReorderPagesPage({
         htmlFor="reorder-file-input"
         onDragOver={(event) => {
           event.preventDefault();
+          event.dataTransfer.dropEffect = isFileDrop(event.dataTransfer)
+            ? "copy"
+            : "none";
         }}
         onDrop={(event) => {
           event.preventDefault();
+          if (!isFileDrop(event.dataTransfer)) {
+            clearDragState();
+            return;
+          }
+
           void selectFiles(event.dataTransfer.files);
         }}
       >
@@ -343,7 +353,7 @@ export function ReorderPagesPage({
                 </div>
                 <div className="file-actions">
                   <span
-                    aria-label={`Drag page ${page.pageNumber} to reorder`}
+                    aria-hidden="true"
                     className="drag-handle"
                     draggable
                     onDragStart={(event) => {
@@ -427,5 +437,12 @@ function pageOrdersMatch(
   return (
     left.length === right.length &&
     left.every((page, index) => page.pageNumber === right[index]?.pageNumber)
+  );
+}
+
+function isFileDrop(dataTransfer: DataTransfer): boolean {
+  return (
+    dataTransfer.files.length > 0 ||
+    Array.from(dataTransfer.types).includes("Files")
   );
 }

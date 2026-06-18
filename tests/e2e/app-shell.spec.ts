@@ -56,6 +56,35 @@ async function dragPageBefore(
   }, targetElement);
 }
 
+async function dropPageDragOnReorderDropZone(
+  sourceHandle: Locator,
+  page: Page,
+): Promise<void> {
+  const dropZoneElement = await page
+    .locator("#reorder .drop-zone")
+    .elementHandle();
+
+  expect(dropZoneElement).not.toBeNull();
+
+  await sourceHandle.evaluate((sourceElement, dropTarget) => {
+    if (dropTarget === null) {
+      throw new Error("Drop zone was not available.");
+    }
+
+    const dataTransfer = new DataTransfer();
+    const dragOptions = {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer,
+    };
+
+    sourceElement.dispatchEvent(new DragEvent("dragstart", dragOptions));
+    dropTarget.dispatchEvent(new DragEvent("dragover", dragOptions));
+    dropTarget.dispatchEvent(new DragEvent("drop", dragOptions));
+    sourceElement.dispatchEvent(new DragEvent("dragend", dragOptions));
+  }, dropZoneElement);
+}
+
 async function cancelDrag(sourceHandle: Locator): Promise<void> {
   await sourceHandle.evaluate((sourceElement) => {
     const dataTransfer = new DataTransfer();
@@ -68,6 +97,36 @@ async function cancelDrag(sourceHandle: Locator): Promise<void> {
     sourceElement.dispatchEvent(new DragEvent("dragstart", dragOptions));
     sourceElement.dispatchEvent(new DragEvent("dragend", dragOptions));
   });
+}
+
+async function dropPdfOnReorderDropZone(
+  page: Page,
+  name: string,
+  base64: string,
+): Promise<void> {
+  await page.locator("#reorder .drop-zone").evaluate(
+    (dropZone, fileData) => {
+      const bytes = Uint8Array.from(atob(fileData.base64), (character) =>
+        character.charCodeAt(0),
+      );
+      const file = new File([bytes], fileData.name, {
+        type: "application/pdf",
+      });
+      const dataTransfer = new DataTransfer();
+
+      dataTransfer.items.add(file);
+
+      const dragOptions = {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer,
+      };
+
+      dropZone.dispatchEvent(new DragEvent("dragover", dragOptions));
+      dropZone.dispatchEvent(new DragEvent("drop", dragOptions));
+    },
+    { base64, name },
+  );
 }
 
 test("LocalDocs web shell supports local-first PDF workflows", async ({
@@ -290,24 +349,24 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .allTextContents();
   expect(resetPageNames).toEqual(["Page 1", "Page 2"]);
 
-  await reorderFileInput.setInputFiles({
-    name: "drag-source.pdf",
-    mimeType: "application/pdf",
-    buffer: pdfBuffer(threePagePdf),
-  });
+  await dropPdfOnReorderDropZone(page, "drag-source.pdf", threePagePdf);
   await expect(
     page.locator("#reorder").getByText("drag-source.pdf, 3 pages."),
   ).toBeVisible();
   await expect(
     page.locator("#reorder").getByText("Page Order (3 Pages)"),
   ).toBeVisible();
-  await expect(dragHandle(page, "Page 1")).toHaveAttribute(
-    "aria-label",
-    "Drag page 1 to reorder",
-  );
   await expect(
     page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
   ).toBeDisabled();
+  await expect(dragHandle(page, "Page 1")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  await expect(dragHandle(page, "Page 1")).toHaveAttribute(
+    "title",
+    "Drag to reorder",
+  );
 
   await page
     .getByRole("button", { name: "Reorder Pages", exact: true })
@@ -315,6 +374,16 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
   ).toBeVisible();
+
+  await dropPageDragOnReorderDropZone(dragHandle(page, "Page 1"), page);
+  await expect(
+    page.locator("#reorder").getByText("drag-source.pdf, 3 pages."),
+  ).toBeVisible();
+  expect(await reorderPageNames(page)).toEqual(["Page 1", "Page 2", "Page 3"]);
+  await expect(
+    page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toBeVisible();
+  await expect(page.locator("#reorder .error-list")).toHaveCount(0);
 
   await cancelDrag(dragHandle(page, "Page 1"));
   await expect(
