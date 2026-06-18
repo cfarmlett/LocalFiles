@@ -191,6 +191,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     }
 
     const operationToken = zipOperations.current.begin();
+    let objectUrl: string | undefined;
     setIsCreatingZip(true);
     setErrors([]);
 
@@ -206,7 +207,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
       const zipBytes = createZipArchive(createSplitZipEntries(outputs));
       const bytes = new ArrayBuffer(zipBytes.byteLength);
       new Uint8Array(bytes).set(zipBytes);
-      const url = URL.createObjectURL(
+      objectUrl = URL.createObjectURL(
         new Blob([bytes], { type: "application/zip" }),
       );
       const link = document.createElement("a");
@@ -215,10 +216,9 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         return;
       }
 
-      link.href = url;
+      link.href = objectUrl;
       link.download = createSplitZipFilename(file.file.name);
       link.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 0);
     } catch (error) {
       if (zipOperations.current.isCurrent(operationToken)) {
         setErrors([
@@ -228,6 +228,12 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         ]);
       }
     } finally {
+      if (objectUrl !== undefined) {
+        const urlToRevoke = objectUrl;
+
+        window.setTimeout(() => URL.revokeObjectURL(urlToRevoke), 0);
+      }
+
       if (zipOperations.current.isCurrent(operationToken)) {
         setIsCreatingZip(false);
       }

@@ -24,6 +24,8 @@ describe("App shell", () => {
     expect(markup).toContain("LocalDocs.org");
     expect(markup).toContain("Files stay local in the browser.");
     expect(markup).toContain("No backend, no accounts, no analytics");
+    expect(markup).toContain("Remove Metadata. Tools run locally");
+    expect(markup).toContain('class="current-section visually-hidden"');
     expect(markup).toContain("Choose one PDF or drop it here");
     expect(markup).toContain("Reorder Pages");
     expect(markup).toContain("Rotate Pages");

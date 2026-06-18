@@ -200,6 +200,98 @@ async function expectNoStaleZipDownload(
   await expect(page.locator("#split").getByText("ZIP export")).toHaveCount(0);
 }
 
+async function expectZipUrlRevokedAfterLateInvalidation(
+  page: Page,
+): Promise<void> {
+  let downloadCount = 0;
+
+  page.on("download", () => {
+    downloadCount += 1;
+  });
+
+  await page.evaluate(() => {
+    const zipWindow = window as typeof window & {
+      __localDocsNativeCreateObjectUrl?: typeof URL.createObjectURL;
+      __localDocsNativeRevokeObjectUrl?: typeof URL.revokeObjectURL;
+      __localDocsRevokedUrls?: string[];
+    };
+
+    zipWindow.__localDocsNativeCreateObjectUrl = URL.createObjectURL.bind(URL);
+    zipWindow.__localDocsNativeRevokeObjectUrl = URL.revokeObjectURL.bind(URL);
+    zipWindow.__localDocsRevokedUrls = [];
+
+    URL.createObjectURL = ((object: Blob | MediaSource) => {
+      if (object instanceof Blob && object.type === "application/zip") {
+        document
+          .querySelector<HTMLButtonElement>(
+            '#split button[aria-label="Clear Split PDF"]',
+          )
+          ?.click();
+
+        return "blob:stale-split-zip";
+      }
+
+      return zipWindow.__localDocsNativeCreateObjectUrl?.(object) ?? "";
+    }) as typeof URL.createObjectURL;
+
+    URL.revokeObjectURL = ((url: string) => {
+      zipWindow.__localDocsRevokedUrls?.push(url);
+
+      if (url !== "blob:stale-split-zip") {
+        zipWindow.__localDocsNativeRevokeObjectUrl?.(url);
+      }
+    }) as typeof URL.revokeObjectURL;
+  });
+
+  await page
+    .locator("#split")
+    .getByRole("button", { name: "Download ZIP" })
+    .click();
+  await expect(
+    page.locator("#split").getByText("No PDF selected yet."),
+  ).toBeVisible();
+  await page.waitForTimeout(50);
+
+  const revokedUrls = await page.evaluate(() => {
+    const zipWindow = window as typeof window & {
+      __localDocsNativeCreateObjectUrl?: typeof URL.createObjectURL;
+      __localDocsNativeRevokeObjectUrl?: typeof URL.revokeObjectURL;
+      __localDocsRevokedUrls?: string[];
+    };
+    const urls = zipWindow.__localDocsRevokedUrls ?? [];
+
+    if (zipWindow.__localDocsNativeCreateObjectUrl !== undefined) {
+      URL.createObjectURL = zipWindow.__localDocsNativeCreateObjectUrl;
+      delete zipWindow.__localDocsNativeCreateObjectUrl;
+    }
+
+    if (zipWindow.__localDocsNativeRevokeObjectUrl !== undefined) {
+      URL.revokeObjectURL = zipWindow.__localDocsNativeRevokeObjectUrl;
+      delete zipWindow.__localDocsNativeRevokeObjectUrl;
+    }
+
+    delete zipWindow.__localDocsRevokedUrls;
+
+    return urls;
+  });
+
+  expect(downloadCount).toBe(0);
+  expect(revokedUrls).toContain("blob:stale-split-zip");
+}
+
+async function expectCurrentSection(
+  page: Page,
+  sectionName: string,
+): Promise<void> {
+  const currentSection = page.getByText(`Current section: ${sectionName}`);
+
+  await expect(currentSection).toHaveText(`Current section: ${sectionName}`);
+  await expect(currentSection).toHaveClass(/visually-hidden/);
+  await expect(currentSection).toHaveCSS("position", "absolute");
+  await expect(currentSection).toHaveCSS("width", "1px");
+  await expect(currentSection).toHaveCSS("height", "1px");
+}
+
 test("LocalDocs web shell supports local-first PDF workflows", async ({
   page,
 }) => {
@@ -226,7 +318,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toBeVisible();
 
   await page.getByRole("link", { name: "Split PDF" }).click();
-  await expect(page.getByText("Current section: Split PDF")).toBeVisible();
+  await expectCurrentSection(page, "Split PDF");
 
   const splitFileInput = page.locator("#split-file-input");
   const generateTwoPageSplit = async () => {
@@ -284,6 +376,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     "split-source-split.zip",
   );
 
+  await expectZipUrlRevokedAfterLateInvalidation(page);
+
+  await generateTwoPageSplit();
   await expectNoStaleZipDownload(page, async () => {
     await page
       .locator("#split")
@@ -400,7 +495,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toBeChecked();
 
   await page.getByRole("link", { name: "Reorder Pages" }).click();
-  await expect(page.getByText("Current section: Reorder Pages")).toBeVisible();
+  await expectCurrentSection(page, "Reorder Pages");
 
   const reorderFileInput = page.locator("#reorder-file-input");
 
@@ -637,7 +732,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   );
 
   await page.getByRole("link", { name: "Rotate Pages" }).click();
-  await expect(page.getByText("Current section: Rotate Pages")).toBeVisible();
+  await expectCurrentSection(page, "Rotate Pages");
 
   const rotateFileInput = page.locator("#rotate-file-input");
 
@@ -718,7 +813,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toHaveCount(0);
 
   await page.getByRole("link", { name: "Delete Pages" }).click();
-  await expect(page.getByText("Current section: Delete Pages")).toBeVisible();
+  await expectCurrentSection(page, "Delete Pages");
 
   const deleteFileInput = page.locator("#delete-file-input");
 
@@ -735,18 +830,18 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     2,
   );
   await expect(
-    page.locator("#delete").getByText("Pages Marked for Deletion (2 Pages)"),
+    page.locator("#delete").getByText("Select Pages to Delete (2 Pages)"),
   ).toBeVisible();
   await page
     .locator("#delete")
-    .getByText("Pages Marked for Deletion (2 Pages)")
+    .getByText("Select Pages to Delete (2 Pages)")
     .click();
   await expect(
     page.locator("#delete").getByRole("button", { name: "Delete page 1" }),
   ).toHaveCount(0);
   await page
     .locator("#delete")
-    .getByText("Pages Marked for Deletion (2 Pages)")
+    .getByText("Select Pages to Delete (2 Pages)")
     .click();
   await expect(
     page.locator("#delete").getByRole("button", { name: "Delete page 1" }),
@@ -809,9 +904,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   );
 
   await page.getByRole("link", { name: "Remove Metadata" }).click();
-  await expect(
-    page.getByText("Current section: Remove Metadata"),
-  ).toBeVisible();
+  await expectCurrentSection(page, "Remove Metadata");
 
   const metadataFileInput = page.locator("#metadata-file-input");
 
@@ -918,7 +1011,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(page.locator("#metadata").getByText("Title")).toHaveCount(0);
 
   await page.getByRole("link", { name: "Merge PDF" }).click();
-  await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
+  await expectCurrentSection(page, "Merge PDF");
 
   const fileInput = page.locator("#merge-file-input");
 

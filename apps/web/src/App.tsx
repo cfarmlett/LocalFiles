@@ -74,9 +74,9 @@ export function App() {
           <p className="eyebrow">Local-first document tools</p>
           <h1>PDF utilities that stay on your device.</h1>
           <p className="hero-copy">
-            LocalDocs.org is a browser app for common PDF workflows. Merge,
-            split, reorder, rotate, delete, and metadata removal tools run
-            locally in your browser by default.
+            LocalDocs.org is a browser app for common PDF workflows: Merge PDF,
+            Split PDF, Reorder Pages, Rotate Pages, Delete Pages, and Remove
+            Metadata. Tools run locally in your browser by default.
           </p>
         </div>
         <PrivacyNote>
@@ -85,7 +85,7 @@ export function App() {
         </PrivacyNote>
       </div>
 
-      <div className="current-section" aria-live="polite">
+      <div className="current-section visually-hidden" aria-live="polite">
         Current section: {sectionTitle}
       </div>
 

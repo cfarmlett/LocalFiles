@@ -257,7 +257,7 @@ export function DeletePagesPage({
         <CollapsibleSection
           isOpen={isPageListExpanded}
           onToggle={setIsPageListExpanded}
-          title={`Pages Marked for Deletion (${pages.length} Page${pages.length === 1 ? "" : "s"})`}
+          title={`Select Pages to Delete (${pages.length} Page${pages.length === 1 ? "" : "s"})`}
         >
           <ol className="file-list" aria-label="Pages with deletion settings">
             {pages.map((page) => (
