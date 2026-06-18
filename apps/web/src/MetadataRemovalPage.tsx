@@ -31,6 +31,12 @@ export function MetadataRemovalPage({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canRemove = file !== undefined && !isReading && !isRemoving;
+  const canClear =
+    file !== undefined ||
+    errors.length > 0 ||
+    isReading ||
+    isRemoving ||
+    removalResult !== undefined;
   const metadataFields = useMemo(
     () => (file === undefined ? [] : getMetadataDisplayFields(file.metadata)),
     [file],
@@ -128,6 +134,15 @@ export function MetadataRemovalPage({
     setRemovalResult(undefined);
   }
 
+  function clearWorkflow() {
+    clearSelection();
+    setErrors([]);
+    setIsReading(false);
+    setIsRemoving(false);
+    clearOutput();
+    resetInput();
+  }
+
   function resetInput() {
     if (inputRef.current !== null) {
       inputRef.current.value = "";
@@ -215,6 +230,9 @@ export function MetadataRemovalPage({
           type="button"
         >
           {isRemoving ? "Removing..." : "Remove Metadata"}
+        </button>
+        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+          Clear
         </button>
       </div>
 

@@ -43,6 +43,13 @@ export function DeletePagesPage({
     !isDeleteAllBlocked &&
     !isReading &&
     !isDeleting;
+  const canClear =
+    file !== undefined ||
+    pages.length > 0 ||
+    errors.length > 0 ||
+    isReading ||
+    isDeleting ||
+    deleteResult !== undefined;
   const exportResults = useMemo<readonly ExportResult[]>(
     () =>
       deleteResult === undefined
@@ -145,6 +152,15 @@ export function DeletePagesPage({
 
   function clearOutput() {
     setDeleteResult(undefined);
+  }
+
+  function clearWorkflow() {
+    clearSelection();
+    setErrors([]);
+    setIsReading(false);
+    setIsDeleting(false);
+    clearOutput();
+    resetInput();
   }
 
   function resetInput() {
@@ -253,6 +269,9 @@ export function DeletePagesPage({
           type="button"
         >
           {isDeleting ? "Deleting..." : "Delete Pages"}
+        </button>
+        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+          Clear
         </button>
       </div>
 

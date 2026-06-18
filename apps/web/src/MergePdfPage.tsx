@@ -30,6 +30,12 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canMerge = files.length > 0 && !isReading && !isMerging;
+  const canClear =
+    files.length > 0 ||
+    errors.length > 0 ||
+    isReading ||
+    isMerging ||
+    mergeResult !== undefined;
   const exportResults = useMemo<readonly ExportResult[]>(
     () =>
       mergeResult === undefined
@@ -89,9 +95,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     setErrors(nextErrors);
     setIsReading(false);
 
-    if (inputRef.current !== null) {
-      inputRef.current.value = "";
-    }
+    resetInput();
   }
 
   async function mergeSelectedFiles() {
@@ -105,6 +109,21 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
       setErrors([getPdfErrorMessage(error)]);
     } finally {
       setIsMerging(false);
+    }
+  }
+
+  function clearWorkflow() {
+    setFiles([]);
+    setErrors([]);
+    setIsReading(false);
+    setIsMerging(false);
+    setMergeResult(undefined);
+    resetInput();
+  }
+
+  function resetInput() {
+    if (inputRef.current !== null) {
+      inputRef.current.value = "";
     }
   }
 
@@ -227,6 +246,9 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
       <div className="merge-actions">
         <button disabled={!canMerge} onClick={mergeSelectedFiles} type="button">
           {isMerging ? "Merging..." : "Merge PDFs"}
+        </button>
+        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+          Clear
         </button>
       </div>
 

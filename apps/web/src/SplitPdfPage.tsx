@@ -32,6 +32,15 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canSplit = file !== undefined && !isReading && !isSplitting;
+  const canClear =
+    file !== undefined ||
+    mode !== "every-page" ||
+    chunkSize !== "1" ||
+    customRanges !== "" ||
+    errors.length > 0 ||
+    isReading ||
+    isSplitting ||
+    outputs.length > 0;
   const exportResults = useMemo(
     () =>
       outputs.map<ExportResult>((output) => ({
@@ -126,6 +135,18 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
 
   function clearOutputs() {
     setOutputs([]);
+  }
+
+  function clearWorkflow() {
+    setFile(undefined);
+    setMode("every-page");
+    setChunkSize("1");
+    setCustomRanges("");
+    setErrors([]);
+    setIsReading(false);
+    setIsSplitting(false);
+    clearOutputs();
+    resetInput();
   }
 
   function resetInput() {
@@ -257,6 +278,9 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
       <div className="merge-actions">
         <button disabled={!canSplit} onClick={splitSelectedFile} type="button">
           {isSplitting ? "Splitting..." : "Split PDF"}
+        </button>
+        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+          Clear
         </button>
       </div>
 

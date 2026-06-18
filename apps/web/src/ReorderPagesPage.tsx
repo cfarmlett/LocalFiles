@@ -34,6 +34,13 @@ export function ReorderPagesPage({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canReorder = file !== undefined && !isReading && !isReordering;
+  const canClear =
+    file !== undefined ||
+    pages.length > 0 ||
+    errors.length > 0 ||
+    isReading ||
+    isReordering ||
+    reorderResult !== undefined;
   const exportResults = useMemo<readonly ExportResult[]>(
     () =>
       reorderResult === undefined
@@ -130,6 +137,15 @@ export function ReorderPagesPage({
 
   function clearOutput() {
     setReorderResult(undefined);
+  }
+
+  function clearWorkflow() {
+    clearSelection();
+    setErrors([]);
+    setIsReading(false);
+    setIsReordering(false);
+    clearOutput();
+    resetInput();
   }
 
   function resetInput() {
@@ -229,6 +245,9 @@ export function ReorderPagesPage({
           type="button"
         >
           {isReordering ? "Reordering..." : "Reorder Pages"}
+        </button>
+        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+          Clear
         </button>
       </div>
 

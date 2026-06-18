@@ -79,6 +79,19 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.getByText("Enter a positive whole number of pages per file."),
   ).toBeVisible();
+  await page.locator("#split").getByRole("button", { name: "Clear" }).click();
+  await expect(
+    page.locator("#split").getByText("No PDF selected yet."),
+  ).toBeVisible();
+  await expect(page.locator("#split").getByText("page-1.pdf")).toHaveCount(0);
+  await expect(
+    page
+      .locator("#split")
+      .getByText("Enter a positive whole number of pages per file."),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#split").getByRole("radio", { name: "Every Page" }),
+  ).toBeChecked();
 
   await page.getByRole("link", { name: "Reorder Pages" }).click();
   await expect(page.getByText("Current section: Reorder Pages")).toBeVisible();
@@ -147,6 +160,16 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   expect(
     (await readFile(reorderDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
+  await page.locator("#reorder").getByRole("button", { name: "Clear" }).click();
+  await expect(
+    page.locator("#reorder").getByText("No PDF selected yet."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
+  await expect(page.locator("#reorder strong").getByText("Page 1")).toHaveCount(
+    0,
+  );
 
   await page.getByRole("link", { name: "Rotate Pages" }).click();
   await expect(page.getByText("Current section: Rotate Pages")).toBeVisible();
@@ -200,6 +223,16 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   expect(
     (await readFile(rotateDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
+  await page.locator("#rotate").getByRole("button", { name: "Clear" }).click();
+  await expect(
+    page.locator("#rotate").getByText("No PDF selected yet."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#rotate").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#rotate").getByText("Rotation 0 degrees"),
+  ).toHaveCount(0);
 
   await page.getByRole("link", { name: "Delete Pages" }).click();
   await expect(page.getByText("Current section: Delete Pages")).toBeVisible();
@@ -264,6 +297,13 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#delete").getByRole("link", { name: "Download PDF" }),
   ).toHaveCount(0);
+  await page.locator("#delete").getByRole("button", { name: "Clear" }).click();
+  await expect(
+    page.locator("#delete").getByText("No PDF selected yet."),
+  ).toBeVisible();
+  await expect(page.locator("#delete").getByText("Kept in output")).toHaveCount(
+    0,
+  );
 
   await page.getByRole("link", { name: "Remove Metadata" }).click();
   await expect(
@@ -315,6 +355,14 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#metadata").getByRole("link", { name: "Download PDF" }),
   ).toHaveCount(0);
+  await page
+    .locator("#metadata")
+    .getByRole("button", { name: "Clear" })
+    .click();
+  await expect(
+    page.locator("#metadata").getByText("No PDF selected yet."),
+  ).toBeVisible();
+  await expect(page.locator("#metadata").getByText("Title")).toHaveCount(0);
 
   await page.getByRole("link", { name: "Merge PDF" }).click();
   await expect(page.getByText("Current section: Merge PDF")).toBeVisible();
@@ -396,6 +444,17 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
 
   expect(downloadedBytes.byteLength).toBeGreaterThan(0);
   expect(downloadedBytes.subarray(0, 5).toString()).toBe("%PDF-");
+  await page.locator("#merge").getByRole("button", { name: "Clear" }).click();
+  await expect(
+    page.locator("#merge").getByText("No PDFs selected yet."),
+  ).toBeVisible();
+  await expect(page.locator("#merge").getByText("first.pdf")).toHaveCount(0);
+  await expect(
+    page.locator("#merge").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#merge").getByText("not-a-pdf.txt is not a PDF file."),
+  ).toHaveCount(0);
 
   expect(externalRequests).toEqual([]);
 });

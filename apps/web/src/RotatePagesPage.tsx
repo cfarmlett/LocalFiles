@@ -34,6 +34,13 @@ export function RotatePagesPage({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const canRotate = file !== undefined && !isReading && !isRotating;
+  const canClear =
+    file !== undefined ||
+    pages.length > 0 ||
+    errors.length > 0 ||
+    isReading ||
+    isRotating ||
+    rotateResult !== undefined;
   const exportResults = useMemo<readonly ExportResult[]>(
     () =>
       rotateResult === undefined
@@ -137,6 +144,15 @@ export function RotatePagesPage({
     setRotateResult(undefined);
   }
 
+  function clearWorkflow() {
+    clearSelection();
+    setErrors([]);
+    setIsReading(false);
+    setIsRotating(false);
+    clearOutput();
+    resetInput();
+  }
+
   function resetInput() {
     if (inputRef.current !== null) {
       inputRef.current.value = "";
@@ -232,6 +248,9 @@ export function RotatePagesPage({
           type="button"
         >
           {isRotating ? "Rotating..." : "Rotate Pages"}
+        </button>
+        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+          Clear
         </button>
       </div>
 
