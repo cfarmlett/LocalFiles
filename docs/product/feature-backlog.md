@@ -480,7 +480,7 @@ Review output naming conventions across workflows:
 - Delete Pages
 - Metadata Removal
 - Future Compress workflow
-- Future ZIP export workflow
+- Split ZIP export workflow
 
 Ensure naming patterns are predictable.
 
@@ -586,7 +586,7 @@ Notes:
 
 ## SP-001: ZIP Export for Split PDF
 
-Status: Backlog
+Status: Implemented
 
 Description:
 Add a local ZIP download option when Split PDF produces multiple output files.
@@ -597,9 +597,11 @@ without changing LocalDocs' local-only processing model.
 
 Notes:
 
-- ZIP export is not implemented.
-- Should preserve existing individual PDF downloads.
-- ZIP creation must remain local to the browser.
+- ZIP export is local-only and generated from existing Split outputs.
+- Individual PDF downloads remain available.
+- Single-output Split results do not show ZIP export.
+- ZIP export includes stale-output guards and ZIP32 limit checks.
+- No cloud processing, upload path, telemetry, or new dependency is required.
 
 ---
 

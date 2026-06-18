@@ -7,6 +7,20 @@ export type ZipEntry = Readonly<{
 
 const textEncoder = new TextEncoder();
 const crcTable = createCrcTable();
+const defaultZipLimits = {
+  maxEntryCount: 0xffff,
+  maxFieldLength: 0xffff,
+  maxFieldValue: 0xffffffff,
+};
+
+type ZipLimits = typeof defaultZipLimits;
+
+export class ZipArchiveError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ZipArchiveError";
+  }
+}
 
 export function createSplitZipFilename(filename: string): string {
   const baseName = filename.replace(/\.pdf$/i, "");
@@ -23,10 +37,15 @@ export function createSplitZipEntries(
   }));
 }
 
-export function createZipArchive(entries: readonly ZipEntry[]): Uint8Array {
+export function createZipArchive(
+  entries: readonly ZipEntry[],
+  limits: ZipLimits = defaultZipLimits,
+): Uint8Array {
   if (entries.length === 0) {
     throw new Error("Create split PDFs before downloading a ZIP.");
   }
+
+  assertZip32Limit(entries.length <= limits.maxEntryCount, "entry count");
 
   const localFileParts: Uint8Array[] = [];
   const centralDirectoryParts: Uint8Array[] = [];
@@ -34,6 +53,17 @@ export function createZipArchive(entries: readonly ZipEntry[]): Uint8Array {
 
   entries.forEach((entry) => {
     const filenameBytes = textEncoder.encode(entry.filename);
+
+    assertZip32Limit(
+      filenameBytes.byteLength <= limits.maxFieldLength,
+      "filename length",
+    );
+    assertZip32Limit(
+      entry.bytes.byteLength <= limits.maxFieldValue,
+      "entry size",
+    );
+    assertZip32Limit(offset <= limits.maxFieldValue, "archive offset");
+
     const crc = calculateCrc32(entry.bytes);
     const localHeader = createLocalFileHeader(
       filenameBytes,
@@ -50,12 +80,21 @@ export function createZipArchive(entries: readonly ZipEntry[]): Uint8Array {
     localFileParts.push(localHeader, entry.bytes);
     centralDirectoryParts.push(centralDirectoryHeader);
     offset += localHeader.byteLength + entry.bytes.byteLength;
+
+    assertZip32Limit(offset <= limits.maxFieldValue, "archive offset");
   });
 
   const centralDirectorySize = centralDirectoryParts.reduce(
     (total, part) => total + part.byteLength,
     0,
   );
+
+  assertZip32Limit(
+    centralDirectorySize <= limits.maxFieldValue,
+    "central directory size",
+  );
+  assertZip32Limit(offset <= limits.maxFieldValue, "central directory offset");
+
   const endOfCentralDirectory = createEndOfCentralDirectoryRecord(
     entries.length,
     centralDirectorySize,
@@ -67,6 +106,14 @@ export function createZipArchive(entries: readonly ZipEntry[]): Uint8Array {
     ...centralDirectoryParts,
     endOfCentralDirectory,
   ]);
+}
+
+function assertZip32Limit(condition: boolean, limitName: string) {
+  if (!condition) {
+    throw new ZipArchiveError(
+      `ZIP export exceeds supported ZIP32 ${limitName} limits. Download individual PDFs instead.`,
+    );
+  }
 }
 
 function createLocalFileHeader(

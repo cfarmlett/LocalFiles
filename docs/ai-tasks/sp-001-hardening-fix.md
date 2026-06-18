@@ -1,3 +1,5 @@
+Status: Completed historical hardening implementation task.
+
 Read the SP-001 hardening review findings and implement only the focused SP-001 hardening fixes.
 
 Scope:

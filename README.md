@@ -20,7 +20,6 @@ Implemented and hardened:
 
 V1 polish still planned:
 
-- ZIP export for Split PDF multi-output downloads
 - Privacy page and processing-model explanation
 - Accessibility review and improvements
 - Error-message and success-message consistency review
@@ -36,10 +35,13 @@ Completed V1.5 polish includes:
 - Reorder Pages label cleanup
 - Split custom-range page-count validation
 - Metadata Removal suffix idempotency
+- ZIP export for Split PDF multi-output downloads
 
-Remaining V1.5 backlog includes Merge drag-and-drop reordering, broader
-filename hygiene, Reorder Pages order-expression input, Split ZIP export, and
-final feedback-release review.
+Remaining before the V1.5 feedback release: final V1.5 review/testing and the
+friends-and-family feedback release.
+
+Future backlog includes Merge drag-and-drop reordering, broader filename
+hygiene, Reorder Pages order-expression input, and rotation iconography.
 
 Browser redaction is intentionally excluded from V1. The current browser-only
 architecture does not meet the project's definition of successful redaction, and

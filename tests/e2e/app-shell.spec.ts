@@ -131,6 +131,75 @@ async function dropPdfOnReorderDropZone(
   );
 }
 
+async function deferZipTimer(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const zipWindow = window as typeof window & {
+      __localDocsNativeSetTimeout?: typeof window.setTimeout;
+      __localDocsZipTimeouts?: Array<() => void>;
+    };
+
+    zipWindow.__localDocsNativeSetTimeout = window.setTimeout.bind(window);
+    zipWindow.__localDocsZipTimeouts = [];
+    window.setTimeout = ((handler: TimerHandler, timeout?: number) => {
+      if (timeout === 0) {
+        zipWindow.__localDocsZipTimeouts?.push(() => {
+          if (typeof handler === "function") {
+            handler();
+          }
+        });
+
+        return 0;
+      }
+
+      return zipWindow.__localDocsNativeSetTimeout?.(handler, timeout) ?? 0;
+    }) as typeof window.setTimeout;
+  });
+}
+
+async function flushZipTimer(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const zipWindow = window as typeof window & {
+      __localDocsNativeSetTimeout?: typeof window.setTimeout;
+      __localDocsZipTimeouts?: Array<() => void>;
+    };
+    const pendingTimers = zipWindow.__localDocsZipTimeouts ?? [];
+
+    zipWindow.__localDocsZipTimeouts = [];
+    pendingTimers.forEach((callback) => callback());
+
+    if (zipWindow.__localDocsNativeSetTimeout !== undefined) {
+      window.setTimeout = zipWindow.__localDocsNativeSetTimeout;
+      delete zipWindow.__localDocsNativeSetTimeout;
+    }
+  });
+}
+
+async function expectNoStaleZipDownload(
+  page: Page,
+  invalidateZip: () => Promise<void>,
+): Promise<void> {
+  let downloadCount = 0;
+
+  page.on("download", () => {
+    downloadCount += 1;
+  });
+
+  await deferZipTimer(page);
+  await page
+    .locator("#split")
+    .getByRole("button", { name: "Download ZIP" })
+    .click();
+  await expect(
+    page.locator("#split").getByRole("button", { name: "Preparing ZIP..." }),
+  ).toBeVisible();
+  await invalidateZip();
+  await flushZipTimer(page);
+  await page.waitForTimeout(50);
+
+  expect(downloadCount).toBe(0);
+  await expect(page.locator("#split").getByText("ZIP export")).toHaveCount(0);
+}
+
 test("LocalDocs web shell supports local-first PDF workflows", async ({
   page,
 }) => {
@@ -160,18 +229,23 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(page.getByText("Current section: Split PDF")).toBeVisible();
 
   const splitFileInput = page.locator("#split-file-input");
+  const generateTwoPageSplit = async () => {
+    await splitFileInput.setInputFiles({
+      name: "split-source.pdf",
+      mimeType: "application/pdf",
+      buffer: pdfBuffer(twoPagePdf),
+    });
 
-  await splitFileInput.setInputFiles({
-    name: "split-source.pdf",
-    mimeType: "application/pdf",
-    buffer: pdfBuffer(twoPagePdf),
-  });
+    await expect(page.getByText("split-source.pdf, 2 pages.")).toBeVisible();
+    await page.getByRole("button", { name: "Split PDF", exact: true }).click();
+    await expect(page.getByText("page-1.pdf")).toBeVisible();
+    await expect(page.getByText("page-2.pdf")).toBeVisible();
+    await expect(
+      page.locator("#split").getByRole("button", { name: "Download ZIP" }),
+    ).toBeVisible();
+  };
 
-  await expect(page.getByText("split-source.pdf, 2 pages.")).toBeVisible();
-
-  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
-  await expect(page.getByText("page-1.pdf")).toBeVisible();
-  await expect(page.getByText("page-2.pdf")).toBeVisible();
+  await generateTwoPageSplit();
   await expect(
     page.locator("#split").getByRole("heading", { name: "PDFs Generated" }),
   ).toBeVisible();
@@ -210,6 +284,40 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     "split-source-split.zip",
   );
 
+  await expectNoStaleZipDownload(page, async () => {
+    await page
+      .locator("#split")
+      .getByRole("button", { name: "Clear Split PDF" })
+      .click();
+    await expect(
+      page.locator("#split").getByText("No PDF selected yet."),
+    ).toBeVisible();
+  });
+
+  await generateTwoPageSplit();
+  await expectNoStaleZipDownload(page, async () => {
+    await splitFileInput.setInputFiles({
+      name: "replacement.pdf",
+      mimeType: "application/pdf",
+      buffer: pdfBuffer(threePagePdf),
+    });
+    await expect(page.getByText("replacement.pdf, 3 pages.")).toBeVisible();
+  });
+
+  await generateTwoPageSplit();
+  await expectNoStaleZipDownload(page, async () => {
+    await page.getByRole("radio", { name: "Every N Pages" }).check();
+    await expect(page.locator("#split").getByText("page-1.pdf")).toHaveCount(0);
+  });
+
+  await page.getByRole("radio", { name: "Every Page" }).check();
+  await generateTwoPageSplit();
+  await expectNoStaleZipDownload(page, async () => {
+    await page.getByRole("button", { name: "Split PDF", exact: true }).click();
+    await expect(page.locator("#split").getByText("page-1.pdf")).toBeVisible();
+  });
+
+  await generateTwoPageSplit();
   await page.locator("#split").getByText("Generated Files (2)").click();
   await expect(page.locator("#split").getByText("page-1.pdf")).toBeHidden();
   await expect(

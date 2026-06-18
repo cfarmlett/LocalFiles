@@ -1,3 +1,5 @@
+Status: Completed historical implementation task.
+
 Implement SP-001: ZIP Export for Split PDF.
 
 Context:

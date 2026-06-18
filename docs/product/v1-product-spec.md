@@ -115,7 +115,7 @@ The following items remain V1 polish and release-readiness work.
 Split PDF can produce many output files. ZIP export belongs in V1 polish because
 it improves the existing Split workflow without adding a new product category.
 
-Expected UX:
+Implemented UX:
 
 - Continue supporting individual output downloads.
 - Add a local ZIP download when Split PDF produces multiple outputs.
@@ -165,7 +165,7 @@ Prioritized polish checklist:
    Metadata Removal.
 2. Review error-message tone and specificity across invalid file, encrypted
    file, corrupted file, empty selection, and invalid page-state paths.
-3. Align output naming patterns for generated PDFs and future Split ZIP output.
+3. Align output naming patterns for generated PDFs and Split ZIP output.
 4. Confirm empty states use consistent terminology for selecting or dropping
    files.
 5. Confirm Redact PDF placeholder copy remains explicit that redaction is not

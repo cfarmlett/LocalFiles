@@ -6,6 +6,7 @@ import type { DownloadableExportResult } from "./exportResults";
 export type ExportResultPanelProps = Readonly<{
   results: readonly DownloadableExportResult[];
   primaryAction?: Readonly<{
+    busyLabel?: string;
     description: string;
     isBusy?: boolean;
     label: string;
@@ -105,7 +106,7 @@ export function ExportResultPanel({
             type="button"
           >
             {primaryAction.isBusy === true
-              ? "Preparing ZIP..."
+              ? (primaryAction.busyLabel ?? primaryAction.label)
               : primaryAction.label}
           </button>
           <p>{primaryAction.description}</p>

@@ -38,6 +38,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const [outputs, setOutputs] = useState<readonly SplitOutput[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const asyncOperations = useRef(createAsyncOperationTracker());
+  const zipOperations = useRef(createAsyncOperationTracker());
 
   const canSplit = file !== undefined && !isReading && !isSplitting;
   const canClear =
@@ -157,18 +158,21 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   }
 
   function changeMode(nextMode: SplitMode) {
+    zipOperations.current.invalidate();
     setMode(nextMode);
     setErrors([]);
     clearOutputs();
   }
 
   function clearOutputs() {
+    zipOperations.current.invalidate();
     setOutputs([]);
     setIsCreatingZip(false);
   }
 
   function clearWorkflow() {
     asyncOperations.current.invalidate();
+    zipOperations.current.invalidate();
     setFile(undefined);
     setMode("every-page");
     setChunkSize("1");
@@ -186,6 +190,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
       return;
     }
 
+    const operationToken = zipOperations.current.begin();
     setIsCreatingZip(true);
     setErrors([]);
 
@@ -193,6 +198,10 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
       await new Promise<void>((resolve) => {
         window.setTimeout(resolve, 0);
       });
+
+      if (!zipOperations.current.isCurrent(operationToken)) {
+        return;
+      }
 
       const zipBytes = createZipArchive(createSplitZipEntries(outputs));
       const bytes = new ArrayBuffer(zipBytes.byteLength);
@@ -202,18 +211,26 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
       );
       const link = document.createElement("a");
 
+      if (!zipOperations.current.isCurrent(operationToken)) {
+        return;
+      }
+
       link.href = url;
       link.download = createSplitZipFilename(file.file.name);
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 0);
     } catch (error) {
-      setErrors([
-        error instanceof Error
-          ? error.message
-          : "The ZIP file could not be prepared.",
-      ]);
+      if (zipOperations.current.isCurrent(operationToken)) {
+        setErrors([
+          error instanceof Error
+            ? error.message
+            : "The ZIP file could not be prepared.",
+        ]);
+      }
     } finally {
-      setIsCreatingZip(false);
+      if (zipOperations.current.isCurrent(operationToken)) {
+        setIsCreatingZip(false);
+      }
     }
   }
 
@@ -361,6 +378,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         primaryAction={
           outputs.length > 1
             ? {
+                busyLabel: "Preparing ZIP...",
                 description:
                   "Download all generated split PDFs together as one ZIP file.",
                 isBusy: isCreatingZip,

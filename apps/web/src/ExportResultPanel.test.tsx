@@ -31,7 +31,9 @@ describe("ExportResultPanel", () => {
     const markup = renderToStaticMarkup(
       <ExportResultPanel
         primaryAction={{
+          busyLabel: "Preparing archive...",
           description: "Download all generated split PDFs together.",
+          isBusy: true,
           label: "Download ZIP",
           onClick: () => undefined,
         }}
@@ -59,7 +61,8 @@ describe("ExportResultPanel", () => {
     expect(markup).toContain("PDFs Generated");
     expect(markup).toContain("2 files are ready to download.");
     expect(markup).toContain("Generated Files (2)");
-    expect(markup).toContain("Download ZIP");
+    expect(markup).toContain("Preparing archive...");
+    expect(markup).not.toContain("Preparing ZIP...");
     expect(markup).toContain("Download all generated split PDFs together.");
     expect(markup).toContain("page-1.pdf");
     expect(markup).toContain("Pages 2");

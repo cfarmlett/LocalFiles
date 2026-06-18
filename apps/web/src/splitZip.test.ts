@@ -4,6 +4,7 @@ import {
   createSplitZipEntries,
   createSplitZipFilename,
   createZipArchive,
+  ZipArchiveError,
 } from "./splitZip";
 import type { SplitOutput } from "./splitWorkflow";
 
@@ -60,6 +61,78 @@ describe("createZipArchive", () => {
   it("rejects empty archives", () => {
     expect(() => createZipArchive([])).toThrow(
       "Create split PDFs before downloading a ZIP.",
+    );
+  });
+
+  it("rejects archives that exceed the ZIP32 entry count limit", () => {
+    expect(() =>
+      createZipArchive(
+        [
+          { filename: "page-1.pdf", bytes: new Uint8Array([1]) },
+          { filename: "page-2.pdf", bytes: new Uint8Array([2]) },
+        ],
+        {
+          maxEntryCount: 1,
+          maxFieldLength: 0xffff,
+          maxFieldValue: 0xffffffff,
+        },
+      ),
+    ).toThrow(ZipArchiveError);
+  });
+
+  it("rejects entries that exceed ZIP32 field limits", () => {
+    expect(() =>
+      createZipArchive(
+        [{ filename: "long-name.pdf", bytes: new Uint8Array([1]) }],
+        {
+          maxEntryCount: 0xffff,
+          maxFieldLength: 4,
+          maxFieldValue: 0xffffffff,
+        },
+      ),
+    ).toThrow("ZIP export exceeds supported ZIP32 filename length limits.");
+
+    expect(() =>
+      createZipArchive(
+        [{ filename: "page-1.pdf", bytes: new Uint8Array([1, 2]) }],
+        {
+          maxEntryCount: 0xffff,
+          maxFieldLength: 0xffff,
+          maxFieldValue: 1,
+        },
+      ),
+    ).toThrow("ZIP export exceeds supported ZIP32 entry size limits.");
+  });
+
+  it("rejects central directory and archive offsets that exceed ZIP32 limits", () => {
+    expect(() =>
+      createZipArchive(
+        [
+          { filename: "a.pdf", bytes: new Uint8Array() },
+          { filename: "b.pdf", bytes: new Uint8Array() },
+        ],
+        {
+          maxEntryCount: 0xffff,
+          maxFieldLength: 0xffff,
+          maxFieldValue: 32,
+        },
+      ),
+    ).toThrow("ZIP export exceeds supported ZIP32 archive offset limits.");
+
+    expect(() =>
+      createZipArchive(
+        [
+          { filename: "a.pdf", bytes: new Uint8Array() },
+          { filename: "b.pdf", bytes: new Uint8Array() },
+        ],
+        {
+          maxEntryCount: 0xffff,
+          maxFieldLength: 0xffff,
+          maxFieldValue: 90,
+        },
+      ),
+    ).toThrow(
+      "ZIP export exceeds supported ZIP32 central directory size limits.",
     );
   });
 });
