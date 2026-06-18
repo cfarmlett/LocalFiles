@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { createAsyncOperationTracker } from "./asyncOperationToken";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
 import { validatePdfFile } from "./mergeWorkflow";
@@ -30,6 +31,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const [isSplitting, setIsSplitting] = useState(false);
   const [outputs, setOutputs] = useState<readonly SplitOutput[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const asyncOperations = useRef(createAsyncOperationTracker());
 
   const canSplit = file !== undefined && !isReading && !isSplitting;
   const canClear =
@@ -57,6 +59,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
+    const operationToken = asyncOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
     clearOutputs();
@@ -88,21 +91,29 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     setErrors([]);
 
     try {
-      setFile(
-        await buildSplitFileItem(selectedFile, adapter, () =>
-          crypto.randomUUID(),
-        ),
+      const nextFile = await buildSplitFileItem(selectedFile, adapter, () =>
+        crypto.randomUUID(),
       );
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setFile(nextFile);
+      }
     } catch (error) {
-      setFile(undefined);
-      setErrors([`${selectedFile.name}: ${getSplitErrorMessage(error)}`]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setFile(undefined);
+        setErrors([`${selectedFile.name}: ${getSplitErrorMessage(error)}`]);
+      }
     } finally {
-      setIsReading(false);
-      resetInput();
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsReading(false);
+        resetInput();
+      }
     }
   }
 
   async function splitSelectedFile() {
+    const operationToken = asyncOperations.current.begin();
+
     clearOutputs();
     setErrors([]);
 
@@ -119,11 +130,17 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         customRanges,
       });
 
-      setOutputs(nextOutputs);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setOutputs(nextOutputs);
+      }
     } catch (error) {
-      setErrors([getSplitErrorMessage(error)]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setErrors([getSplitErrorMessage(error)]);
+      }
     } finally {
-      setIsSplitting(false);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsSplitting(false);
+      }
     }
   }
 
@@ -138,6 +155,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   }
 
   function clearWorkflow() {
+    asyncOperations.current.invalidate();
     setFile(undefined);
     setMode("every-page");
     setChunkSize("1");
@@ -279,7 +297,12 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         <button disabled={!canSplit} onClick={splitSelectedFile} type="button">
           {isSplitting ? "Splitting..." : "Split PDF"}
         </button>
-        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+        <button
+          aria-label="Clear Split PDF"
+          disabled={!canClear}
+          onClick={clearWorkflow}
+          type="button"
+        >
           Clear
         </button>
       </div>

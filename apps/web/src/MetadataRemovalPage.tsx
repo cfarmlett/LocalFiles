@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { createAsyncOperationTracker } from "./asyncOperationToken";
 import {
   buildMetadataRemovalFileItem,
   getMetadataDisplayFields,
@@ -29,6 +30,7 @@ export function MetadataRemovalPage({
   const [isRemoving, setIsRemoving] = useState(false);
   const [removalResult, setRemovalResult] = useState<MetadataRemovalResult>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const asyncOperations = useRef(createAsyncOperationTracker());
 
   const canRemove = file !== undefined && !isReading && !isRemoving;
   const canClear =
@@ -58,6 +60,7 @@ export function MetadataRemovalPage({
   const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
+    const operationToken = asyncOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
     clearOutput();
@@ -90,23 +93,33 @@ export function MetadataRemovalPage({
     setErrors([]);
 
     try {
-      setFile(
-        await buildMetadataRemovalFileItem(selectedFile, adapter, () =>
-          crypto.randomUUID(),
-        ),
+      const nextFile = await buildMetadataRemovalFileItem(
+        selectedFile,
+        adapter,
+        () => crypto.randomUUID(),
       );
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setFile(nextFile);
+      }
     } catch (error) {
-      clearSelection();
-      setErrors([
-        `${selectedFile.name}: ${getMetadataRemovalErrorMessage(error)}`,
-      ]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        clearSelection();
+        setErrors([
+          `${selectedFile.name}: ${getMetadataRemovalErrorMessage(error)}`,
+        ]);
+      }
     } finally {
-      setIsReading(false);
-      resetInput();
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsReading(false);
+        resetInput();
+      }
     }
   }
 
   async function removeSelectedMetadata() {
+    const operationToken = asyncOperations.current.begin();
+
     clearOutput();
     setErrors([]);
 
@@ -118,11 +131,19 @@ export function MetadataRemovalPage({
     setIsRemoving(true);
 
     try {
-      setRemovalResult(await removeMetadataFromFile(file, adapter));
+      const nextResult = await removeMetadataFromFile(file, adapter);
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setRemovalResult(nextResult);
+      }
     } catch (error) {
-      setErrors([getMetadataRemovalErrorMessage(error)]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setErrors([getMetadataRemovalErrorMessage(error)]);
+      }
     } finally {
-      setIsRemoving(false);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsRemoving(false);
+      }
     }
   }
 
@@ -135,6 +156,7 @@ export function MetadataRemovalPage({
   }
 
   function clearWorkflow() {
+    asyncOperations.current.invalidate();
     clearSelection();
     setErrors([]);
     setIsReading(false);
@@ -231,7 +253,12 @@ export function MetadataRemovalPage({
         >
           {isRemoving ? "Removing..." : "Remove Metadata"}
         </button>
-        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+        <button
+          aria-label="Clear Remove Metadata"
+          disabled={!canClear}
+          onClick={clearWorkflow}
+          type="button"
+        >
           Clear
         </button>
       </div>

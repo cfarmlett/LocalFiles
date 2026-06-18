@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { createAsyncOperationTracker } from "./asyncOperationToken";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
@@ -32,6 +33,7 @@ export function ReorderPagesPage({
   const [isReordering, setIsReordering] = useState(false);
   const [reorderResult, setReorderResult] = useState<ReorderResult>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const asyncOperations = useRef(createAsyncOperationTracker());
 
   const canReorder = file !== undefined && !isReading && !isReordering;
   const canClear =
@@ -58,6 +60,7 @@ export function ReorderPagesPage({
   const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
+    const operationToken = asyncOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
     clearOutput();
@@ -93,18 +96,27 @@ export function ReorderPagesPage({
       const nextFile = await buildReorderFileItem(selectedFile, adapter, () =>
         crypto.randomUUID(),
       );
-      setFile(nextFile);
-      setPages(createDefaultPageOrder(nextFile.metadata.pageCount));
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setFile(nextFile);
+        setPages(createDefaultPageOrder(nextFile.metadata.pageCount));
+      }
     } catch (error) {
-      clearSelection();
-      setErrors([`${selectedFile.name}: ${getReorderErrorMessage(error)}`]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        clearSelection();
+        setErrors([`${selectedFile.name}: ${getReorderErrorMessage(error)}`]);
+      }
     } finally {
-      setIsReading(false);
-      resetInput();
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsReading(false);
+        resetInput();
+      }
     }
   }
 
   async function reorderSelectedFile() {
+    const operationToken = asyncOperations.current.begin();
+
     clearOutput();
     setErrors([]);
 
@@ -116,11 +128,19 @@ export function ReorderPagesPage({
     setIsReordering(true);
 
     try {
-      setReorderResult(await reorderFile(file, adapter, pages));
+      const nextResult = await reorderFile(file, adapter, pages);
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setReorderResult(nextResult);
+      }
     } catch (error) {
-      setErrors([getReorderErrorMessage(error)]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setErrors([getReorderErrorMessage(error)]);
+      }
     } finally {
-      setIsReordering(false);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsReordering(false);
+      }
     }
   }
 
@@ -140,6 +160,7 @@ export function ReorderPagesPage({
   }
 
   function clearWorkflow() {
+    asyncOperations.current.invalidate();
     clearSelection();
     setErrors([]);
     setIsReading(false);
@@ -246,7 +267,12 @@ export function ReorderPagesPage({
         >
           {isReordering ? "Reordering..." : "Reorder Pages"}
         </button>
-        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+        <button
+          aria-label="Clear Reorder Pages"
+          disabled={!canClear}
+          onClick={clearWorkflow}
+          type="button"
+        >
           Clear
         </button>
       </div>

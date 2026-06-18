@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { createAsyncOperationTracker } from "./asyncOperationToken";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
@@ -34,6 +35,7 @@ export function DeletePagesPage({
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteResult, setDeleteResult] = useState<DeleteResult>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const asyncOperations = useRef(createAsyncOperationTracker());
 
   const hasDeletedPages = pages.some((page) => page.deleted);
   const isDeleteAllBlocked = allPagesDeleted(pages);
@@ -67,6 +69,7 @@ export function DeletePagesPage({
   const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
+    const operationToken = asyncOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
     clearOutput();
@@ -102,18 +105,27 @@ export function DeletePagesPage({
       const nextFile = await buildDeleteFileItem(selectedFile, adapter, () =>
         crypto.randomUUID(),
       );
-      setFile(nextFile);
-      setPages(createDefaultDeletePages(nextFile.metadata.pageCount));
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setFile(nextFile);
+        setPages(createDefaultDeletePages(nextFile.metadata.pageCount));
+      }
     } catch (error) {
-      clearSelection();
-      setErrors([`${selectedFile.name}: ${getDeleteErrorMessage(error)}`]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        clearSelection();
+        setErrors([`${selectedFile.name}: ${getDeleteErrorMessage(error)}`]);
+      }
     } finally {
-      setIsReading(false);
-      resetInput();
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsReading(false);
+        resetInput();
+      }
     }
   }
 
   async function deleteSelectedPages() {
+    const operationToken = asyncOperations.current.begin();
+
     clearOutput();
     setErrors([]);
 
@@ -125,11 +137,19 @@ export function DeletePagesPage({
     setIsDeleting(true);
 
     try {
-      setDeleteResult(await deletePagesFile(file, adapter, pages));
+      const nextResult = await deletePagesFile(file, adapter, pages);
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setDeleteResult(nextResult);
+      }
     } catch (error) {
-      setErrors([getDeleteErrorMessage(error)]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setErrors([getDeleteErrorMessage(error)]);
+      }
     } finally {
-      setIsDeleting(false);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsDeleting(false);
+      }
     }
   }
 
@@ -155,6 +175,7 @@ export function DeletePagesPage({
   }
 
   function clearWorkflow() {
+    asyncOperations.current.invalidate();
     clearSelection();
     setErrors([]);
     setIsReading(false);
@@ -270,7 +291,12 @@ export function DeletePagesPage({
         >
           {isDeleting ? "Deleting..." : "Delete Pages"}
         </button>
-        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+        <button
+          aria-label="Clear Delete Pages"
+          disabled={!canClear}
+          onClick={clearWorkflow}
+          type="button"
+        >
           Clear
         </button>
       </div>

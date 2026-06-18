@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { createAsyncOperationTracker } from "./asyncOperationToken";
 import {
   buildMergeFileItem,
   getPdfErrorMessage,
@@ -28,6 +29,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   const [isMerging, setIsMerging] = useState(false);
   const [mergeResult, setMergeResult] = useState<MergeResult>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const asyncOperations = useRef(createAsyncOperationTracker());
 
   const canMerge = files.length > 0 && !isReading && !isMerging;
   const canClear =
@@ -58,6 +60,8 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   );
 
   async function addFiles(selectedFiles: FileList | readonly File[]) {
+    const operationToken = asyncOperations.current.begin();
+
     setMergeResult(undefined);
 
     const nextErrors: string[] = [];
@@ -83,12 +87,26 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
 
     for (const file of pdfFiles) {
       try {
-        nextItems.push(
-          await buildMergeFileItem(file, adapter, () => crypto.randomUUID()),
+        const nextItem = await buildMergeFileItem(file, adapter, () =>
+          crypto.randomUUID(),
         );
+
+        if (!asyncOperations.current.isCurrent(operationToken)) {
+          return;
+        }
+
+        nextItems.push(nextItem);
       } catch (error) {
+        if (!asyncOperations.current.isCurrent(operationToken)) {
+          return;
+        }
+
         nextErrors.push(`${file.name}: ${getPdfErrorMessage(error)}`);
       }
+    }
+
+    if (!asyncOperations.current.isCurrent(operationToken)) {
+      return;
     }
 
     setFiles((currentFiles) => [...currentFiles, ...nextItems]);
@@ -99,20 +117,31 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   }
 
   async function mergeSelectedFiles() {
+    const operationToken = asyncOperations.current.begin();
+
     setErrors([]);
     setMergeResult(undefined);
     setIsMerging(true);
 
     try {
-      setMergeResult(await mergeFiles(files, adapter));
+      const nextResult = await mergeFiles(files, adapter);
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setMergeResult(nextResult);
+      }
     } catch (error) {
-      setErrors([getPdfErrorMessage(error)]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setErrors([getPdfErrorMessage(error)]);
+      }
     } finally {
-      setIsMerging(false);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsMerging(false);
+      }
     }
   }
 
   function clearWorkflow() {
+    asyncOperations.current.invalidate();
     setFiles([]);
     setErrors([]);
     setIsReading(false);
@@ -247,7 +276,12 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
         <button disabled={!canMerge} onClick={mergeSelectedFiles} type="button">
           {isMerging ? "Merging..." : "Merge PDFs"}
         </button>
-        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+        <button
+          aria-label="Clear Merge PDF"
+          disabled={!canClear}
+          onClick={clearWorkflow}
+          type="button"
+        >
           Clear
         </button>
       </div>

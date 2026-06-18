@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
+import { createAsyncOperationTracker } from "./asyncOperationToken";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
@@ -32,6 +33,7 @@ export function RotatePagesPage({
   const [isRotating, setIsRotating] = useState(false);
   const [rotateResult, setRotateResult] = useState<RotateResult>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const asyncOperations = useRef(createAsyncOperationTracker());
 
   const canRotate = file !== undefined && !isReading && !isRotating;
   const canClear =
@@ -58,6 +60,7 @@ export function RotatePagesPage({
   const downloadableResults = useExportResultUrls(exportResults);
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
+    const operationToken = asyncOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
     clearOutput();
@@ -93,23 +96,32 @@ export function RotatePagesPage({
       const nextFile = await buildRotateFileItem(selectedFile, adapter, () =>
         crypto.randomUUID(),
       );
-      setFile(nextFile);
-      setPages(
-        createDefaultRotatePages(
-          nextFile.metadata.pageCount,
-          nextFile.metadata.pageRotations,
-        ),
-      );
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setFile(nextFile);
+        setPages(
+          createDefaultRotatePages(
+            nextFile.metadata.pageCount,
+            nextFile.metadata.pageRotations,
+          ),
+        );
+      }
     } catch (error) {
-      clearSelection();
-      setErrors([`${selectedFile.name}: ${getRotateErrorMessage(error)}`]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        clearSelection();
+        setErrors([`${selectedFile.name}: ${getRotateErrorMessage(error)}`]);
+      }
     } finally {
-      setIsReading(false);
-      resetInput();
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsReading(false);
+        resetInput();
+      }
     }
   }
 
   async function rotateSelectedFile() {
+    const operationToken = asyncOperations.current.begin();
+
     clearOutput();
     setErrors([]);
 
@@ -121,11 +133,19 @@ export function RotatePagesPage({
     setIsRotating(true);
 
     try {
-      setRotateResult(await rotateFile(file, adapter, pages));
+      const nextResult = await rotateFile(file, adapter, pages);
+
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setRotateResult(nextResult);
+      }
     } catch (error) {
-      setErrors([getRotateErrorMessage(error)]);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setErrors([getRotateErrorMessage(error)]);
+      }
     } finally {
-      setIsRotating(false);
+      if (asyncOperations.current.isCurrent(operationToken)) {
+        setIsRotating(false);
+      }
     }
   }
 
@@ -145,6 +165,7 @@ export function RotatePagesPage({
   }
 
   function clearWorkflow() {
+    asyncOperations.current.invalidate();
     clearSelection();
     setErrors([]);
     setIsReading(false);
@@ -249,7 +270,12 @@ export function RotatePagesPage({
         >
           {isRotating ? "Rotating..." : "Rotate Pages"}
         </button>
-        <button disabled={!canClear} onClick={clearWorkflow} type="button">
+        <button
+          aria-label="Clear Rotate Pages"
+          disabled={!canClear}
+          onClick={clearWorkflow}
+          type="button"
+        >
           Clear
         </button>
       </div>

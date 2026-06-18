@@ -50,7 +50,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
 
   await expect(page.getByText("split-source.pdf, 2 pages.")).toBeVisible();
 
-  await page.getByRole("button", { name: "Split PDF" }).click();
+  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
   await expect(page.getByText("page-1.pdf")).toBeVisible();
   await expect(page.getByText("page-2.pdf")).toBeVisible();
   await expect(
@@ -75,11 +75,14 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await page.getByRole("radio", { name: "Every N Pages" }).check();
   await expect(page.getByText("page-1.pdf")).toHaveCount(0);
   await page.getByLabel("Pages per file").fill("0");
-  await page.getByRole("button", { name: "Split PDF" }).click();
+  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
   await expect(
     page.getByText("Enter a positive whole number of pages per file."),
   ).toBeVisible();
-  await page.locator("#split").getByRole("button", { name: "Clear" }).click();
+  await page
+    .locator("#split")
+    .getByRole("button", { name: "Clear Split PDF" })
+    .click();
   await expect(
     page.locator("#split").getByText("No PDF selected yet."),
   ).toBeVisible();
@@ -131,7 +134,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .allTextContents();
   expect(reorderedPageNames).toEqual(["Page 2", "Page 1"]);
 
-  await page.getByRole("button", { name: "Reorder Pages" }).click();
+  await page
+    .getByRole("button", { name: "Reorder Pages", exact: true })
+    .click();
   await expect(
     page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
   ).toBeVisible();
@@ -147,7 +152,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toHaveCount(0);
 
   const reorderDownloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Reorder Pages" }).click();
+  await page
+    .getByRole("button", { name: "Reorder Pages", exact: true })
+    .click();
   await page
     .locator("#reorder")
     .getByRole("link", { name: "Download PDF" })
@@ -160,7 +167,10 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   expect(
     (await readFile(reorderDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
-  await page.locator("#reorder").getByRole("button", { name: "Clear" }).click();
+  await page
+    .locator("#reorder")
+    .getByRole("button", { name: "Clear Reorder Pages" })
+    .click();
   await expect(
     page.locator("#reorder").getByText("No PDF selected yet."),
   ).toBeVisible();
@@ -197,7 +207,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .click();
   await expect(rotatePageOneRow.getByText("Rotation 90 degrees")).toBeVisible();
 
-  await page.getByRole("button", { name: "Rotate Pages" }).click();
+  await page.getByRole("button", { name: "Rotate Pages", exact: true }).click();
   await expect(
     page.locator("#rotate").getByRole("link", { name: "Download PDF" }),
   ).toBeVisible();
@@ -210,7 +220,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toHaveCount(0);
 
   const rotateDownloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Rotate Pages" }).click();
+  await page.getByRole("button", { name: "Rotate Pages", exact: true }).click();
   await page
     .locator("#rotate")
     .getByRole("link", { name: "Download PDF" })
@@ -223,7 +233,10 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   expect(
     (await readFile(rotateDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
-  await page.locator("#rotate").getByRole("button", { name: "Clear" }).click();
+  await page
+    .locator("#rotate")
+    .getByRole("button", { name: "Clear Rotate Pages" })
+    .click();
   await expect(
     page.locator("#rotate").getByText("No PDF selected yet."),
   ).toBeVisible();
@@ -267,7 +280,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     page.getByText("Restore at least one page before generating a PDF."),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Delete Pages" }),
+    page.getByRole("button", { name: "Delete Pages", exact: true }),
   ).toBeDisabled();
 
   await deletePageTwoRow
@@ -275,7 +288,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .click();
 
   const deleteDownloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Delete Pages" }).click();
+  await page.getByRole("button", { name: "Delete Pages", exact: true }).click();
   await page
     .locator("#delete")
     .getByRole("link", { name: "Download PDF" })
@@ -297,7 +310,10 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#delete").getByRole("link", { name: "Download PDF" }),
   ).toHaveCount(0);
-  await page.locator("#delete").getByRole("button", { name: "Clear" }).click();
+  await page
+    .locator("#delete")
+    .getByRole("button", { name: "Clear Delete Pages" })
+    .click();
   await expect(
     page.locator("#delete").getByText("No PDF selected yet."),
   ).toBeVisible();
@@ -331,7 +347,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toBeVisible();
 
   const metadataDownloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Remove Metadata" }).click();
+  await page
+    .getByRole("button", { name: "Remove Metadata", exact: true })
+    .click();
   await page
     .locator("#metadata")
     .getByRole("link", { name: "Download PDF" })
@@ -357,7 +375,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toHaveCount(0);
   await page
     .locator("#metadata")
-    .getByRole("button", { name: "Clear" })
+    .getByRole("button", { name: "Clear Remove Metadata" })
     .click();
   await expect(
     page.locator("#metadata").getByText("No PDF selected yet."),
@@ -444,7 +462,10 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
 
   expect(downloadedBytes.byteLength).toBeGreaterThan(0);
   expect(downloadedBytes.subarray(0, 5).toString()).toBe("%PDF-");
-  await page.locator("#merge").getByRole("button", { name: "Clear" }).click();
+  await page
+    .locator("#merge")
+    .getByRole("button", { name: "Clear Merge PDF" })
+    .click();
   await expect(
     page.locator("#merge").getByText("No PDFs selected yet."),
   ).toBeVisible();
