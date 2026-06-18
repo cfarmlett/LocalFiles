@@ -457,6 +457,19 @@ h3 {
   margin-bottom: 0;
 }
 
+.export-result-primary-action {
+  align-items: center;
+  border-top: 1px solid #dfe5eb;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  padding-top: 12px;
+}
+
+.export-result-primary-action p {
+  flex: 1 1 260px;
+}
+
 .export-result-list {
   display: grid;
   gap: 10px;

@@ -178,6 +178,38 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#split").getByText("Generated Files (2)"),
   ).toBeVisible();
+  await expect(
+    page.locator("#split").getByRole("button", { name: "Download ZIP" }),
+  ).toBeVisible();
+
+  const splitZipDownloadPromise = page.waitForEvent("download");
+  await page
+    .locator("#split")
+    .getByRole("button", { name: "Download ZIP" })
+    .click();
+  const splitZipDownload = await splitZipDownloadPromise;
+  const splitZipDownloadPath = await splitZipDownload.path();
+
+  expect(splitZipDownload.suggestedFilename()).toBe("split-source-split.zip");
+  expect(splitZipDownloadPath).not.toBeNull();
+
+  const splitZipBytes = await readFile(splitZipDownloadPath ?? "");
+
+  expect(splitZipBytes.subarray(0, 2).toString()).toBe("PK");
+  expect(splitZipBytes.toString("utf8")).toContain("page-1.pdf");
+  expect(splitZipBytes.toString("utf8")).toContain("page-2.pdf");
+
+  const repeatedSplitZipDownloadPromise = page.waitForEvent("download");
+  await page
+    .locator("#split")
+    .getByRole("button", { name: "Download ZIP" })
+    .click();
+  const repeatedSplitZipDownload = await repeatedSplitZipDownloadPromise;
+
+  expect(repeatedSplitZipDownload.suggestedFilename()).toBe(
+    "split-source-split.zip",
+  );
+
   await page.locator("#split").getByText("Generated Files (2)").click();
   await expect(page.locator("#split").getByText("page-1.pdf")).toBeHidden();
   await expect(
@@ -216,6 +248,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#split").getByText("part-1-pages-1-2.pdf"),
   ).toBeVisible();
+  await expect(
+    page.locator("#split").getByRole("button", { name: "Download ZIP" }),
+  ).toHaveCount(0);
   await page.getByLabel("Page ranges").fill("1-3");
   await page.getByRole("button", { name: "Split PDF", exact: true }).click();
   await expect(

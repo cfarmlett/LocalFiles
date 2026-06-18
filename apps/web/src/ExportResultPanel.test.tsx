@@ -30,6 +30,11 @@ describe("ExportResultPanel", () => {
   it("renders multi-output result details", () => {
     const markup = renderToStaticMarkup(
       <ExportResultPanel
+        primaryAction={{
+          description: "Download all generated split PDFs together.",
+          label: "Download ZIP",
+          onClick: () => undefined,
+        }}
         results={[
           {
             id: "page-1.pdf",
@@ -54,6 +59,8 @@ describe("ExportResultPanel", () => {
     expect(markup).toContain("PDFs Generated");
     expect(markup).toContain("2 files are ready to download.");
     expect(markup).toContain("Generated Files (2)");
+    expect(markup).toContain("Download ZIP");
+    expect(markup).toContain("Download all generated split PDFs together.");
     expect(markup).toContain("page-1.pdf");
     expect(markup).toContain("Pages 2");
     expect(markup).toContain('aria-label="Download page-1.pdf"');

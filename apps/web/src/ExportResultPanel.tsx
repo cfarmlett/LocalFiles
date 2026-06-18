@@ -5,9 +5,18 @@ import type { DownloadableExportResult } from "./exportResults";
 
 export type ExportResultPanelProps = Readonly<{
   results: readonly DownloadableExportResult[];
+  primaryAction?: Readonly<{
+    description: string;
+    isBusy?: boolean;
+    label: string;
+    onClick: () => void;
+  }>;
 }>;
 
-export function ExportResultPanel({ results }: ExportResultPanelProps) {
+export function ExportResultPanel({
+  primaryAction,
+  results,
+}: ExportResultPanelProps) {
   const resultListSignature = useMemo(
     () => results.map((result) => `${result.id}:${result.url}`).join("|"),
     [results],
@@ -86,6 +95,22 @@ export function ExportResultPanel({ results }: ExportResultPanelProps) {
             : "Your file is ready to download."}
         </p>
       </div>
+
+      {primaryAction === undefined ? null : (
+        <div className="export-result-primary-action">
+          <button
+            aria-busy={primaryAction.isBusy === true}
+            disabled={primaryAction.isBusy === true}
+            onClick={primaryAction.onClick}
+            type="button"
+          >
+            {primaryAction.isBusy === true
+              ? "Preparing ZIP..."
+              : primaryAction.label}
+          </button>
+          <p>{primaryAction.description}</p>
+        </div>
+      )}
 
       {multipleResults ? (
         <CollapsibleSection
