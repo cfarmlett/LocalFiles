@@ -1,3 +1,5 @@
+Status: Completed historical hardening review.
+
 Perform a read-only hardening review of the completed RP-001 implementation.
 
 Context:

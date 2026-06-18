@@ -1,3 +1,5 @@
+Status: Completed historical implementation task.
+
 Implement UX-003: Persistent Export Result Panel for LocalDocs.
 
 Context:

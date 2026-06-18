@@ -26,14 +26,20 @@ V1 polish still planned:
 - Error-message and success-message consistency review
 - Documentation alignment
 
-Planned V1.5 work focuses on UX polish and workflow refinement for the
-implemented V1 toolset:
+Completed V1.5 polish includes:
 
 - Persistent export result panel
 - Collapsible feature content
 - Clear loaded document
 - Reset Page Order
 - Drag-and-drop page reordering
+- Reorder Pages label cleanup
+- Split custom-range page-count validation
+- Metadata Removal suffix idempotency
+
+Remaining V1.5 backlog includes Merge drag-and-drop reordering, broader
+filename hygiene, Reorder Pages order-expression input, Split ZIP export, and
+final feedback-release review.
 
 Browser redaction is intentionally excluded from V1. The current browser-only
 architecture does not meet the project's definition of successful redaction, and

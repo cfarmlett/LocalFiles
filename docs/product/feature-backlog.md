@@ -19,7 +19,7 @@ Status values:
 
 ## RP-001: Reset Page Order
 
-Status: Planned
+Status: Implemented
 
 Description:
 Add a Reset button that restores the page list to its original document order.
@@ -93,7 +93,7 @@ Allow importing an entire page ordering sequence generated externally or pasted 
 
 ## RP-003: Drag-and-Drop Page Reordering
 
-Status: Planned
+Status: Implemented
 
 Description:
 Allow users to reorder pages by dragging page rows directly within the page list.
@@ -212,7 +212,7 @@ Create formal design-system guidelines covering workflow completion patterns acr
 
 ## RP-004: Rotation Button Iconography
 
-Status: Planned
+Status: Backlog
 
 Description:
 Add rotation icons to page rotation controls in addition to text labels.
@@ -244,7 +244,7 @@ Display the current page rotation state directly within the page thumbnail or pa
 
 ## UX-003: Persistent Export Result Panel
 
-Status: Planned
+Status: Implemented
 
 Description:
 Display a persistent export result panel after document processing completes, allowing users to interact with the generated output without immediately triggering a download.
@@ -290,7 +290,7 @@ Expand the result panel to support:
 
 ## UX-004: Clear Loaded Document
 
-Status: Planned
+Status: Implemented
 
 Description:
 Allow users to remove the currently loaded document from a feature without refreshing the page.
@@ -325,7 +325,7 @@ Allow replacing the loaded document directly through a "Replace Document" action
 
 ## UX-005: Collapsible Feature Content
 
-Status: Planned
+Status: Implemented
 
 Description:
 Allow users to collapse and expand feature content areas to reduce scrolling and improve navigation when working with large documents.
@@ -384,6 +384,9 @@ document-page-1.pdf
 ```
 
 Most current naming behavior is acceptable, but several edge cases may produce awkward or inconsistent filenames over time.
+
+Metadata Removal now avoids stacking the `-metadata-removed` suffix. Broader
+filename hygiene remains backlog work.
 
 Examples:
 
@@ -559,13 +562,44 @@ User-facing workflow friction, validation, and document-processing correctness s
 
 # Merge PDF
 
-Reserved for MP-xxx entries.
+## MP-001: Drag-and-Drop Merge File Reordering
+
+Status: Backlog
+
+Description:
+Allow users to reorder selected Merge PDF files by dragging file rows.
+
+Motivation:
+Merge already depends on selected-file order. Drag-and-drop would make
+long-distance file movement faster while preserving existing Move Up / Move
+Down controls for keyboard access.
+
+Notes:
+
+- Separate from RP-003, which applies only to pages inside Reorder Pages.
+- Should preserve current merge output and stale-output invalidation behavior.
+- Should not introduce a large drag-and-drop dependency.
 
 ---
 
 # Split PDF
 
-Reserved for SP-xxx entries.
+## SP-001: ZIP Export for Split PDF
+
+Status: Backlog
+
+Description:
+Add a local ZIP download option when Split PDF produces multiple output files.
+
+Motivation:
+Split can produce many PDFs. ZIP export would make multi-output downloads easier
+without changing LocalDocs' local-only processing model.
+
+Notes:
+
+- ZIP export is not implemented.
+- Should preserve existing individual PDF downloads.
+- ZIP creation must remain local to the browser.
 
 ---
 
@@ -596,3 +630,26 @@ Reserved for PLAT-xxx entries.
 # Trust & Transparency
 
 Reserved for TT-xxx entries.
+
+---
+
+# Release Readiness
+
+## V15-001: Final V1.5 Review And Feedback Release
+
+Status: Backlog
+
+Description:
+Perform final V1.5 release review/testing and prepare a friends-and-family
+feedback release.
+
+Motivation:
+V1.5 is intended to improve polish and confidence before early external
+feedback. A focused review should confirm that completed UX and workflow polish
+holds together across the app.
+
+Notes:
+
+- Should verify privacy/local-only behavior remains intact.
+- Should run the full local validation suite.
+- Should collect early tester feedback before expanding scope.

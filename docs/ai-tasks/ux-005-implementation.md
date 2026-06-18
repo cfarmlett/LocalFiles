@@ -1,3 +1,5 @@
+Status: Completed historical implementation task.
+
 Implement UX-005: Collapsible Large Workflow Sections for LocalDocs.
 
 Context:

@@ -1,3 +1,5 @@
+Status: Completed historical implementation task.
+
 Implement RP-003: Drag-and-Drop Page Reordering for LocalDocs.
 
 Context:

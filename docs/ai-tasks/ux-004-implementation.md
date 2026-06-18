@@ -1,3 +1,5 @@
+Status: Completed historical implementation task.
+
 Implement UX-004: Clear Loaded Document for LocalDocs.
 
 Context:

@@ -1,3 +1,5 @@
+Status: Completed historical implementation task.
+
 Implement RP-001: Reset Page Order for LocalDocs.
 
 Context:
