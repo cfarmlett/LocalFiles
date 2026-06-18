@@ -8,55 +8,55 @@ The intended scope is narrow: collapse large repeated-content regions that can g
 
 Implemented examples include:
 
-* Generated files inside the UX-003 Export Result Panel
-* Merge PDF selected files
-* Reorder Pages page order
-* Rotate Pages page rotations
-* Delete Pages page list
+- Generated files inside the UX-003 Export Result Panel
+- Merge PDF selected files
+- Reorder Pages page order
+- Rotate Pages page rotations
+- Delete Pages page list
 
 UX-005 must preserve UX-003 Export Result Panel behavior and UX-004 Clear/async invalidation behavior.
 
 Requirements:
 
-* Do not modify files.
-* Do not implement fixes.
-* Do not broaden scope beyond UX-005.
-* Evaluate the implementation as it currently exists.
-* Assume the feature is complete and look for weaknesses, regressions, inconsistencies, accessibility issues, maintainability concerns, state bugs, browser-behavior issues, and test gaps.
+- Do not modify files.
+- Do not implement fixes.
+- Do not broaden scope beyond UX-005.
+- Evaluate the implementation as it currently exists.
+- Assume the feature is complete and look for weaknesses, regressions, inconsistencies, accessibility issues, maintainability concerns, state bugs, browser-behavior issues, and test gaps.
 
 Review Areas:
 
-* Collapse/expand behavior
-* Native disclosure accessibility
-* Native disclosure browser behavior
-* Keyboard accessibility
-* Hidden content focusability
-* Focus management
-* Result panel discoverability
-* Clear behavior while sections are collapsed
-* Collapse state ownership
-* Separation between presentation state and document-processing state
-* Interaction with UX-003
-* Interaction with UX-004
-* Visual clarity and spacing
-* Consistency across workflows
-* Privacy-first and local-only guarantees
-* Test coverage
+- Collapse/expand behavior
+- Native disclosure accessibility
+- Native disclosure browser behavior
+- Keyboard accessibility
+- Hidden content focusability
+- Focus management
+- Result panel discoverability
+- Clear behavior while sections are collapsed
+- Collapse state ownership
+- Separation between presentation state and document-processing state
+- Interaction with UX-003
+- Interaction with UX-004
+- Visual clarity and spacing
+- Consistency across workflows
+- Privacy-first and local-only guarantees
+- Test coverage
 
 For every issue found provide:
 
-* Severity: Must Fix / Should Fix / Nice To Have
-* File(s) involved
-* Description
-* Risk if left unchanged
-* Recommended fix
+- Severity: Must Fix / Should Fix / Nice To Have
+- File(s) involved
+- Description
+- Risk if left unchanged
+- Recommended fix
 
 Also identify:
 
-* Strong implementation decisions worth keeping
-* Areas that are cleaner than expected
-* Areas that appear over-engineered or under-engineered
-* Any places where collapse controls may have been added outside the intended UX-005 scope
+- Strong implementation decisions worth keeping
+- Areas that are cleaner than expected
+- Areas that appear over-engineered or under-engineered
+- Any places where collapse controls may have been added outside the intended UX-005 scope
 
 Specific Validation Questions:
 

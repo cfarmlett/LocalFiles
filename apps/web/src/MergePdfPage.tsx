@@ -112,6 +112,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     }
 
     setFiles((currentFiles) => [...currentFiles, ...nextItems]);
+    setIsFileListExpanded(true);
     setErrors(nextErrors);
     setIsReading(false);
 
@@ -217,7 +218,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
         <CollapsibleSection
           isOpen={isFileListExpanded}
           onToggle={setIsFileListExpanded}
-          title={`Selected PDFs (${files.length})`}
+          title={`Selected PDF${files.length === 1 ? "" : "s"} (${files.length})`}
         >
           <ol className="file-list" aria-label="Selected PDFs in merge order">
             {files.map((file, index) => (

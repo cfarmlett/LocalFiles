@@ -102,6 +102,7 @@ export function ReorderPagesPage({
       if (asyncOperations.current.isCurrent(operationToken)) {
         setFile(nextFile);
         setPages(createDefaultPageOrder(nextFile.metadata.pageCount));
+        setIsPageListExpanded(true);
       }
     } catch (error) {
       if (asyncOperations.current.isCurrent(operationToken)) {
@@ -235,7 +236,7 @@ export function ReorderPagesPage({
         <CollapsibleSection
           isOpen={isPageListExpanded}
           onToggle={setIsPageListExpanded}
-          title={`Page Order (${pages.length} Pages)`}
+          title={`Page Order (${pages.length} Page${pages.length === 1 ? "" : "s"})`}
         >
           <ol className="file-list" aria-label="Pages in reorder output order">
             {pages.map((page, index) => (

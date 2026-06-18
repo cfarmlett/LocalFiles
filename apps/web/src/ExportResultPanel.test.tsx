@@ -23,6 +23,8 @@ describe("ExportResultPanel", () => {
     expect(markup).toContain("localdocs-merged.pdf");
     expect(markup).toContain("Download PDF");
     expect(markup).toContain("Open PDF");
+    expect(markup).not.toContain("<details");
+    expect(markup).not.toContain("Generated File (1)");
   });
 
   it("renders multi-output result details", () => {

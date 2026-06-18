@@ -111,6 +111,7 @@ export function DeletePagesPage({
       if (asyncOperations.current.isCurrent(operationToken)) {
         setFile(nextFile);
         setPages(createDefaultDeletePages(nextFile.metadata.pageCount));
+        setIsPageListExpanded(true);
       }
     } catch (error) {
       if (asyncOperations.current.isCurrent(operationToken)) {
@@ -256,7 +257,7 @@ export function DeletePagesPage({
         <CollapsibleSection
           isOpen={isPageListExpanded}
           onToggle={setIsPageListExpanded}
-          title={`Pages Marked for Deletion (${pages.length} Pages)`}
+          title={`Pages Marked for Deletion (${pages.length} Page${pages.length === 1 ? "" : "s"})`}
         >
           <ol className="file-list" aria-label="Pages with deletion settings">
             {pages.map((page) => (

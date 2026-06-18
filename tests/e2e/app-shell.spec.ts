@@ -64,7 +64,16 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#split").getByRole("heading", { name: "PDFs Generated" }),
   ).toBeVisible();
-  await page.locator("#split").getByText("Generated Files (2)").click();
+  await page
+    .locator("#split")
+    .getByRole("button", { name: "Clear Split PDF" })
+    .click();
+  await splitFileInput.setInputFiles({
+    name: "split-source.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(twoPagePdf),
+  });
+  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
   await expect(page.locator("#split").getByText("page-1.pdf")).toBeVisible();
 
   const splitDownloadPromise = page.waitForEvent("download");
@@ -143,7 +152,14 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#reorder").getByText("ordered.pdf, 2 pages."),
   ).toBeVisible();
-  await page.locator("#reorder").getByText("Page Order (2 Pages)").click();
+  await reorderFileInput.setInputFiles({
+    name: "replacement.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(twoPagePdf),
+  });
+  await expect(
+    page.locator("#reorder").getByText("replacement.pdf, 2 pages."),
+  ).toBeVisible();
   await expect(
     page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
   ).toBeVisible();
@@ -186,7 +202,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   const reorderDownload = await reorderDownloadPromise;
   const reorderDownloadPath = await reorderDownload.path();
 
-  expect(reorderDownload.suggestedFilename()).toBe("ordered-reordered.pdf");
+  expect(reorderDownload.suggestedFilename()).toBe("replacement-reordered.pdf");
   expect(reorderDownloadPath).not.toBeNull();
   expect(
     (await readFile(reorderDownloadPath ?? "")).subarray(0, 5).toString(),

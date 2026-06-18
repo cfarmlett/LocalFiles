@@ -107,6 +107,7 @@ export function RotatePagesPage({
             nextFile.metadata.pageRotations,
           ),
         );
+        setIsPageListExpanded(true);
       }
     } catch (error) {
       if (asyncOperations.current.isCurrent(operationToken)) {
@@ -240,7 +241,7 @@ export function RotatePagesPage({
         <CollapsibleSection
           isOpen={isPageListExpanded}
           onToggle={setIsPageListExpanded}
-          title={`Page Rotations (${pages.length} Pages)`}
+          title={`Page Rotations (${pages.length} Page${pages.length === 1 ? "" : "s"})`}
         >
           <ol className="file-list" aria-label="Pages with rotation settings">
             {pages.map((page) => (
