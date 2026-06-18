@@ -371,7 +371,8 @@ h3 {
 }
 
 .file-actions,
-.merge-actions {
+.merge-actions,
+.page-order-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -382,7 +383,16 @@ h3 {
   color: #25313d;
 }
 
+.page-order-actions button {
+  background: #ffffff;
+  color: #25313d;
+}
+
 .file-actions button:disabled {
+  background: #eef2f5;
+}
+
+.page-order-actions button:disabled {
   background: #eef2f5;
 }
 

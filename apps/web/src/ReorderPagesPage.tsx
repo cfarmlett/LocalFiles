@@ -29,6 +29,9 @@ export function ReorderPagesPage({
 }: ReorderPagesPageProps) {
   const [file, setFile] = useState<ReorderFileItem>();
   const [pages, setPages] = useState<readonly PageListItem[]>([]);
+  const [originalPages, setOriginalPages] = useState<readonly PageListItem[]>(
+    [],
+  );
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
@@ -38,9 +41,15 @@ export function ReorderPagesPage({
   const asyncOperations = useRef(createAsyncOperationTracker());
 
   const canReorder = file !== undefined && !isReading && !isReordering;
+  const canResetOrder =
+    file !== undefined &&
+    !isReading &&
+    !isReordering &&
+    !pageOrdersMatch(pages, originalPages);
   const canClear =
     file !== undefined ||
     pages.length > 0 ||
+    originalPages.length > 0 ||
     errors.length > 0 ||
     isReading ||
     isReordering ||
@@ -100,8 +109,13 @@ export function ReorderPagesPage({
       );
 
       if (asyncOperations.current.isCurrent(operationToken)) {
+        const defaultPages = createDefaultPageOrder(
+          nextFile.metadata.pageCount,
+        );
+
         setFile(nextFile);
-        setPages(createDefaultPageOrder(nextFile.metadata.pageCount));
+        setPages(defaultPages);
+        setOriginalPages(defaultPages);
         setIsPageListExpanded(true);
       }
     } catch (error) {
@@ -153,9 +167,20 @@ export function ReorderPagesPage({
     clearOutput();
   }
 
+  function resetPageOrder() {
+    if (file === undefined || pageOrdersMatch(pages, originalPages)) {
+      return;
+    }
+
+    setPages([...originalPages]);
+    setErrors([]);
+    clearOutput();
+  }
+
   function clearSelection() {
     setFile(undefined);
     setPages([]);
+    setOriginalPages([]);
   }
 
   function clearOutput() {
@@ -269,6 +294,18 @@ export function ReorderPagesPage({
         </CollapsibleSection>
       ) : null}
 
+      {file !== undefined ? (
+        <div className="page-order-actions">
+          <button
+            disabled={!canResetOrder}
+            onClick={resetPageOrder}
+            type="button"
+          >
+            Reset Order
+          </button>
+        </div>
+      ) : null}
+
       <div className="merge-actions">
         <button
           disabled={!canReorder}
@@ -295,5 +332,15 @@ export function ReorderPagesPage({
         </p>
       ) : null}
     </div>
+  );
+}
+
+function pageOrdersMatch(
+  left: readonly PageListItem[],
+  right: readonly PageListItem[],
+): boolean {
+  return (
+    left.length === right.length &&
+    left.every((page, index) => page.pageNumber === right[index]?.pageNumber)
   );
 }

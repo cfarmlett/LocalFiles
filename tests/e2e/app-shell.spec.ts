@@ -150,6 +150,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
   ).toHaveCount(0);
   await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
+  await expect(
     page.locator("#reorder").getByText("ordered.pdf, 2 pages."),
   ).toBeVisible();
   await reorderFileInput.setInputFiles({
@@ -163,11 +166,17 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
   ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
 
   const pageTwoRow = page.locator("#reorder .file-list__item").filter({
     hasText: "Page 2",
   });
   await pageTwoRow.getByRole("button", { name: "Move page 2 up" }).click();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeEnabled();
 
   const reorderedPageNames = await page
     .locator("#reorder .file-list__item strong")
@@ -181,15 +190,30 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
   ).toBeVisible();
 
-  const reorderedPageOneRow = page.locator("#reorder .file-list__item").filter({
-    hasText: "Page 1",
-  });
-  await reorderedPageOneRow
-    .getByRole("button", { name: "Move page 1 up" })
+  await page.locator("#reorder").getByText("Page Order (2 Pages)").click();
+  await page
+    .locator("#reorder")
+    .getByRole("button", { name: "Reset Order" })
     .click();
   await expect(
     page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
   ).toHaveCount(0);
+  await expect(
+    page.locator("#reorder").getByText("replacement.pdf, 2 pages."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
+  ).toHaveCount(0);
+
+  await page.locator("#reorder").getByText("Page Order (2 Pages)").click();
+  const resetPageNames = await page
+    .locator("#reorder .file-list__item strong")
+    .allTextContents();
+  expect(resetPageNames).toEqual(["Page 1", "Page 2"]);
+  await pageTwoRow.getByRole("button", { name: "Move page 2 up" }).click();
 
   const reorderDownloadPromise = page.waitForEvent("download");
   await page
