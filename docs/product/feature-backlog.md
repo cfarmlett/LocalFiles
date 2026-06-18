@@ -363,6 +363,200 @@ Example collapsed header:
 Potential Future Enhancement:
 Provide global "Collapse All" and "Expand All" actions for managing multiple loaded documents simultaneously.
 
+# FN-001: Filename Hygiene Pass
+
+## Status
+
+Backlog
+
+## Priority
+
+Low
+
+## Context
+
+LocalDocs currently generates workflow-specific output filenames such as:
+
+```text
+document-merged.pdf
+document-metadata-removed.pdf
+document-page-1.pdf
+```
+
+Most current naming behavior is acceptable, but several edge cases may produce awkward or inconsistent filenames over time.
+
+Examples:
+
+```text
+document-metadata-removed-metadata-removed.pdf
+document-compressed-compressed.pdf
+document-merged-merged.pdf
+```
+
+These cases do not break functionality but reduce polish.
+
+This item is intentionally focused on filename quality and consistency.
+
+It is not intended to redesign workflow behavior.
+
+---
+
+## Goals
+
+Improve consistency, readability, and predictability of generated filenames.
+
+Prevent common filename-quality issues without introducing a complex naming framework.
+
+---
+
+## Candidate Improvements
+
+### Duplicate Suffix Prevention
+
+Ensure operation suffixes are idempotent.
+
+Examples:
+
+```text
+document-metadata-removed.pdf
++ metadata removal
+→ document-metadata-removed.pdf
+```
+
+not:
+
+```text
+document-metadata-removed-metadata-removed.pdf
+```
+
+Similarly:
+
+```text
+document-compressed.pdf
++ compression
+→ document-compressed.pdf
+```
+
+not:
+
+```text
+document-compressed-compressed.pdf
+```
+
+---
+
+### Shared Filename Helper
+
+Consider introducing a small shared helper:
+
+```ts
+appendFilenameSuffix(filename, suffix);
+```
+
+Responsibilities:
+
+- preserve file extension
+- append suffix when absent
+- avoid duplicate suffixes
+- produce deterministic filenames
+
+The helper should remain lightweight.
+
+Avoid creating a large filename-management subsystem.
+
+---
+
+### Consistent Output Naming
+
+Review output naming conventions across workflows:
+
+- Merge
+- Split
+- Reorder
+- Rotate
+- Delete Pages
+- Metadata Removal
+- Future Compress workflow
+- Future ZIP export workflow
+
+Ensure naming patterns are predictable.
+
+Examples:
+
+```text
+document-merged.pdf
+document-reordered.pdf
+document-rotated.pdf
+document-metadata-removed.pdf
+```
+
+---
+
+### Split Output Naming Review
+
+Review:
+
+```text
+document-page-1.pdf
+document-pages-1-5.pdf
+```
+
+for consistency and readability.
+
+No redesign required unless a clear issue is found.
+
+---
+
+### Long Filename Handling
+
+Consider whether repeated operations can create excessively long filenames.
+
+Examples:
+
+```text
+document-reordered-rotated-compressed-metadata-removed.pdf
+```
+
+No solution required today, but the issue should be evaluated.
+
+---
+
+### Reserved Character Handling
+
+Verify generated filenames remain valid across supported platforms and browsers.
+
+---
+
+## Out of Scope
+
+Do not:
+
+- Change workflow behavior.
+- Change export architecture.
+- Introduce user-configurable naming templates.
+- Introduce localization/internationalization work.
+- Introduce server-side naming.
+- Create a large filename management system.
+- Block valid operations solely because they would generate a duplicate filename.
+
+---
+
+## Success Criteria
+
+- Duplicate suffixes are prevented.
+- Filename generation remains deterministic.
+- Existing workflows continue functioning.
+- Output filenames remain readable and predictable.
+- No LocalDocs privacy guarantees are affected.
+
+---
+
+## Notes
+
+This is a polish item.
+
+User-facing workflow friction, validation, and document-processing correctness should generally take priority over filename aesthetics.
+
 # Merge PDF
 
 Reserved for MP-xxx entries.

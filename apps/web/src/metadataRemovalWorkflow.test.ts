@@ -125,4 +125,16 @@ describe("createMetadataRemovedFilename", () => {
       "document-metadata-removed.pdf",
     );
   });
+
+  it("does not stack the metadata-removed suffix", () => {
+    expect(createMetadataRemovedFilename("budget_receipt.pdf")).toBe(
+      "budget_receipt-metadata-removed.pdf",
+    );
+    expect(
+      createMetadataRemovedFilename("budget_receipt-metadata-removed.pdf"),
+    ).toBe("budget_receipt-metadata-removed.pdf");
+    expect(createMetadataRemovedFilename("Document-METADATA-REMOVED.PDF")).toBe(
+      "Document-metadata-removed.pdf",
+    );
+  });
 });

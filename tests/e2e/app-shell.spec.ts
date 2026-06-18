@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 
 const onePagePdf =
   "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDI2Nwo+PgpzdHJlYW0KeJzVkslqwzAQhu96ijm2l2gsa3MxhtTLpRRC6KmhBxGLYChR8ALt23dkpS09lJ6L+NEy32j7JwMEAVJCDsaCBJULKEvGn94vHvjOnfzE+MPQT3CgKMIeXhivw3KeIWNVxb7Z2s3uNZxYSoIswp/Ebgz9cvQjlF3bdYgGEbUkaUTRUF+TCpKgOcWEpTHJyKtozeSI+ZZiXZI2KSfGV1Zd81vqidWRaRIrbZp/nRvPatMe4q/7FBXjj6Fv3OzhprkTKDTqTKOSVuLzLX3H6N0c/u/j1vsP4fzrC3/4HO2NJo8+1sDqMt/7KSzjkWwnror/5fvB3Yc3qhqkpgq1ERaszDa2oAoi5AOeoo8rCmVuZHN0cmVhbQplbmRvYmoKCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM0Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDcgXQo+PgpzdHJlYW0KeJwVxDEOACAIBLAext0v+3IIHYructmy1XbikXwGQ54CtQplbmRzdHJlYW0KZW5kb2JqCgpzdGFydHhyZWYKMzg1CiUlRU9G";
+const noMetadataPdf =
+  "JVBERi0xLjcKJYGBgYEKCjQgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiAzCi9GaXJzdCAxNAovTGVuZ3RoIDEzNQo+PgpzdHJlYW0KeJxVjUEKwjAQRfdzin+CTlJTTKF0YZciSHEnLoIdSkGMNC3o7Z3oQuQv33t8C4MSzmGDrUfTEJ9eDwEfwyiJeD8NCWeFBj0uxF1c7wsstS393C4s4RZH+kawWf43Msh4llx/OPeS4jpfNVBPbT7IMIVdfOqf0VV1VZQe3tnC1/qtyhv2yCwVCmVuZHN0cmVhbQplbmRvYmoKCjUgMCBvYmoKPDwKL1NpemUgNgovUm9vdCAyIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDI5Ci9XIFsgMSAxIDIgXQovSW5kZXggWyAwIDYgXQo+PgpzdHJlYW0KeJxjYPj/n4mFgQGIGYGYiVGAgYHxLwMDAC+TAyMKZW5kc3RyZWFtCmVuZG9iagoKc3RhcnR4cmVmCjI1MwolJUVPRg==";
 const twoPagePdf =
   "JVBERi0xLjcKJYGBgYEKCjYgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA1Ci9GaXJzdCAyNgovTGVuZ3RoIDI3Ngo+PgpzdHJlYW0KeJzVkk1LxDAQhu/5FXPUy2aSJmkipaD9uIiwLJ4UD2EbloJspB+g/97JZlU8iCcPEt6k6TyTr3cEIEjQCAVYBQp0YUGDEQ6qivH7t5cAfOsPYWb8dhxmeCQGYUdM6p8Yb+J6XECyumZfGY1f/HM8sJwKIsEfxHaKw7oPE1R91/eIJSIaRTKIsqWxITmSpDnFpKVvUqnOon9lgVhcU6zPMmXOSfETq8/5HY3EmsS0mVU2zz/3TXt1eQ3523lczfhdHFq/BLhoryRKg0YY1MoqfLik55iCX+L/vdzp/GM8/njDbz4ne5PJU6AayC7zXZjjOu3JduLq9F5hGP1NfKXaQWra6Y20VG1iYx1V0F8s+A644KZgCmVuZHN0cmVhbQplbmRvYmoKCjcgMCBvYmoKPDwKL1NpemUgOAovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM2Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDggXQo+PgpzdHJlYW0KeJwVxLENACAMAzCnIGbu5umiejC6y2HKVNOadlySxwdPXALOCmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgozOTQKJSVFT0Y=";
 const threePagePdf =
@@ -207,6 +209,28 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   expect(
     (await readFile(splitDownloadPath ?? "")).subarray(0, 5).toString(),
   ).toBe("%PDF-");
+
+  await page.getByRole("radio", { name: "Custom Ranges" }).check();
+  await page.getByLabel("Page ranges").fill("1-2");
+  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
+  await expect(
+    page.locator("#split").getByText("part-1-pages-1-2.pdf"),
+  ).toBeVisible();
+  await page.getByLabel("Page ranges").fill("1-3");
+  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
+  await expect(
+    page
+      .locator("#split")
+      .getByText(
+        "Page range exceeds document length. This PDF contains 2 pages, but the range includes page 3.",
+      ),
+  ).toBeVisible();
+  await expect(
+    page.locator("#split").getByRole("region", { name: "Export result" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#split").getByText("part-1-pages-1-2.pdf"),
+  ).toHaveCount(0);
 
   await page.getByRole("radio", { name: "Every N Pages" }).check();
   await expect(page.getByText("page-1.pdf")).toHaveCount(0);
@@ -688,11 +712,59 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await metadataFileInput.setInputFiles({
     name: "metadata-empty.pdf",
     mimeType: "application/pdf",
-    buffer: pdfBuffer(onePagePdf),
+    buffer: pdfBuffer(noMetadataPdf),
   });
   await expect(
     page.locator("#metadata").getByRole("link", { name: "Download PDF" }),
   ).toHaveCount(0);
+  await expect(
+    page
+      .locator("#metadata")
+      .getByText("No removable standard metadata was found."),
+  ).toBeVisible();
+
+  const emptyMetadataDownloadPromise = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Remove Metadata", exact: true })
+    .click();
+  await page
+    .locator("#metadata")
+    .getByRole("link", { name: "Download PDF" })
+    .click();
+  const emptyMetadataDownload = await emptyMetadataDownloadPromise;
+
+  expect(emptyMetadataDownload.suggestedFilename()).toBe(
+    "metadata-empty-metadata-removed.pdf",
+  );
+
+  await metadataFileInput.setInputFiles({
+    name: "metadata-empty-metadata-removed.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(noMetadataPdf),
+  });
+  await expect(
+    page.locator("#metadata").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
+  await expect(
+    page
+      .locator("#metadata")
+      .getByText("No removable standard metadata was found."),
+  ).toBeVisible();
+
+  const repeatedMetadataDownloadPromise = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Remove Metadata", exact: true })
+    .click();
+  await page
+    .locator("#metadata")
+    .getByRole("link", { name: "Download PDF" })
+    .click();
+  const repeatedMetadataDownload = await repeatedMetadataDownloadPromise;
+
+  expect(repeatedMetadataDownload.suggestedFilename()).toBe(
+    "metadata-empty-metadata-removed.pdf",
+  );
+
   await page
     .locator("#metadata")
     .getByRole("button", { name: "Clear Remove Metadata" })

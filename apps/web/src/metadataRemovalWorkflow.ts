@@ -78,7 +78,11 @@ export function createMetadataRemovedFilename(filename: string): string {
   }
 
   const withoutExtension = trimmed.replace(/\.pdf$/i, "");
-  const safeBase = withoutExtension.trim() || "document";
+  const withoutRemovalSuffix = withoutExtension.replace(
+    /-metadata-removed$/i,
+    "",
+  );
+  const safeBase = withoutRemovalSuffix.trim() || "document";
 
   return `${safeBase}-metadata-removed.pdf`;
 }

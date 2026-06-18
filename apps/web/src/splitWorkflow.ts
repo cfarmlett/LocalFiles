@@ -146,7 +146,8 @@ export function getSplitErrorMessage(error: unknown): string {
       error.message === "Enter a positive whole number of pages per file." ||
       error.message === "Enter at least one page range." ||
       error.message ===
-        "Use page ranges like 1-3, 4, or 5-8, separated by commas or new lines."
+        "Use page ranges like 1-3, 4, or 5-8, separated by commas or new lines." ||
+      error.message.startsWith("Page range exceeds document length.")
     ) {
       return error.message;
     }
@@ -174,10 +175,22 @@ function parseCustomRanges(input: string, pageCount: number): PageRange[] {
     .map((part) => part.trim())
     .filter((part) => part.length > 0)
     .map(parseRangeToken);
-  const validation = validatePageRanges(ranges, { pageCount });
+  const validation = validatePageRanges(ranges);
 
   if (!validation.valid) {
     throw new Error(validation.errors.join(" "));
+  }
+
+  const largestReferencedPage = Math.max(
+    ...ranges.map((range) => Math.max(range.start, range.end)),
+  );
+
+  if (largestReferencedPage > pageCount) {
+    throw new Error(
+      `Page range exceeds document length. This PDF contains ${pageCount} page${
+        pageCount === 1 ? "" : "s"
+      }, but the range includes page ${largestReferencedPage}.`,
+    );
   }
 
   return ranges;

@@ -130,7 +130,9 @@ describe("createSplitPlan", () => {
 
     expect(() =>
       createSplitPlan("custom-ranges", 5, { customRanges: "6" }),
-    ).toThrow("Range 1: Page range end must be less than or equal");
+    ).toThrow(
+      "Page range exceeds document length. This PDF contains 5 pages, but the range includes page 6.",
+    );
 
     expect(() =>
       createSplitPlan("custom-ranges", 5, { customRanges: "one" }),
@@ -173,6 +175,19 @@ describe("splitFile", () => {
         { start: 5, end: 5 },
       ],
     });
+  });
+
+  it("rejects out-of-range custom ranges before adapter generation", async () => {
+    const adapter = createAdapter();
+
+    await expect(
+      splitFile(createItem(), adapter, "custom-ranges", {
+        customRanges: "1-3, 4-8",
+      }),
+    ).rejects.toThrow(
+      "Page range exceeds document length. This PDF contains 5 pages, but the range includes page 8.",
+    );
+    expect(adapter.split).not.toHaveBeenCalled();
   });
 
   it("maps adapter split errors to safe user-facing messages", () => {
