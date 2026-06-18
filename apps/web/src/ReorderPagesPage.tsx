@@ -168,7 +168,12 @@ export function ReorderPagesPage({
   }
 
   function resetPageOrder() {
-    if (file === undefined || pageOrdersMatch(pages, originalPages)) {
+    if (
+      file === undefined ||
+      isReading ||
+      isReordering ||
+      pageOrdersMatch(pages, originalPages)
+    ) {
       return;
     }
 

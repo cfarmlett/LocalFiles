@@ -10,42 +10,42 @@ UX-003, UX-004, and UX-005 have already been completed and must remain intact.
 
 Requirements:
 
-* Do not modify files.
-* Do not implement fixes.
-* Do not broaden scope beyond RP-001.
-* Evaluate the implementation as it currently exists.
-* Assume the feature is complete and look for correctness issues, state bugs, stale-output bugs, accessibility issues, UX inconsistencies, maintainability concerns, and test gaps.
+- Do not modify files.
+- Do not implement fixes.
+- Do not broaden scope beyond RP-001.
+- Evaluate the implementation as it currently exists.
+- Assume the feature is complete and look for correctness issues, state bugs, stale-output bugs, accessibility issues, UX inconsistencies, maintainability concerns, and test gaps.
 
 Review Areas:
 
-* Original-order baseline tracking
-* Reset Order behavior
-* Order comparison logic
-* Repeated reset/reorder lifecycle behavior
-* Stale output invalidation
-* Output lifecycle after reset
-* Interaction with UX-003 Export Result Panel
-* Interaction with UX-004 Clear and async invalidation safeguards
-* Interaction with UX-005 collapsible page list
-* Button enable/disable behavior
-* Accessibility and keyboard use
-* Local-only/privacy-first guarantees
-* Test coverage
+- Original-order baseline tracking
+- Reset Order behavior
+- Order comparison logic
+- Repeated reset/reorder lifecycle behavior
+- Stale output invalidation
+- Output lifecycle after reset
+- Interaction with UX-003 Export Result Panel
+- Interaction with UX-004 Clear and async invalidation safeguards
+- Interaction with UX-005 collapsible page list
+- Button enable/disable behavior
+- Accessibility and keyboard use
+- Local-only/privacy-first guarantees
+- Test coverage
 
 For every issue found provide:
 
-* Severity: Must Fix / Should Fix / Nice To Have
-* File(s) involved
-* Description
-* Risk if left unchanged
-* Recommended fix
+- Severity: Must Fix / Should Fix / Nice To Have
+- File(s) involved
+- Description
+- Risk if left unchanged
+- Recommended fix
 
 Also identify:
 
-* Strong implementation decisions worth keeping
-* Areas that are cleaner than expected
-* Areas that appear over-engineered or under-engineered
-* Any places where RP-001 scope may have expanded into RP-003, drag-and-drop, order-expression input, or unrelated workflow changes
+- Strong implementation decisions worth keeping
+- Areas that are cleaner than expected
+- Areas that appear over-engineered or under-engineered
+- Any places where RP-001 scope may have expanded into RP-003, drag-and-drop, order-expression input, or unrelated workflow changes
 
 Specific Validation Questions:
 

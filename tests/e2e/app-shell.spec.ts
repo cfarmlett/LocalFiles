@@ -158,6 +158,21 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await reorderFileInput.setInputFiles({
     name: "replacement.pdf",
     mimeType: "application/pdf",
+    buffer: pdfBuffer(onePagePdf),
+  });
+  await expect(
+    page.locator("#reorder").getByText("replacement.pdf, 1 page."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByText("Page Order (1 Page)"),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
+
+  await reorderFileInput.setInputFiles({
+    name: "replacement.pdf",
+    mimeType: "application/pdf",
     buffer: pdfBuffer(twoPagePdf),
   });
   await expect(
@@ -166,9 +181,6 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
   ).toBeVisible();
-  await expect(
-    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
-  ).toBeDisabled();
 
   const pageTwoRow = page.locator("#reorder .file-list__item").filter({
     hasText: "Page 2",
@@ -197,6 +209,12 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .click();
   await expect(
     page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#reorder").getByRole("region", { name: "Export result" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#reorder").getByRole("heading", { name: "PDF Generated" }),
   ).toHaveCount(0);
   await expect(
     page.locator("#reorder").getByText("replacement.pdf, 2 pages."),
