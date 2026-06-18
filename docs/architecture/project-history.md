@@ -465,9 +465,12 @@ Completed infrastructure:
 - Independent Claude review workflow
 - Privacy-first project positioning
 
-Current V1 polish:
+Completed V1.5/V1 polish:
 
 - ZIP export for Split PDF
+
+Current V1 release-readiness work:
+
 - Privacy page and processing-model explanation
 - Accessibility review and improvements
 - Error-message consistency review

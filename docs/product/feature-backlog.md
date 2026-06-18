@@ -601,6 +601,8 @@ Notes:
 - Individual PDF downloads remain available.
 - Single-output Split results do not show ZIP export.
 - ZIP export includes stale-output guards and ZIP32 limit checks.
+- ZIP object URLs are cleaned up after download attempts, including stale
+  invalidation paths.
 - No cloud processing, upload path, telemetry, or new dependency is required.
 
 ---
@@ -652,6 +654,9 @@ holds together across the app.
 
 Notes:
 
+- V1.5 feature development and hardening are complete.
+- Latest validation is green for format, typecheck, lint, unit tests, and e2e
+  tests.
 - Should verify privacy/local-only behavior remains intact.
 - Should run the full local validation suite.
 - Should collect early tester feedback before expanding scope.

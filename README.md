@@ -25,6 +25,8 @@ V1 polish still planned:
 - Error-message and success-message consistency review
 - Documentation alignment
 
+V1.5 feature work and hardening are complete.
+
 Completed V1.5 polish includes:
 
 - Persistent export result panel
@@ -36,8 +38,11 @@ Completed V1.5 polish includes:
 - Split custom-range page-count validation
 - Metadata Removal suffix idempotency
 - ZIP export for Split PDF multi-output downloads
+- ZIP export stale-output and ZIP32 hardening
+- Pre-release polish for ZIP cleanup, current-section announcements, Delete
+  Pages wording, and Remove Metadata terminology
 
-Remaining before the V1.5 feedback release: final V1.5 review/testing and the
+Current phase: final manual testing and release validation before the
 friends-and-family feedback release.
 
 Future backlog includes Merge drag-and-drop reordering, broader filename

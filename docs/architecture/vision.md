@@ -63,9 +63,13 @@ workflows are implemented and hardened:
 - Delete pages
 - Metadata removal
 
-V1 polish remains focused on release readiness:
+Completed V1.5/V1 polish includes ZIP export for Split PDF multi-output
+downloads, persistent export results, Clear actions, collapsible workflow
+sections, Reorder Pages reset/drag-and-drop polish, Split validation polish, and
+Metadata Removal filename-suffix idempotency.
 
-- ZIP export for Split PDF multi-output downloads
+Current release preparation remains focused on:
+
 - Privacy page and processing-model explanation
 - Accessibility review and improvements
 - Error-message and success-message consistency review
