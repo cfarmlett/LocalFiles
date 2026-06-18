@@ -349,7 +349,6 @@ export function ReorderPagesPage({
               >
                 <div>
                   <strong>Page {page.pageNumber}</strong>
-                  <span>Original page {page.pageNumber}</span>
                 </div>
                 <div className="file-actions">
                   <span
