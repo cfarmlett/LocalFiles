@@ -1,5 +1,12 @@
 # tests/e2e
 
-Future Playwright end-to-end tests for browser workflows.
+Playwright end-to-end tests for the LocalDocs browser workflows.
 
-No browser flows are implemented yet. When tests are added, they should preserve LocalDocs' local-first assumptions and avoid relying on backend services, cloud uploads, analytics, telemetry, accounts, or payments.
+The current suite exercises the app shell and implemented PDF workflows,
+including export result behavior, stale-output invalidation, clear/reset flows,
+Split ZIP export, Reorder drag-and-drop, and Metadata Removal.
+
+These tests are part of release validation alongside format, typecheck, lint,
+and unit tests. They should preserve LocalDocs' local-first assumptions and keep
+the no-external-request guarantee: no backend services, cloud uploads,
+analytics, telemetry, accounts, or payments.

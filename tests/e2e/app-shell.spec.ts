@@ -292,6 +292,24 @@ async function expectCurrentSection(
   await expect(currentSection).toHaveCSS("height", "1px");
 }
 
+test("LocalDocs web shell syncs current section with hash navigation", async ({
+  page,
+}) => {
+  await page.goto("/#merge");
+
+  await expectCurrentSection(page, "Merge PDF");
+  await expect(page.getByRole("link", { name: "Merge PDF" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+
+  await page.getByRole("link", { name: "Split PDF" }).click();
+  await expectCurrentSection(page, "Split PDF");
+
+  await page.goBack();
+  await expectCurrentSection(page, "Merge PDF");
+});
+
 test("LocalDocs web shell supports local-first PDF workflows", async ({
   page,
 }) => {

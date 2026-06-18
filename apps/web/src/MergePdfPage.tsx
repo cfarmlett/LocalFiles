@@ -164,7 +164,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     <div className="merge-tool">
       <div className="tool-intro">
         <p>
-          Select two or more PDFs, put them in the order you want, then merge
+          Select one or more PDFs, put them in the order you want, then merge
           them locally in your browser. Files are not uploaded.
         </p>
       </div>

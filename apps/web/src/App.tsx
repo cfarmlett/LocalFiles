@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
 
@@ -38,12 +38,39 @@ export const appSections: readonly AppSection[] = [
   { id: "privacy", label: "Privacy" },
 ];
 
+function getSectionIdFromHash(): SectionId {
+  if (typeof window === "undefined") {
+    return "home";
+  }
+
+  const hashSectionId = window.location.hash.slice(1);
+
+  if (appSections.some((section) => section.id === hashSectionId)) {
+    return hashSectionId as SectionId;
+  }
+
+  return "home";
+}
+
 export function App() {
-  const [activeSection, setActiveSection] = useState<SectionId>("home");
+  const [activeSection, setActiveSection] =
+    useState<SectionId>(getSectionIdFromHash);
   const sectionTitle = useMemo(
     () => appSections.find((section) => section.id === activeSection)?.label,
     [activeSection],
   );
+
+  useEffect(() => {
+    function syncActiveSectionFromHash() {
+      setActiveSection(getSectionIdFromHash());
+    }
+
+    window.addEventListener("hashchange", syncActiveSectionFromHash);
+
+    return () => {
+      window.removeEventListener("hashchange", syncActiveSectionFromHash);
+    };
+  }, []);
 
   return (
     <main className="app-shell">
