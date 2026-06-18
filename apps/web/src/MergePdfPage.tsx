@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { createAsyncOperationTracker } from "./asyncOperationToken";
+import { CollapsibleSection } from "./CollapsibleSection";
 import {
   buildMergeFileItem,
   getPdfErrorMessage,
@@ -27,6 +28,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
   const [isMerging, setIsMerging] = useState(false);
+  const [isFileListExpanded, setIsFileListExpanded] = useState(true);
   const [mergeResult, setMergeResult] = useState<MergeResult>();
   const inputRef = useRef<HTMLInputElement>(null);
   const asyncOperations = useRef(createAsyncOperationTracker());
@@ -146,6 +148,7 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     setErrors([]);
     setIsReading(false);
     setIsMerging(false);
+    setIsFileListExpanded(true);
     setMergeResult(undefined);
     resetInput();
   }
@@ -211,65 +214,71 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
       </div>
 
       {files.length > 0 ? (
-        <ol className="file-list" aria-label="Selected PDFs in merge order">
-          {files.map((file, index) => (
-            <li className="file-list__item" key={file.id}>
-              <div>
-                <strong>{file.file.name}</strong>
-                <span>
-                  {file.metadata?.pageCount === undefined
-                    ? "Page count unavailable"
-                    : `${file.metadata.pageCount} page${
-                        file.metadata.pageCount === 1 ? "" : "s"
-                      }`}
-                </span>
-              </div>
-              <div className="file-actions">
-                <button
-                  aria-label={`Move ${file.file.name} up`}
-                  disabled={index === 0}
-                  onClick={() => {
-                    setFiles((currentFiles) =>
-                      moveMergeFile(currentFiles, file.id, "up"),
-                    );
-                    setErrors([]);
-                    setMergeResult(undefined);
-                  }}
-                  type="button"
-                >
-                  Move up
-                </button>
-                <button
-                  aria-label={`Move ${file.file.name} down`}
-                  disabled={index === files.length - 1}
-                  onClick={() => {
-                    setFiles((currentFiles) =>
-                      moveMergeFile(currentFiles, file.id, "down"),
-                    );
-                    setErrors([]);
-                    setMergeResult(undefined);
-                  }}
-                  type="button"
-                >
-                  Move down
-                </button>
-                <button
-                  aria-label={`Remove ${file.file.name}`}
-                  onClick={() => {
-                    setFiles((currentFiles) =>
-                      removeMergeFile(currentFiles, file.id),
-                    );
-                    setErrors([]);
-                    setMergeResult(undefined);
-                  }}
-                  type="button"
-                >
-                  Remove
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <CollapsibleSection
+          isOpen={isFileListExpanded}
+          onToggle={setIsFileListExpanded}
+          title={`Selected PDFs (${files.length})`}
+        >
+          <ol className="file-list" aria-label="Selected PDFs in merge order">
+            {files.map((file, index) => (
+              <li className="file-list__item" key={file.id}>
+                <div>
+                  <strong>{file.file.name}</strong>
+                  <span>
+                    {file.metadata?.pageCount === undefined
+                      ? "Page count unavailable"
+                      : `${file.metadata.pageCount} page${
+                          file.metadata.pageCount === 1 ? "" : "s"
+                        }`}
+                  </span>
+                </div>
+                <div className="file-actions">
+                  <button
+                    aria-label={`Move ${file.file.name} up`}
+                    disabled={index === 0}
+                    onClick={() => {
+                      setFiles((currentFiles) =>
+                        moveMergeFile(currentFiles, file.id, "up"),
+                      );
+                      setErrors([]);
+                      setMergeResult(undefined);
+                    }}
+                    type="button"
+                  >
+                    Move up
+                  </button>
+                  <button
+                    aria-label={`Move ${file.file.name} down`}
+                    disabled={index === files.length - 1}
+                    onClick={() => {
+                      setFiles((currentFiles) =>
+                        moveMergeFile(currentFiles, file.id, "down"),
+                      );
+                      setErrors([]);
+                      setMergeResult(undefined);
+                    }}
+                    type="button"
+                  >
+                    Move down
+                  </button>
+                  <button
+                    aria-label={`Remove ${file.file.name}`}
+                    onClick={() => {
+                      setFiles((currentFiles) =>
+                        removeMergeFile(currentFiles, file.id),
+                      );
+                      setErrors([]);
+                      setMergeResult(undefined);
+                    }}
+                    type="button"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </CollapsibleSection>
       ) : null}
 
       <div className="merge-actions">

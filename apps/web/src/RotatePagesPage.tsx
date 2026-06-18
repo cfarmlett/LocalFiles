@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { createAsyncOperationTracker } from "./asyncOperationToken";
+import { CollapsibleSection } from "./CollapsibleSection";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
@@ -31,6 +32,7 @@ export function RotatePagesPage({
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+  const [isPageListExpanded, setIsPageListExpanded] = useState(true);
   const [rotateResult, setRotateResult] = useState<RotateResult>();
   const inputRef = useRef<HTMLInputElement>(null);
   const asyncOperations = useRef(createAsyncOperationTracker());
@@ -170,6 +172,7 @@ export function RotatePagesPage({
     setErrors([]);
     setIsReading(false);
     setIsRotating(false);
+    setIsPageListExpanded(true);
     clearOutput();
     resetInput();
   }
@@ -234,32 +237,38 @@ export function RotatePagesPage({
       </div>
 
       {pages.length > 0 ? (
-        <ol className="file-list" aria-label="Pages with rotation settings">
-          {pages.map((page) => (
-            <li className="file-list__item" key={page.id}>
-              <div>
-                <strong>Page {page.pageNumber}</strong>
-                <span>Rotation {page.rotation} degrees</span>
-              </div>
-              <div className="file-actions">
-                <button
-                  aria-label={`Rotate page ${page.pageNumber} left`}
-                  onClick={() => rotateSelectedPage(page.id, "left")}
-                  type="button"
-                >
-                  Rotate left
-                </button>
-                <button
-                  aria-label={`Rotate page ${page.pageNumber} right`}
-                  onClick={() => rotateSelectedPage(page.id, "right")}
-                  type="button"
-                >
-                  Rotate right
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <CollapsibleSection
+          isOpen={isPageListExpanded}
+          onToggle={setIsPageListExpanded}
+          title={`Page Rotations (${pages.length} Pages)`}
+        >
+          <ol className="file-list" aria-label="Pages with rotation settings">
+            {pages.map((page) => (
+              <li className="file-list__item" key={page.id}>
+                <div>
+                  <strong>Page {page.pageNumber}</strong>
+                  <span>Rotation {page.rotation} degrees</span>
+                </div>
+                <div className="file-actions">
+                  <button
+                    aria-label={`Rotate page ${page.pageNumber} left`}
+                    onClick={() => rotateSelectedPage(page.id, "left")}
+                    type="button"
+                  >
+                    Rotate left
+                  </button>
+                  <button
+                    aria-label={`Rotate page ${page.pageNumber} right`}
+                    onClick={() => rotateSelectedPage(page.id, "right")}
+                    type="button"
+                  >
+                    Rotate right
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </CollapsibleSection>
       ) : null}
 
       <div className="merge-actions">

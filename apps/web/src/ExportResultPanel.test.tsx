@@ -51,6 +51,7 @@ describe("ExportResultPanel", () => {
 
     expect(markup).toContain("PDFs Generated");
     expect(markup).toContain("2 files are ready to download.");
+    expect(markup).toContain("Generated Files (2)");
     expect(markup).toContain("page-1.pdf");
     expect(markup).toContain("Pages 2");
     expect(markup).toContain('aria-label="Download page-1.pdf"');

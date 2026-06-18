@@ -56,6 +56,16 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#split").getByRole("heading", { name: "PDFs Generated" }),
   ).toBeVisible();
+  await expect(
+    page.locator("#split").getByText("Generated Files (2)"),
+  ).toBeVisible();
+  await page.locator("#split").getByText("Generated Files (2)").click();
+  await expect(page.locator("#split").getByText("page-1.pdf")).toBeHidden();
+  await expect(
+    page.locator("#split").getByRole("heading", { name: "PDFs Generated" }),
+  ).toBeVisible();
+  await page.locator("#split").getByText("Generated Files (2)").click();
+  await expect(page.locator("#split").getByText("page-1.pdf")).toBeVisible();
 
   const splitDownloadPromise = page.waitForEvent("download");
   await page
@@ -122,6 +132,20 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toBeVisible();
   await expect(
     page.locator("#reorder strong").getByText("Page 2"),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByText("Page Order (2 Pages)"),
+  ).toBeVisible();
+  await page.locator("#reorder").getByText("Page Order (2 Pages)").click();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#reorder").getByText("ordered.pdf, 2 pages."),
+  ).toBeVisible();
+  await page.locator("#reorder").getByText("Page Order (2 Pages)").click();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Move page 2 up" }),
   ).toBeVisible();
 
   const pageTwoRow = page.locator("#reorder .file-list__item").filter({
@@ -198,6 +222,21 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(
     page.locator("#rotate").getByText("Rotation 0 degrees"),
   ).toHaveCount(2);
+  await expect(
+    page.locator("#rotate").getByText("Page Rotations (2 Pages)"),
+  ).toBeVisible();
+  await page.locator("#rotate").getByText("Page Rotations (2 Pages)").click();
+  await expect(
+    page
+      .locator("#rotate")
+      .getByRole("button", { name: "Rotate page 1 right" }),
+  ).toHaveCount(0);
+  await page.locator("#rotate").getByText("Page Rotations (2 Pages)").click();
+  await expect(
+    page
+      .locator("#rotate")
+      .getByRole("button", { name: "Rotate page 1 right" }),
+  ).toBeVisible();
 
   const rotatePageOneRow = page.locator("#rotate .file-list__item").filter({
     hasText: "Page 1",
@@ -264,6 +303,23 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(page.locator("#delete").getByText("Kept in output")).toHaveCount(
     2,
   );
+  await expect(
+    page.locator("#delete").getByText("Pages Marked for Deletion (2 Pages)"),
+  ).toBeVisible();
+  await page
+    .locator("#delete")
+    .getByText("Pages Marked for Deletion (2 Pages)")
+    .click();
+  await expect(
+    page.locator("#delete").getByRole("button", { name: "Delete page 1" }),
+  ).toHaveCount(0);
+  await page
+    .locator("#delete")
+    .getByText("Pages Marked for Deletion (2 Pages)")
+    .click();
+  await expect(
+    page.locator("#delete").getByRole("button", { name: "Delete page 1" }),
+  ).toBeVisible();
 
   const deletePageOneRow = page.locator("#delete .file-list__item").filter({
     hasText: "Page 1",
@@ -410,6 +466,14 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   await expect(page.getByText("first.pdf")).toBeVisible();
   await expect(page.getByText("second.pdf")).toBeVisible();
   await expect(page.getByText("2 PDFs selected, 3 total pages.")).toBeVisible();
+  await expect(
+    page.locator("#merge").getByText("Selected PDFs (2)"),
+  ).toBeVisible();
+  await page.locator("#merge").getByText("Selected PDFs (2)").click();
+  await expect(
+    page.locator("#merge").getByRole("button", { name: "Move second.pdf up" }),
+  ).toHaveCount(0);
+  await page.locator("#merge").getByText("Selected PDFs (2)").click();
 
   const secondRow = page.locator(".file-list__item").filter({
     hasText: "second.pdf",

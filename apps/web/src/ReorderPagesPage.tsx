@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { createAsyncOperationTracker } from "./asyncOperationToken";
+import { CollapsibleSection } from "./CollapsibleSection";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
@@ -31,6 +32,7 @@ export function ReorderPagesPage({
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
+  const [isPageListExpanded, setIsPageListExpanded] = useState(true);
   const [reorderResult, setReorderResult] = useState<ReorderResult>();
   const inputRef = useRef<HTMLInputElement>(null);
   const asyncOperations = useRef(createAsyncOperationTracker());
@@ -165,6 +167,7 @@ export function ReorderPagesPage({
     setErrors([]);
     setIsReading(false);
     setIsReordering(false);
+    setIsPageListExpanded(true);
     clearOutput();
     resetInput();
   }
@@ -229,34 +232,40 @@ export function ReorderPagesPage({
       </div>
 
       {pages.length > 0 ? (
-        <ol className="file-list" aria-label="Pages in reorder output order">
-          {pages.map((page, index) => (
-            <li className="file-list__item" key={page.id}>
-              <div>
-                <strong>Page {page.pageNumber}</strong>
-                <span>Original page {page.pageNumber}</span>
-              </div>
-              <div className="file-actions">
-                <button
-                  aria-label={`Move page ${page.pageNumber} up`}
-                  disabled={index === 0}
-                  onClick={() => moveSelectedPage(page.id, "up")}
-                  type="button"
-                >
-                  Move up
-                </button>
-                <button
-                  aria-label={`Move page ${page.pageNumber} down`}
-                  disabled={index === pages.length - 1}
-                  onClick={() => moveSelectedPage(page.id, "down")}
-                  type="button"
-                >
-                  Move down
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <CollapsibleSection
+          isOpen={isPageListExpanded}
+          onToggle={setIsPageListExpanded}
+          title={`Page Order (${pages.length} Pages)`}
+        >
+          <ol className="file-list" aria-label="Pages in reorder output order">
+            {pages.map((page, index) => (
+              <li className="file-list__item" key={page.id}>
+                <div>
+                  <strong>Page {page.pageNumber}</strong>
+                  <span>Original page {page.pageNumber}</span>
+                </div>
+                <div className="file-actions">
+                  <button
+                    aria-label={`Move page ${page.pageNumber} up`}
+                    disabled={index === 0}
+                    onClick={() => moveSelectedPage(page.id, "up")}
+                    type="button"
+                  >
+                    Move up
+                  </button>
+                  <button
+                    aria-label={`Move page ${page.pageNumber} down`}
+                    disabled={index === pages.length - 1}
+                    onClick={() => moveSelectedPage(page.id, "down")}
+                    type="button"
+                  >
+                    Move down
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </CollapsibleSection>
       ) : null}
 
       <div className="merge-actions">

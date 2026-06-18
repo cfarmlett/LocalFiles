@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+import { CollapsibleSection } from "./CollapsibleSection";
 import type { DownloadableExportResult } from "./exportResults";
 
 export type ExportResultPanelProps = Readonly<{
@@ -5,6 +8,8 @@ export type ExportResultPanelProps = Readonly<{
 }>;
 
 export function ExportResultPanel({ results }: ExportResultPanelProps) {
+  const [isResultListExpanded, setIsResultListExpanded] = useState(true);
+
   if (results.length === 0) {
     return null;
   }
@@ -27,41 +32,51 @@ export function ExportResultPanel({ results }: ExportResultPanelProps) {
         </p>
       </div>
 
-      <ol className="export-result-list">
-        {results.map((result) => (
-          <li className="export-result-list__item" key={result.id}>
-            <div>
-              <strong>{result.filename}</strong>
-              {result.detail === undefined ? null : (
-                <span>{result.detail}</span>
-              )}
-            </div>
-            <div className="export-result-actions">
-              <a
-                aria-label={
-                  multipleResults ? `Download ${result.filename}` : undefined
-                }
-                download={result.filename}
-                href={result.url}
-              >
-                {multipleResults ? "Download" : "Download PDF"}
-              </a>
-              {result.mimeType === "application/pdf" ? (
+      <CollapsibleSection
+        isOpen={isResultListExpanded}
+        onToggle={setIsResultListExpanded}
+        title={
+          multipleResults
+            ? `Generated Files (${results.length})`
+            : "Generated File (1)"
+        }
+      >
+        <ol className="export-result-list">
+          {results.map((result) => (
+            <li className="export-result-list__item" key={result.id}>
+              <div>
+                <strong>{result.filename}</strong>
+                {result.detail === undefined ? null : (
+                  <span>{result.detail}</span>
+                )}
+              </div>
+              <div className="export-result-actions">
                 <a
                   aria-label={
-                    multipleResults ? `Open ${result.filename}` : undefined
+                    multipleResults ? `Download ${result.filename}` : undefined
                   }
+                  download={result.filename}
                   href={result.url}
-                  rel="noreferrer"
-                  target="_blank"
                 >
-                  Open PDF
+                  {multipleResults ? "Download" : "Download PDF"}
                 </a>
-              ) : null}
-            </div>
-          </li>
-        ))}
-      </ol>
+                {result.mimeType === "application/pdf" ? (
+                  <a
+                    aria-label={
+                      multipleResults ? `Open ${result.filename}` : undefined
+                    }
+                    href={result.url}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Open PDF
+                  </a>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </CollapsibleSection>
     </section>
   );
 }

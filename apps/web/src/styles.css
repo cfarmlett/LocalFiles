@@ -344,6 +344,32 @@ h3 {
   font-size: 0.9rem;
 }
 
+.collapsible-section {
+  display: grid;
+  gap: 10px;
+  max-width: 920px;
+}
+
+.collapsible-section__summary {
+  background: #ffffff;
+  border: 1px solid #cbd4dd;
+  border-radius: 4px;
+  color: #25313d;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 12px;
+}
+
+.collapsible-section__summary:focus-visible {
+  outline: 3px solid #b8c7d6;
+  outline-offset: 2px;
+}
+
+.collapsible-section__content {
+  display: grid;
+  gap: 10px;
+}
+
 .file-actions,
 .merge-actions {
   display: flex;

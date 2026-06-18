@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
 
 import { createAsyncOperationTracker } from "./asyncOperationToken";
+import { CollapsibleSection } from "./CollapsibleSection";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
@@ -33,6 +34,7 @@ export function DeletePagesPage({
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isPageListExpanded, setIsPageListExpanded] = useState(true);
   const [deleteResult, setDeleteResult] = useState<DeleteResult>();
   const inputRef = useRef<HTMLInputElement>(null);
   const asyncOperations = useRef(createAsyncOperationTracker());
@@ -180,6 +182,7 @@ export function DeletePagesPage({
     setErrors([]);
     setIsReading(false);
     setIsDeleting(false);
+    setIsPageListExpanded(true);
     clearOutput();
     resetInput();
   }
@@ -250,37 +253,43 @@ export function DeletePagesPage({
       </div>
 
       {pages.length > 0 ? (
-        <ol className="file-list" aria-label="Pages with deletion settings">
-          {pages.map((page) => (
-            <li className="file-list__item" key={page.id}>
-              <div>
-                <strong>Page {page.pageNumber}</strong>
-                <span>
-                  {page.deleted ? "Marked for deletion" : "Kept in output"}
-                </span>
-              </div>
-              <div className="file-actions">
-                {page.deleted ? (
-                  <button
-                    aria-label={`Restore page ${page.pageNumber}`}
-                    onClick={() => restoreSelectedPage(page.id)}
-                    type="button"
-                  >
-                    Restore
-                  </button>
-                ) : (
-                  <button
-                    aria-label={`Delete page ${page.pageNumber}`}
-                    onClick={() => markSelectedPageDeleted(page.id)}
-                    type="button"
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
-        </ol>
+        <CollapsibleSection
+          isOpen={isPageListExpanded}
+          onToggle={setIsPageListExpanded}
+          title={`Pages Marked for Deletion (${pages.length} Pages)`}
+        >
+          <ol className="file-list" aria-label="Pages with deletion settings">
+            {pages.map((page) => (
+              <li className="file-list__item" key={page.id}>
+                <div>
+                  <strong>Page {page.pageNumber}</strong>
+                  <span>
+                    {page.deleted ? "Marked for deletion" : "Kept in output"}
+                  </span>
+                </div>
+                <div className="file-actions">
+                  {page.deleted ? (
+                    <button
+                      aria-label={`Restore page ${page.pageNumber}`}
+                      onClick={() => restoreSelectedPage(page.id)}
+                      type="button"
+                    >
+                      Restore
+                    </button>
+                  ) : (
+                    <button
+                      aria-label={`Delete page ${page.pageNumber}`}
+                      onClick={() => markSelectedPageDeleted(page.id)}
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </CollapsibleSection>
       ) : null}
 
       <div className="merge-actions">
