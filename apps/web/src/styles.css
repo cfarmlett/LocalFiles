@@ -344,6 +344,15 @@ h3 {
   font-size: 0.9rem;
 }
 
+.file-list__item--dragging {
+  opacity: 0.58;
+}
+
+.file-list__item--drag-target {
+  border-top-color: #25313d;
+  border-top-width: 3px;
+}
+
 .collapsible-section {
   display: grid;
   gap: 10px;
@@ -381,6 +390,24 @@ h3 {
 .file-actions button {
   background: #ffffff;
   color: #25313d;
+}
+
+.drag-handle {
+  align-items: center;
+  background: #eef2f5;
+  border: 1px solid #cbd4dd;
+  border-radius: 4px;
+  color: #25313d;
+  cursor: grab;
+  display: inline-flex;
+  font-weight: 700;
+  min-height: 42px;
+  padding: 8px 10px;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 .page-order-actions button {

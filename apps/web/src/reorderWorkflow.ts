@@ -85,6 +85,33 @@ export function movePage(
   return nextPages;
 }
 
+export function movePageBefore(
+  pages: readonly PageListItem[],
+  draggedPageId: string,
+  targetPageId: string,
+): PageListItem[] {
+  if (draggedPageId === targetPageId) {
+    return [...pages];
+  }
+
+  const draggedIndex = pages.findIndex((page) => page.id === draggedPageId);
+  const targetIndex = pages.findIndex((page) => page.id === targetPageId);
+
+  if (draggedIndex === -1 || targetIndex === -1) {
+    return [...pages];
+  }
+
+  const nextPages = [...pages];
+  const [draggedPage] = nextPages.splice(draggedIndex, 1);
+  const insertionIndex = nextPages.findIndex(
+    (page) => page.id === targetPageId,
+  );
+
+  nextPages.splice(insertionIndex, 0, draggedPage);
+
+  return nextPages;
+}
+
 export function validatePageOrder(
   pages: readonly PageListItem[],
   pageCount: number,

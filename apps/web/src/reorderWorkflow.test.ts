@@ -8,6 +8,7 @@ import {
   createReorderedFilename,
   getReorderErrorMessage,
   movePage,
+  movePageBefore,
   reorderFile,
   validatePageOrder,
   type ReorderFileItem,
@@ -81,6 +82,30 @@ describe("page movement", () => {
 
     expect(movePage(pages, "page-1", "up")).toEqual(pages);
     expect(movePage(pages, "page-2", "down")).toEqual(pages);
+  });
+
+  it("moves dragged pages before the target page", () => {
+    const pages = createDefaultPageOrder(3);
+
+    expect(movePageBefore(pages, "page-3", "page-1")).toEqual([
+      { id: "page-3", pageNumber: 3 },
+      { id: "page-1", pageNumber: 1 },
+      { id: "page-2", pageNumber: 2 },
+    ]);
+    expect(movePageBefore(pages, "page-1", "page-3")).toEqual([
+      { id: "page-2", pageNumber: 2 },
+      { id: "page-1", pageNumber: 1 },
+      { id: "page-3", pageNumber: 3 },
+    ]);
+  });
+
+  it("leaves no-op drag placements unchanged", () => {
+    const pages = createDefaultPageOrder(3);
+
+    expect(movePageBefore(pages, "page-1", "page-1")).toEqual(pages);
+    expect(movePageBefore(pages, "page-1", "page-2")).toEqual(pages);
+    expect(movePageBefore(pages, "missing", "page-2")).toEqual(pages);
+    expect(movePageBefore(pages, "page-2", "missing")).toEqual(pages);
   });
 });
 

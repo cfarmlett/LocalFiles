@@ -12,6 +12,7 @@ import {
   createDefaultPageOrder,
   getReorderErrorMessage,
   movePage,
+  movePageBefore,
   reorderFile,
   type PageListItem,
   type ReorderFileItem,
@@ -36,6 +37,8 @@ export function ReorderPagesPage({
   const [isReading, setIsReading] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
   const [isPageListExpanded, setIsPageListExpanded] = useState(true);
+  const [draggedPageId, setDraggedPageId] = useState<string>();
+  const [dragTargetPageId, setDragTargetPageId] = useState<string>();
   const [reorderResult, setReorderResult] = useState<ReorderResult>();
   const inputRef = useRef<HTMLInputElement>(null);
   const asyncOperations = useRef(createAsyncOperationTracker());
@@ -162,9 +165,43 @@ export function ReorderPagesPage({
   }
 
   function moveSelectedPage(pageId: string, direction: "up" | "down") {
-    setPages((currentPages) => movePage(currentPages, pageId, direction));
-    setErrors([]);
-    clearOutput();
+    updatePageOrder((currentPages) =>
+      movePage(currentPages, pageId, direction),
+    );
+  }
+
+  function dragPageBefore(targetPageId: string, dataTransfer: DataTransfer) {
+    const draggedId =
+      dataTransfer.getData("text/plain").trim() || draggedPageId;
+
+    if (draggedId === undefined || draggedId === "") {
+      clearDragState();
+      return;
+    }
+
+    updatePageOrder((currentPages) =>
+      movePageBefore(currentPages, draggedId, targetPageId),
+    );
+    clearDragState();
+  }
+
+  function updatePageOrder(
+    createNextPages: (
+      currentPages: readonly PageListItem[],
+    ) => readonly PageListItem[],
+  ) {
+    setPages((currentPages) => {
+      const nextPages = createNextPages(currentPages);
+
+      if (pageOrdersMatch(currentPages, nextPages)) {
+        return currentPages;
+      }
+
+      setErrors([]);
+      clearOutput();
+
+      return nextPages;
+    });
   }
 
   function resetPageOrder() {
@@ -199,8 +236,14 @@ export function ReorderPagesPage({
     setIsReading(false);
     setIsReordering(false);
     setIsPageListExpanded(true);
+    clearDragState();
     clearOutput();
     resetInput();
+  }
+
+  function clearDragState() {
+    setDraggedPageId(undefined);
+    setDragTargetPageId(undefined);
   }
 
   function resetInput() {
@@ -270,12 +313,49 @@ export function ReorderPagesPage({
         >
           <ol className="file-list" aria-label="Pages in reorder output order">
             {pages.map((page, index) => (
-              <li className="file-list__item" key={page.id}>
+              <li
+                className={`file-list__item${
+                  draggedPageId === page.id ? " file-list__item--dragging" : ""
+                }${
+                  dragTargetPageId === page.id
+                    ? " file-list__item--drag-target"
+                    : ""
+                }`}
+                key={page.id}
+                onDragEnd={clearDragState}
+                onDragEnter={(event) => {
+                  event.preventDefault();
+                  setDragTargetPageId(page.id);
+                }}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = "move";
+                  setDragTargetPageId(page.id);
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  dragPageBefore(page.id, event.dataTransfer);
+                }}
+              >
                 <div>
                   <strong>Page {page.pageNumber}</strong>
                   <span>Original page {page.pageNumber}</span>
                 </div>
                 <div className="file-actions">
+                  <span
+                    aria-label={`Drag page ${page.pageNumber} to reorder`}
+                    className="drag-handle"
+                    draggable
+                    onDragStart={(event) => {
+                      event.dataTransfer.effectAllowed = "move";
+                      event.dataTransfer.setData("text/plain", page.id);
+                      setDraggedPageId(page.id);
+                      setDragTargetPageId(undefined);
+                    }}
+                    title="Drag to reorder"
+                  >
+                    Drag
+                  </span>
                   <button
                     aria-label={`Move page ${page.pageNumber} up`}
                     disabled={index === 0}

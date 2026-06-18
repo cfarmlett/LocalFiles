@@ -1,15 +1,73 @@
-import { expect, test } from "playwright/test";
+import { expect, test, type Locator, type Page } from "playwright/test";
 import { readFile } from "node:fs/promises";
 
 const onePagePdf =
   "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDI2Nwo+PgpzdHJlYW0KeJzVkslqwzAQhu96ijm2l2gsa3MxhtTLpRRC6KmhBxGLYChR8ALt23dkpS09lJ6L+NEy32j7JwMEAVJCDsaCBJULKEvGn94vHvjOnfzE+MPQT3CgKMIeXhivw3KeIWNVxb7Z2s3uNZxYSoIswp/Ebgz9cvQjlF3bdYgGEbUkaUTRUF+TCpKgOcWEpTHJyKtozeSI+ZZiXZI2KSfGV1Zd81vqidWRaRIrbZp/nRvPatMe4q/7FBXjj6Fv3OzhprkTKDTqTKOSVuLzLX3H6N0c/u/j1vsP4fzrC3/4HO2NJo8+1sDqMt/7KSzjkWwnror/5fvB3Yc3qhqkpgq1ERaszDa2oAoi5AOeoo8rCmVuZHN0cmVhbQplbmRvYmoKCjYgMCBvYmoKPDwKL1NpemUgNwovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM0Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDcgXQo+PgpzdHJlYW0KeJwVxDEOACAIBLAext0v+3IIHYructmy1XbikXwGQ54CtQplbmRzdHJlYW0KZW5kb2JqCgpzdGFydHhyZWYKMzg1CiUlRU9G";
 const twoPagePdf =
   "JVBERi0xLjcKJYGBgYEKCjYgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA1Ci9GaXJzdCAyNgovTGVuZ3RoIDI3Ngo+PgpzdHJlYW0KeJzVkk1LxDAQhu/5FXPUy2aSJmkipaD9uIiwLJ4UD2EbloJspB+g/97JZlU8iCcPEt6k6TyTr3cEIEjQCAVYBQp0YUGDEQ6qivH7t5cAfOsPYWb8dhxmeCQGYUdM6p8Yb+J6XECyumZfGY1f/HM8sJwKIsEfxHaKw7oPE1R91/eIJSIaRTKIsqWxITmSpDnFpKVvUqnOon9lgVhcU6zPMmXOSfETq8/5HY3EmsS0mVU2zz/3TXt1eQ3523lczfhdHFq/BLhoryRKg0YY1MoqfLik55iCX+L/vdzp/GM8/njDbz4ne5PJU6AayC7zXZjjOu3JduLq9F5hGP1NfKXaQWra6Y20VG1iYx1V0F8s+A644KZgCmVuZHN0cmVhbQplbmRvYmoKCjcgMCBvYmoKPDwKL1NpemUgOAovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM2Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDggXQo+PgpzdHJlYW0KeJwVxLENACAMAzCnIGbu5umiejC6y2HKVNOadlySxwdPXALOCmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgozOTQKJSVFT0Y=";
+const threePagePdf =
+  "JVBERi0xLjcKJYGBgYEKCjcgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA2Ci9GaXJzdCAzMgovTGVuZ3RoIDI3OQo+PgpzdHJlYW0KeJzVUk1rxCAQvfsr5the1tEYoyUEtvm4lMKy9NTSg2xkCSxryQe0/75j3Lb0UHpe5DnqvJlR3whAkJBryMAiKMgVAbQkQIEaypLxp483D3znjn5i/GHoJ3ghJsKemHHW6/zKeB2W8wwZqyr2E1e72Z3CkaUEICL5i7EbQ78c/Ahl13YdYoGIWhE0omzI1gRLkLQnnzS0JhTqAjorMsRsS74uQRcpJvpXbn6Jb8kSV0dOk7jKpP133VirTTnkf/exFeOPoW/c7OGmuZMoNWphUAor8PmWvmP0bg7X+7j1/kM4//nCXzpHeaPIo6ceSCrzvZ/CMh5IduJV8b98P7j78E4dhDRym2+kAaPExljqoKtI+AnYYb2FCmVuZHN0cmVhbQplbmRvYmoKCjggMCBvYmoKPDwKL1NpemUgOQovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM4Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDkgXQo+PgpzdHJlYW0KeJwVxDEOACAMxLBcAbH247y5KB4MzBQXLFa2bNsJDcmDD1uWAuQKZW5kc3RyZWFtCmVuZG9iagoKc3RhcnR4cmVmCjM5NwolJUVPRg==";
 const metadataPdf =
   "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDI2Ngo+PgpzdHJlYW0KeJxlkdFqgzAUhu/zFOcJmhMTjYIIm9WbMhjd7sYuXBs6S2mGRra+/U6aqIwhP8Fz/v87JyoAIQGlQILOQYFICyhLxl9vXwb4c3cyI+O7/jjCG1kQ9vDOeG2nqwPBqoqt3rpz3cWeWAiB8Oa/Dt/w7cH49L3P92a003CgAPnIzZ/Mse8e7Q/NQ3rSIt0kOeRKbPKCZs/A3l0MlG3TtohKImZ0Zg0pIxUkRUpDTatYE6QaMUHKNCGjo09Lmv0wuU87LNg6YuUaVWqtaRlQ6YLwOMK8TB9nc3ALZxv7KnLiOb/fGUlcdxvXyuaZxNuZ27cd6BdEoKaATsKdZuN8Dw/L/i1e+e/2CwBucYUKZW5kc3RyZWFtCmVuZG9iagoKNiAwIG9iago8PAovU2l6ZSA3Ci9Sb290IDIgMCBSCi9JbmZvIDQgMCBSCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9UeXBlIC9YUmVmCi9MZW5ndGggMzQKL1cgWyAxIDIgMiBdCi9JbmRleCBbIDAgNyBdCj4+CnN0cmVhbQp4nBXEMQ4AIAgEsB7G3Sf7cwgdiu5y2bLVduKRfAZDmwK0CmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgozODQKJSVFT0Y=";
 
 function pdfBuffer(base64: string): Buffer {
   return Buffer.from(base64, "base64");
+}
+
+function reorderRow(page: Page, pageName: string): Locator {
+  return page
+    .locator("#reorder .file-list__item")
+    .filter({ hasText: pageName });
+}
+
+function dragHandle(page: Page, pageName: string): Locator {
+  return reorderRow(page, pageName).locator(".drag-handle");
+}
+
+async function reorderPageNames(page: Page): Promise<string[]> {
+  return page.locator("#reorder .file-list__item strong").allTextContents();
+}
+
+async function dragPageBefore(
+  sourceHandle: Locator,
+  targetRow: Locator,
+): Promise<void> {
+  const targetElement = await targetRow.elementHandle();
+
+  expect(targetElement).not.toBeNull();
+
+  await sourceHandle.evaluate((sourceElement, dropTarget) => {
+    if (dropTarget === null) {
+      throw new Error("Drop target was not available.");
+    }
+
+    const dataTransfer = new DataTransfer();
+    const dragOptions = {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer,
+    };
+
+    sourceElement.dispatchEvent(new DragEvent("dragstart", dragOptions));
+    dropTarget.dispatchEvent(new DragEvent("dragenter", dragOptions));
+    dropTarget.dispatchEvent(new DragEvent("dragover", dragOptions));
+    dropTarget.dispatchEvent(new DragEvent("drop", dragOptions));
+    sourceElement.dispatchEvent(new DragEvent("dragend", dragOptions));
+  }, targetElement);
+}
+
+async function cancelDrag(sourceHandle: Locator): Promise<void> {
+  await sourceHandle.evaluate((sourceElement) => {
+    const dataTransfer = new DataTransfer();
+    const dragOptions = {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer,
+    };
+
+    sourceElement.dispatchEvent(new DragEvent("dragstart", dragOptions));
+    sourceElement.dispatchEvent(new DragEvent("dragend", dragOptions));
+  });
 }
 
 test("LocalDocs web shell supports local-first PDF workflows", async ({
@@ -231,7 +289,86 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
     .locator("#reorder .file-list__item strong")
     .allTextContents();
   expect(resetPageNames).toEqual(["Page 1", "Page 2"]);
-  await pageTwoRow.getByRole("button", { name: "Move page 2 up" }).click();
+
+  await reorderFileInput.setInputFiles({
+    name: "drag-source.pdf",
+    mimeType: "application/pdf",
+    buffer: pdfBuffer(threePagePdf),
+  });
+  await expect(
+    page.locator("#reorder").getByText("drag-source.pdf, 3 pages."),
+  ).toBeVisible();
+  await expect(
+    page.locator("#reorder").getByText("Page Order (3 Pages)"),
+  ).toBeVisible();
+  await expect(dragHandle(page, "Page 1")).toHaveAttribute(
+    "aria-label",
+    "Drag page 1 to reorder",
+  );
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
+
+  await page
+    .getByRole("button", { name: "Reorder Pages", exact: true })
+    .click();
+  await expect(
+    page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toBeVisible();
+
+  await cancelDrag(dragHandle(page, "Page 1"));
+  await expect(
+    page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toBeVisible();
+
+  await dragPageBefore(dragHandle(page, "Page 1"), reorderRow(page, "Page 1"));
+  expect(await reorderPageNames(page)).toEqual(["Page 1", "Page 2", "Page 3"]);
+  await expect(
+    page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toBeVisible();
+
+  await dragPageBefore(dragHandle(page, "Page 1"), reorderRow(page, "Page 3"));
+  expect(await reorderPageNames(page)).toEqual(["Page 2", "Page 1", "Page 3"]);
+  await expect(
+    page.locator("#reorder").getByRole("link", { name: "Download PDF" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#reorder").getByRole("region", { name: "Export result" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeEnabled();
+
+  await page.locator("#reorder").getByText("Page Order (3 Pages)").click();
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Move page 1 up" }),
+  ).toHaveCount(0);
+  await page.locator("#reorder").getByText("Page Order (3 Pages)").click();
+  expect(await reorderPageNames(page)).toEqual(["Page 2", "Page 1", "Page 3"]);
+
+  await dragPageBefore(dragHandle(page, "Page 1"), reorderRow(page, "Page 2"));
+  expect(await reorderPageNames(page)).toEqual(["Page 1", "Page 2", "Page 3"]);
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
+
+  await dragPageBefore(dragHandle(page, "Page 3"), reorderRow(page, "Page 1"));
+  expect(await reorderPageNames(page)).toEqual(["Page 3", "Page 1", "Page 2"]);
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeEnabled();
+
+  await page
+    .locator("#reorder")
+    .getByRole("button", { name: "Reset Order" })
+    .click();
+  expect(await reorderPageNames(page)).toEqual(["Page 1", "Page 2", "Page 3"]);
+  await expect(
+    page.locator("#reorder").getByRole("button", { name: "Reset Order" }),
+  ).toBeDisabled();
+
+  await dragPageBefore(dragHandle(page, "Page 3"), reorderRow(page, "Page 1"));
+  expect(await reorderPageNames(page)).toEqual(["Page 3", "Page 1", "Page 2"]);
 
   const reorderDownloadPromise = page.waitForEvent("download");
   await page
@@ -244,7 +381,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   const reorderDownload = await reorderDownloadPromise;
   const reorderDownloadPath = await reorderDownload.path();
 
-  expect(reorderDownload.suggestedFilename()).toBe("replacement-reordered.pdf");
+  expect(reorderDownload.suggestedFilename()).toBe("drag-source-reordered.pdf");
   expect(reorderDownloadPath).not.toBeNull();
   expect(
     (await readFile(reorderDownloadPath ?? "")).subarray(0, 5).toString(),
