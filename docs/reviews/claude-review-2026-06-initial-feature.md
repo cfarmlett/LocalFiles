@@ -1,7 +1,7 @@
-# LocalDocs Independent Technical Review
+# LocalFiles Independent Technical Review
 
 **Reviewed:** June 16, 2026  
-**Scope:** Full source review of LocalDocs — a privacy-first local browser PDF tool  
+**Scope:** Full source review of LocalFiles — a privacy-first local browser PDF tool
 **Reviewer note:** All findings are based on direct inspection of the source. Prior AI review findings are independently verified, challenged, or refined.
 
 ---
@@ -22,7 +22,7 @@ The biggest real concern is the **complete absence of CI**. For a project whose 
 
 **Severity:** High (for a trust-oriented project)  
 **Location:** `.github/workflows/` — contains only a README  
-**Why it matters:** LocalDocs' core value proposition is verifiability. A project claiming privacy guarantees with no automated test runs cannot publicly demonstrate correctness. Experienced engineers and privacy advocates will notice this immediately when the repo goes public. More practically: the "no external requests" E2E assertion is this project's most important test. It currently only runs when you remember to run it locally.  
+**Why it matters:** LocalFiles' core value proposition is verifiability. A project claiming privacy guarantees with no automated test runs cannot publicly demonstrate correctness. Experienced engineers and privacy advocates will notice this immediately when the repo goes public. More practically: the "no external requests" E2E assertion is this project's most important test. It currently only runs when you remember to run it locally.
 **Fix:** Add a minimal GitHub Actions workflow — install pnpm, run `pnpm test` (Vitest unit tests) and `pnpm typecheck`. E2E tests need a running dev server so can be added separately, but even unit tests on every push is a major credibility improvement.  
 **Should be done before next feature:** Yes.
 

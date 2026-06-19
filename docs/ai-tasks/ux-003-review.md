@@ -1,6 +1,6 @@
 Status: Completed historical review task.
 
-Read the LocalDocs repository and evaluate UX-003: Persistent Export Result Panel before making any code changes.
+Read the LocalFiles repository and evaluate UX-003: Persistent Export Result Panel before making any code changes.
 
 This is a read-only review.
 
@@ -12,7 +12,7 @@ Context:
 UX-003 is the first planned V1.5 feature.
 
 Goal:
-Introduce a reusable persistent export result panel that improves the current export/download workflow while preserving LocalDocs' local-only privacy model.
+Introduce a reusable persistent export result panel that improves the current export/download workflow while preserving LocalFiles' local-only privacy model.
 
 Reference documentation:
 

@@ -1,18 +1,18 @@
-# LocalDocs Vision
+# LocalFiles Vision
 
 ## Purpose
 
-LocalDocs is a privacy-first document utility site focused on common PDF workflows that people often need but do not necessarily trust random websites to perform.
+LocalFiles is a privacy-first document utility site focused on common PDF workflows that people often need but do not necessarily trust random websites to perform.
 
 The core promise is simple:
 
 > Useful document tools that run locally whenever possible, with clear privacy expectations and no surprise uploads.
 
-LocalDocs should feel boring, serious, and trustworthy. It should be suitable for individuals, small businesses, law firms, accountants, medical offices, consultants, and anyone else handling documents they would rather not send to an unknown server.
+LocalFiles should feel boring, serious, and trustworthy. It should be suitable for individuals, small businesses, law firms, accountants, medical offices, consultants, and anyone else handling documents they would rather not send to an unknown server.
 
 ## Product Philosophy
 
-LocalDocs should be built around a few durable principles:
+LocalFiles should be built around a few durable principles:
 
 1. **Local-first by default**
    Files should stay on the user’s device whenever technically feasible. Browser-based processing should be preferred over server-side processing.
@@ -37,7 +37,7 @@ LocalDocs should be built around a few durable principles:
 
 ## Initial Target Users
 
-LocalDocs is intended for people who need simple document manipulation but are uneasy about uploading sensitive files to random websites.
+LocalFiles is intended for people who need simple document manipulation but are uneasy about uploading sensitive files to random websites.
 
 Likely early users include:
 
@@ -95,7 +95,7 @@ The first version does not need:
 - Enterprise admin features
 - Browser redaction
 
-Those may be considered later, but they should not distract from the initial goal: prove that LocalDocs can provide useful, trustworthy, local-first PDF tools.
+Those may be considered later, but they should not distract from the initial goal: prove that LocalFiles can provide useful, trustworthy, local-first PDF tools.
 
 ## Technical Direction
 
@@ -134,7 +134,7 @@ directly.
 
 ## Privacy and Security Posture
 
-LocalDocs should assume users may process sensitive documents.
+LocalFiles should assume users may process sensitive documents.
 
 Security and privacy expectations:
 
@@ -182,7 +182,7 @@ The free tier should build trust. Premium should feel earned.
 
 Open sourcing the project is likely attractive because it supports trust, auditability, and adoption.
 
-However, open source does not automatically prove that the deployed site is running the published code. If LocalDocs leans on open source as part of its trust strategy, it should eventually consider:
+However, open source does not automatically prove that the deployed site is running the published code. If LocalFiles leans on open source as part of its trust strategy, it should eventually consider:
 
 - Reproducible builds
 - Public release artifacts
@@ -195,7 +195,7 @@ This does not need to be solved in the first version, but early architecture sho
 
 ## Non-Goals for v0.1
 
-LocalDocs v0.1 should not attempt to be:
+LocalFiles v0.1 should not attempt to be:
 
 - Google Drive
 - Dropbox
@@ -226,6 +226,6 @@ The early project is successful if:
 
 When making product or architecture decisions, ask:
 
-> Does this make LocalDocs more trustworthy, useful, and maintainable without adding unnecessary complexity?
+> Does this make LocalFiles more trustworthy, useful, and maintainable without adding unnecessary complexity?
 
 If the answer is no, defer it.

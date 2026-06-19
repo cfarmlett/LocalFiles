@@ -4,7 +4,7 @@ docs/prompts/claude-review-template.md
 
 Review Scope:
 
-The LocalDocs codebase after implementation and hardening of:
+The LocalFiles codebase after implementation and hardening of:
 
 - Merge PDF
 - Split PDF
@@ -74,7 +74,7 @@ Do not recommend abstraction unless there is a concrete maintainability benefit.
 
 ### 3. Privacy Claims
 
-Evaluate whether the implementation continues to support LocalDocs' public claims:
+Evaluate whether the implementation continues to support LocalFiles' public claims:
 
 - local processing
 - no uploads

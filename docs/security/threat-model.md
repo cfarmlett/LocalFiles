@@ -1,8 +1,8 @@
-# LocalDocs Threat Model
+# LocalFiles Threat Model
 
 ## Scope
 
-This document covers realistic early risks for LocalDocs as a local-first browser PDF utility. It focuses on common users handling sensitive personal, legal, tax, medical, business, or administrative documents.
+This document covers realistic early risks for LocalFiles as a local-first browser PDF utility. It focuses on common users handling sensitive personal, legal, tax, medical, business, or administrative documents.
 
 It does not assume protection against compromised devices, malicious browser extensions, targeted nation-state attackers, or users who intentionally share their own files.
 
@@ -13,13 +13,13 @@ It does not assume protection against compromised devices, malicious browser ext
 - Page selections, redaction regions, and workflow choices
 - Generated output files
 - User privacy expectations
-- LocalDocs source code, release artifacts, and dependency chain
+- LocalFiles source code, release artifacts, and dependency chain
 - Future account, billing, support, or hosted-processing data if those features are added
 
 ## Trust Boundaries
 
 - User device and browser
-- LocalDocs application code loaded in the browser
+- LocalFiles application code loaded in the browser
 - Third-party dependencies bundled into the app
 - Browser APIs used for file selection, download, storage, or workers
 - Future optional hosted services, if introduced
@@ -61,7 +61,7 @@ Mitigations should include limiting dependencies, reviewing PDF-related packages
 
 ## Future Server-Side Feature Risks
 
-LocalDocs may later add premium hosted convenience, batch processing, support, or workflow features. Those features would create new risks:
+LocalFiles may later add premium hosted convenience, batch processing, support, or workflow features. Those features would create new risks:
 
 - Files or metadata leaving the user's device
 - Retention of uploaded or generated documents
@@ -115,7 +115,7 @@ assessment concluded that the current browser-only stack cannot confidently
 remove targeted information from all recoverable PDF representations or verify
 that removal afterward.
 
-LocalDocs should not imply that drawing boxes, hiding content visually, or
+LocalFiles should not imply that drawing boxes, hiding content visually, or
 removing only some PDF structures is successful redaction. Future desktop or
 native research may revisit redaction, but any implementation must be reviewed
 against the project's redaction definition before it becomes product work.

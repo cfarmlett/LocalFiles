@@ -10,7 +10,7 @@ Context:
 - UX-003 introduced the reusable Export Result Panel and array-based result model.
 - UX-004 introduced Clear behavior and async invalidation safeguards.
 - UX-005 introduced collapsible generated-file lists.
-- Preserve LocalDocs' privacy-first, local-only architecture.
+- Preserve LocalFiles' privacy-first, local-only architecture.
 - Do not add cloud processing, analytics, telemetry, external uploads, accounts, or network dependencies.
 
 Goal:

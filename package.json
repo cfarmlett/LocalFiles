@@ -1,7 +1,7 @@
 {
-  "name": "localdocs",
+  "name": "localfiles",
   "version": "1.5.0-rc1",
-  "description": "Privacy-first local document tools.",
+  "description": "Privacy-first local file tools.",
   "private": true,
   "type": "module",
   "scripts": {

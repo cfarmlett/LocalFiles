@@ -1,4 +1,4 @@
-# LocalDocs Post-Page-Tools Review
+# LocalFiles Post-Page-Tools Review
 
 **Reviewer role:** Independent read-only review per `docs/prompts/claude-review-template.md`
 **Scope:** Merge PDF, Split PDF, Reorder Pages, Rotate Pages, Delete Pages — as currently implemented and hardened
@@ -25,7 +25,7 @@ None identified.
 
 The `.gitignore` lists `dist` and `apps/web/dist`, but the `apps/web/dist/` directory is present and tracked in the repository (visible in the ZIP: `apps/web/dist/assets/index-VgJbOY2U.js` at 647 KB, CSS, and `index.html`). When a `.gitignore` entry is added after a file is already tracked, Git continues tracking it.
 
-This matters for two reasons. First, it bloats the repository with a ~650 KB pre-built bundle that changes on every build. Second, if LocalDocs is open-sourced, the first thing a skeptical reviewer does is inspect the committed artifact for obfuscated code, injected scripts, or unexpected network behavior — none of which can be ruled out without auditing the bundle itself. The vision document explicitly mentions reproducible builds and signed releases as future trust goals; a committed unverifiable binary artifact cuts against both.
+This matters for two reasons. First, it bloats the repository with a ~650 KB pre-built bundle that changes on every build. Second, if LocalFiles is open-sourced, the first thing a skeptical reviewer does is inspect the committed artifact for obfuscated code, injected scripts, or unexpected network behavior — none of which can be ruled out without auditing the bundle itself. The vision document explicitly mentions reproducible builds and signed releases as future trust goals; a committed unverifiable binary artifact cuts against both.
 
 Fix: `git rm -r --cached apps/web/dist/` and confirm `.gitignore` is working.
 
@@ -50,7 +50,7 @@ Rotate and Delete use "Page {page.pageNumber}" consistently, which is cleaner be
 
 `ReorderPagesPage.tsx`, `RotatePagesPage.tsx`, and `DeletePagesPage.tsx` each contain an identical private `createPdfObjectUrl(bytes: Uint8Array): string` function. `SplitPdfPage.tsx` also has a local copy.
 
-This is a minor, concrete duplication — four copies of a ~6-line function. It does not yet cause a maintainability problem, but if the `Blob` construction logic ever needed to change, there would be four places to update. Moving this to a shared utility (or the `@localdocs/ui` or a local `utils.ts`) eliminates the risk. The review prompt asks for evidence of a concrete benefit before recommending abstraction; this qualifies because the function is already identical in all four locations with no contextual variation.
+This is a minor, concrete duplication — four copies of a ~6-line function. It does not yet cause a maintainability problem, but if the `Blob` construction logic ever needed to change, there would be four places to update. Moving this to a shared utility (or the `@localfiles/ui` or a local `utils.ts`) eliminates the risk. The review prompt asks for evidence of a concrete benefit before recommending abstraction; this qualifies because the function is already identical in all four locations with no contextual variation.
 
 ---
 

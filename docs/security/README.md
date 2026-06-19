@@ -1,6 +1,6 @@
 # docs/security
 
-Security and privacy documentation for LocalDocs.
+Security and privacy documentation for LocalFiles.
 
 This folder holds threat models, privacy assumptions, and security notes. The
 default stance is local-first processing with no backend, no cloud dependency,

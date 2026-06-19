@@ -1,9 +1,9 @@
-import { validatePageRanges, type PageRange } from "@localdocs/core";
+import { validatePageRanges, type PageRange } from "@localfiles/core";
 import {
   PdfProcessingError,
   type PdfAdapter,
   type PdfDocumentMetadata,
-} from "@localdocs/pdf";
+} from "@localfiles/pdf";
 
 import { getPdfErrorMessage, validatePdfFile } from "./mergeWorkflow";
 

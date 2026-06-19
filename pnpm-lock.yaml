@@ -40,13 +40,13 @@ importers:
 
   apps/web:
     dependencies:
-      "@localdocs/core":
+      "@localfiles/core":
         specifier: workspace:*
         version: link:../../packages/core
-      "@localdocs/pdf":
+      "@localfiles/pdf":
         specifier: workspace:*
         version: link:../../packages/pdf
-      "@localdocs/ui":
+      "@localfiles/ui":
         specifier: workspace:*
         version: link:../../packages/ui
       react:

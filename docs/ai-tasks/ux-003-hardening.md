@@ -3,7 +3,7 @@ Status: Completed historical hardening task.
 Review and harden the UX-003 Persistent Export Result Panel implementation.
 
 Context:
-UX-003 should provide a reusable export-completion pattern while preserving LocalDocs' privacy-first, local-only behavior.
+UX-003 should provide a reusable export-completion pattern while preserving LocalFiles' privacy-first, local-only behavior.
 
 Focus on correctness, maintainability, consistency, accessibility, and future compatibility.
 

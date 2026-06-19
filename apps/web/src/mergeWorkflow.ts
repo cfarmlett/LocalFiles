@@ -2,7 +2,7 @@ import {
   PdfProcessingError,
   type PdfAdapter,
   type PdfDocumentMetadata,
-} from "@localdocs/pdf";
+} from "@localfiles/pdf";
 
 export type MergeFileStatus = "ready" | "reading" | "error";
 
@@ -113,7 +113,7 @@ export async function mergeFiles(
 
   return {
     bytes,
-    filename: "localdocs-merged.pdf",
+    filename: "localfiles-merged.pdf",
   };
 }
 

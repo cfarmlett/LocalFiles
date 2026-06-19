@@ -26,7 +26,7 @@ Requirements:
 - Preserve UX-004 Clear behavior and async invalidation safeguards.
 - Preserve UX-005 collapsible generated-file behavior.
 - Preserve existing Split parsing and page-count validation behavior.
-- Preserve LocalDocs' local-only/privacy-first architecture.
+- Preserve LocalFiles' local-only/privacy-first architecture.
 - Do not add network activity, telemetry, analytics, accounts, uploads, external processing, or dependencies.
 
 ---

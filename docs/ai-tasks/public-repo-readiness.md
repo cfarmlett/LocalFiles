@@ -12,7 +12,7 @@ Scope:
      - Scope of security reports.
 
    - Include response expectations only if they can be reasonably maintained; otherwise use non-committal language.
-   - Align with the LocalDocs privacy-first and local-processing model.
+   - Align with the LocalFiles privacy-first and local-processing model.
    - Reference existing security documentation where appropriate.
    - Do not invent email addresses, contact methods, or placeholder security contacts.
    - If no security contact exists, document that a reporting process will be established before public release.
@@ -82,7 +82,7 @@ Scope:
    - Explain:
 
      - Documents are processed locally in the browser.
-     - Files are not uploaded to LocalDocs servers.
+     - Files are not uploaded to LocalFiles servers.
      - No analytics, telemetry, advertising, or tracking are included.
      - What data does and does not leave the user's device.
 

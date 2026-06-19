@@ -1,6 +1,6 @@
 # Project Alignment Pass
 
-Perform a Project Alignment Pass for LocalDocs.
+Perform a Project Alignment Pass for LocalFiles.
 
 This is a documentation, roadmap, planning, and project-positioning task.
 

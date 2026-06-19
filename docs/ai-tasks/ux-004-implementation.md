@@ -1,13 +1,13 @@
 Status: Completed historical implementation task.
 
-Implement UX-004: Clear Loaded Document for LocalDocs.
+Implement UX-004: Clear Loaded Document for LocalFiles.
 
 Context:
 
 - UX-003 (Persistent Export Result Panel) has been completed.
 - Users can now generate and retain outputs across workflows.
 - Users need an obvious way to discard the current document and return a workflow to its initial state.
-- Preserve LocalDocs' privacy-first, local-only architecture.
+- Preserve LocalFiles' privacy-first, local-only architecture.
 - Do not add cloud processing, analytics, telemetry, external uploads, accounts, or network dependencies.
 
 Reference documentation:

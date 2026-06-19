@@ -1,11 +1,15 @@
 # Changelog
 
-This file records notable, verifiable changes to LocalDocs. It does not attempt
+This file records notable, verifiable changes to LocalFiles. It does not attempt
 to reconstruct undocumented development history.
 
 ## Unreleased
 
-No entries yet.
+### Changed
+
+- Renamed the project from LocalDocs to LocalFiles before public launch,
+  including the `localfiles.org` domain, application branding, downloaded file
+  naming, and private workspace package scope.
 
 ## 1.5.0-rc1 - Release Candidate
 

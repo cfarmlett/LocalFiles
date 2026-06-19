@@ -10,7 +10,7 @@ const twoPagePdf =
 const threePagePdf =
   "JVBERi0xLjcKJYGBgYEKCjcgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA2Ci9GaXJzdCAzMgovTGVuZ3RoIDI3OQo+PgpzdHJlYW0KeJzVUk1rxCAQvfsr5the1tEYoyUEtvm4lMKy9NTSg2xkCSxryQe0/75j3Lb0UHpe5DnqvJlR3whAkJBryMAiKMgVAbQkQIEaypLxp483D3znjn5i/GHoJ3ghJsKemHHW6/zKeB2W8wwZqyr2E1e72Z3CkaUEICL5i7EbQ78c/Ahl13YdYoGIWhE0omzI1gRLkLQnnzS0JhTqAjorMsRsS74uQRcpJvpXbn6Jb8kSV0dOk7jKpP133VirTTnkf/exFeOPoW/c7OGmuZMoNWphUAor8PmWvmP0bg7X+7j1/kM4//nCXzpHeaPIo6ceSCrzvZ/CMh5IduJV8b98P7j78E4dhDRym2+kAaPExljqoKtI+AnYYb2FCmVuZHN0cmVhbQplbmRvYmoKCjggMCBvYmoKPDwKL1NpemUgOQovUm9vdCAyIDAgUgovSW5mbyAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQovVHlwZSAvWFJlZgovTGVuZ3RoIDM4Ci9XIFsgMSAyIDIgXQovSW5kZXggWyAwIDkgXQo+PgpzdHJlYW0KeJwVxDEOACAMxLBcAbH247y5KB4MzBQXLFa2bNsJDcmDD1uWAuQKZW5kc3RyZWFtCmVuZG9iagoKc3RhcnR4cmVmCjM5NwolJUVPRg==";
 const metadataPdf =
-  "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDI2Ngo+PgpzdHJlYW0KeJxlkdFqgzAUhu/zFOcJmhMTjYIIm9WbMhjd7sYuXBs6S2mGRra+/U6aqIwhP8Fz/v87JyoAIQGlQILOQYFICyhLxl9vXwb4c3cyI+O7/jjCG1kQ9vDOeG2nqwPBqoqt3rpz3cWeWAiB8Oa/Dt/w7cH49L3P92a003CgAPnIzZ/Mse8e7Q/NQ3rSIt0kOeRKbPKCZs/A3l0MlG3TtohKImZ0Zg0pIxUkRUpDTatYE6QaMUHKNCGjo09Lmv0wuU87LNg6YuUaVWqtaRlQ6YLwOMK8TB9nc3ALZxv7KnLiOb/fGUlcdxvXyuaZxNuZ27cd6BdEoKaATsKdZuN8Dw/L/i1e+e/2CwBucYUKZW5kc3RyZWFtCmVuZG9iagoKNiAwIG9iago8PAovU2l6ZSA3Ci9Sb290IDIgMCBSCi9JbmZvIDQgMCBSCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCi9UeXBlIC9YUmVmCi9MZW5ndGggMzQKL1cgWyAxIDIgMiBdCi9JbmRleCBbIDAgNyBdCj4+CnN0cmVhbQp4nBXEMQ4AIAgEsB7G3Sf7cwgdiu5y2bLVduKRfAZDmwK0CmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgozODQKJSVFT0Y=";
+  "JVBERi0xLjcKJYGBgYEKCjUgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL09ialN0bQovTiA0Ci9GaXJzdCAyMAovTGVuZ3RoIDM2Nwo+PgpzdHJlYW0KeJzVkk1PwzAMhu/9FT7CZU1Tt2nRNGn04zIhTYMTiENZo1E0LahrBfv3OI3DQAjuqLLSxO/72FYSgQAJiBCDygAhSnKYz4Pw7vSqIVw3O30MwlXXHuGBJAI28BiEhRkPA0TBYhGctUUzNHuzC5wJIiv+rrAJm+61dU/5cKOPZuy3ZCAdqcMb3XbNtXmneoK+JE9mMoMMo1mWU20P7Ia9hnld1bUQGAuR0ppWFClFToEUiTtTyGcRRSGEFOSpnEexTsVUezkOz6b/xBaMjc9W9PjC2xwuwfNeIaFux6cXvR0+WSXnkVm8+v3EkNxyya2lvi7xVvr0Znq6BgYqMijpmvFCP4uFpT+aJ8i6N+241f1XyNQJAWTJJjuddBCZ0X/mwFMIN2G8pFztIlXcBLI2YX/FxWs3kdVixpP5ujlfmnL5P/vJ7eMwbdkMGi7KKylkSpPlVBATvL+kV9nrZjD/d7ip/84cfp2Q3v4HNsTTYgplbmRzdHJlYW0KZW5kb2JqCgo2IDAgb2JqCjw8Ci9TaXplIDcKL1Jvb3QgMiAwIFIKL0luZm8gNCAwIFIKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL1R5cGUgL1hSZWYKL0xlbmd0aCAzNQovVyBbIDEgMiAyIF0KL0luZGV4IFsgMCA3IF0KPj4Kc3RyZWFtCnicFcSxEQAgCASwPJ69++/nHHCkCLrLZctW24lH8hlEygMZCmVuZHN0cmVhbQplbmRvYmoKCnN0YXJ0eHJlZgo0ODUKJSVFT0Y=";
 
 function pdfBuffer(base64: string): Buffer {
   return Buffer.from(base64, "base64");
@@ -134,15 +134,15 @@ async function dropPdfOnReorderDropZone(
 async function deferZipTimer(page: Page): Promise<void> {
   await page.evaluate(() => {
     const zipWindow = window as typeof window & {
-      __localDocsNativeSetTimeout?: typeof window.setTimeout;
-      __localDocsZipTimeouts?: Array<() => void>;
+      __localFilesNativeSetTimeout?: typeof window.setTimeout;
+      __localFilesZipTimeouts?: Array<() => void>;
     };
 
-    zipWindow.__localDocsNativeSetTimeout = window.setTimeout.bind(window);
-    zipWindow.__localDocsZipTimeouts = [];
+    zipWindow.__localFilesNativeSetTimeout = window.setTimeout.bind(window);
+    zipWindow.__localFilesZipTimeouts = [];
     window.setTimeout = ((handler: TimerHandler, timeout?: number) => {
       if (timeout === 0) {
-        zipWindow.__localDocsZipTimeouts?.push(() => {
+        zipWindow.__localFilesZipTimeouts?.push(() => {
           if (typeof handler === "function") {
             handler();
           }
@@ -151,7 +151,7 @@ async function deferZipTimer(page: Page): Promise<void> {
         return 0;
       }
 
-      return zipWindow.__localDocsNativeSetTimeout?.(handler, timeout) ?? 0;
+      return zipWindow.__localFilesNativeSetTimeout?.(handler, timeout) ?? 0;
     }) as typeof window.setTimeout;
   });
 }
@@ -159,17 +159,17 @@ async function deferZipTimer(page: Page): Promise<void> {
 async function flushZipTimer(page: Page): Promise<void> {
   await page.evaluate(() => {
     const zipWindow = window as typeof window & {
-      __localDocsNativeSetTimeout?: typeof window.setTimeout;
-      __localDocsZipTimeouts?: Array<() => void>;
+      __localFilesNativeSetTimeout?: typeof window.setTimeout;
+      __localFilesZipTimeouts?: Array<() => void>;
     };
-    const pendingTimers = zipWindow.__localDocsZipTimeouts ?? [];
+    const pendingTimers = zipWindow.__localFilesZipTimeouts ?? [];
 
-    zipWindow.__localDocsZipTimeouts = [];
+    zipWindow.__localFilesZipTimeouts = [];
     pendingTimers.forEach((callback) => callback());
 
-    if (zipWindow.__localDocsNativeSetTimeout !== undefined) {
-      window.setTimeout = zipWindow.__localDocsNativeSetTimeout;
-      delete zipWindow.__localDocsNativeSetTimeout;
+    if (zipWindow.__localFilesNativeSetTimeout !== undefined) {
+      window.setTimeout = zipWindow.__localFilesNativeSetTimeout;
+      delete zipWindow.__localFilesNativeSetTimeout;
     }
   });
 }
@@ -211,14 +211,14 @@ async function expectZipUrlRevokedAfterLateInvalidation(
 
   await page.evaluate(() => {
     const zipWindow = window as typeof window & {
-      __localDocsNativeCreateObjectUrl?: typeof URL.createObjectURL;
-      __localDocsNativeRevokeObjectUrl?: typeof URL.revokeObjectURL;
-      __localDocsRevokedUrls?: string[];
+      __localFilesNativeCreateObjectUrl?: typeof URL.createObjectURL;
+      __localFilesNativeRevokeObjectUrl?: typeof URL.revokeObjectURL;
+      __localFilesRevokedUrls?: string[];
     };
 
-    zipWindow.__localDocsNativeCreateObjectUrl = URL.createObjectURL.bind(URL);
-    zipWindow.__localDocsNativeRevokeObjectUrl = URL.revokeObjectURL.bind(URL);
-    zipWindow.__localDocsRevokedUrls = [];
+    zipWindow.__localFilesNativeCreateObjectUrl = URL.createObjectURL.bind(URL);
+    zipWindow.__localFilesNativeRevokeObjectUrl = URL.revokeObjectURL.bind(URL);
+    zipWindow.__localFilesRevokedUrls = [];
 
     URL.createObjectURL = ((object: Blob | MediaSource) => {
       if (object instanceof Blob && object.type === "application/zip") {
@@ -231,14 +231,14 @@ async function expectZipUrlRevokedAfterLateInvalidation(
         return "blob:stale-split-zip";
       }
 
-      return zipWindow.__localDocsNativeCreateObjectUrl?.(object) ?? "";
+      return zipWindow.__localFilesNativeCreateObjectUrl?.(object) ?? "";
     }) as typeof URL.createObjectURL;
 
     URL.revokeObjectURL = ((url: string) => {
-      zipWindow.__localDocsRevokedUrls?.push(url);
+      zipWindow.__localFilesRevokedUrls?.push(url);
 
       if (url !== "blob:stale-split-zip") {
-        zipWindow.__localDocsNativeRevokeObjectUrl?.(url);
+        zipWindow.__localFilesNativeRevokeObjectUrl?.(url);
       }
     }) as typeof URL.revokeObjectURL;
   });
@@ -254,23 +254,23 @@ async function expectZipUrlRevokedAfterLateInvalidation(
 
   const revokedUrls = await page.evaluate(() => {
     const zipWindow = window as typeof window & {
-      __localDocsNativeCreateObjectUrl?: typeof URL.createObjectURL;
-      __localDocsNativeRevokeObjectUrl?: typeof URL.revokeObjectURL;
-      __localDocsRevokedUrls?: string[];
+      __localFilesNativeCreateObjectUrl?: typeof URL.createObjectURL;
+      __localFilesNativeRevokeObjectUrl?: typeof URL.revokeObjectURL;
+      __localFilesRevokedUrls?: string[];
     };
-    const urls = zipWindow.__localDocsRevokedUrls ?? [];
+    const urls = zipWindow.__localFilesRevokedUrls ?? [];
 
-    if (zipWindow.__localDocsNativeCreateObjectUrl !== undefined) {
-      URL.createObjectURL = zipWindow.__localDocsNativeCreateObjectUrl;
-      delete zipWindow.__localDocsNativeCreateObjectUrl;
+    if (zipWindow.__localFilesNativeCreateObjectUrl !== undefined) {
+      URL.createObjectURL = zipWindow.__localFilesNativeCreateObjectUrl;
+      delete zipWindow.__localFilesNativeCreateObjectUrl;
     }
 
-    if (zipWindow.__localDocsNativeRevokeObjectUrl !== undefined) {
-      URL.revokeObjectURL = zipWindow.__localDocsNativeRevokeObjectUrl;
-      delete zipWindow.__localDocsNativeRevokeObjectUrl;
+    if (zipWindow.__localFilesNativeRevokeObjectUrl !== undefined) {
+      URL.revokeObjectURL = zipWindow.__localFilesNativeRevokeObjectUrl;
+      delete zipWindow.__localFilesNativeRevokeObjectUrl;
     }
 
-    delete zipWindow.__localDocsRevokedUrls;
+    delete zipWindow.__localFilesRevokedUrls;
 
     return urls;
   });
@@ -292,7 +292,7 @@ async function expectCurrentSection(
   await expect(currentSection).toHaveCSS("height", "1px");
 }
 
-test("LocalDocs web shell syncs current section with hash navigation", async ({
+test("LocalFiles web shell syncs current section with hash navigation", async ({
   page,
 }) => {
   await page.goto("/#merge");
@@ -310,7 +310,7 @@ test("LocalDocs web shell syncs current section with hash navigation", async ({
   await expectCurrentSection(page, "Merge PDF");
 });
 
-test("LocalDocs web shell supports local-first PDF workflows", async ({
+test("LocalFiles web shell supports local-first PDF workflows", async ({
   page,
 }) => {
   const externalRequests: string[] = [];
@@ -325,7 +325,9 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
 
   await page.goto("/");
 
-  await expect(page.getByRole("link", { name: "LocalDocs.org" })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "LocalFiles.org" }),
+  ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       name: "PDF utilities that stay on your device.",
@@ -941,7 +943,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   ).toBeVisible();
   await expect(page.locator("#metadata").getByText("Author")).toBeVisible();
   await expect(
-    page.locator("#metadata").getByText("LocalDocs Test"),
+    page.locator("#metadata").getByText("LocalFiles Test"),
   ).toBeVisible();
 
   const metadataDownloadPromise = page.waitForEvent("download");
@@ -1109,7 +1111,7 @@ test("LocalDocs web shell supports local-first PDF workflows", async ({
   const download = await downloadPromise;
   const downloadPath = await download.path();
 
-  expect(download.suggestedFilename()).toBe("localdocs-merged.pdf");
+  expect(download.suggestedFilename()).toBe("localfiles-merged.pdf");
   expect(downloadPath).not.toBeNull();
 
   const downloadedBytes = await readFile(downloadPath ?? "");

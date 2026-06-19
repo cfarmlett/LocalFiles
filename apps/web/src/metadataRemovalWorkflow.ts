@@ -1,4 +1,4 @@
-import { type PdfAdapter, type PdfDocumentMetadata } from "@localdocs/pdf";
+import { type PdfAdapter, type PdfDocumentMetadata } from "@localfiles/pdf";
 
 import { getPdfErrorMessage, validatePdfFile } from "./mergeWorkflow";
 

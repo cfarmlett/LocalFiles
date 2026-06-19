@@ -1,6 +1,6 @@
 Status: Completed historical implementation task.
 
-Implement RP-003: Drag-and-Drop Page Reordering for LocalDocs.
+Implement RP-003: Drag-and-Drop Page Reordering for LocalFiles.
 
 Context:
 
@@ -10,7 +10,7 @@ Context:
 - RP-001 (Reset Page Order) has been completed.
 - Reorder Pages currently supports page reordering through existing controls.
 - Users need a faster, more intuitive way to reorder pages directly.
-- Preserve LocalDocs' privacy-first, local-only architecture.
+- Preserve LocalFiles' privacy-first, local-only architecture.
 - Do not add cloud processing, analytics, telemetry, external uploads, accounts, or network dependencies.
 
 Reference documentation:

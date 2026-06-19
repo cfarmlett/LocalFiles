@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Propose a focused LocalDocs improvement
+about: Propose a focused LocalFiles improvement
 title: "[Feature]: "
 labels: enhancement
 assignees: ""

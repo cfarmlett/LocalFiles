@@ -1,6 +1,6 @@
-# Contributing to LocalDocs
+# Contributing to LocalFiles
 
-LocalDocs welcomes focused changes that preserve its privacy-first,
+LocalFiles welcomes focused changes that preserve its privacy-first,
 browser-local processing model.
 
 ## Development Setup

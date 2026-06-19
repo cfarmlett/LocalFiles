@@ -1,15 +1,15 @@
-# LocalDocs V1 Product Specification
+# LocalFiles V1 Product Specification
 
 ## Vision
 
-LocalDocs provides privacy-first PDF tools that run entirely on the user's
+LocalFiles provides privacy-first PDF tools that run entirely on the user's
 device. Users can complete common PDF workflows without uploading files,
 creating accounts, or sacrificing privacy.
 
 ## Product Principles
 
 - All processing occurs locally on the user's device.
-- No document uploads to LocalDocs servers.
+- No document uploads to LocalFiles servers.
 - No user accounts required.
 - No advertisements.
 - No analytics or telemetry.
@@ -197,7 +197,7 @@ Reason:
   not be shipped as V1 work.
 
 Future desktop or native research may revisit redaction with stronger tooling
-and verification. Until then, LocalDocs should communicate that browser
+and verification. Until then, LocalFiles should communicate that browser
 redaction is intentionally unavailable, not forgotten.
 
 ### Other Exclusions
@@ -222,7 +222,7 @@ The following features are also out of scope for V1:
 ### Privacy
 
 - Documents never leave the user's device in current local workflows.
-- No document contents are transmitted to LocalDocs servers.
+- No document contents are transmitted to LocalFiles servers.
 - No analytics, telemetry, trackers, external fonts, or CDN assets.
 
 ### Reliability

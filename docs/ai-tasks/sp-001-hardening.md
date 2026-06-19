@@ -159,7 +159,7 @@ If not, is the gap significant?
 If so:
 
 - quantify the duplication where practical
-- assess whether it is reasonable for realistic LocalDocs usage
+- assess whether it is reasonable for realistic LocalFiles usage
 
 28. Are memory and performance reasonable for large but realistic split outputs?
 

@@ -1,20 +1,20 @@
-# LocalDocs
+# LocalFiles
 
 Privacy-first PDF tools that run locally in the browser.
 
-LocalDocs currently focuses on common PDF workflows for people who do not want
+LocalFiles currently focuses on common PDF workflows for people who do not want
 to upload sensitive files to unknown servers. The browser app has no backend,
 accounts, analytics, telemetry, ads, trackers, or server upload path for the
 implemented V1 workflows.
 
 For the implemented workflows, documents remain in browser memory and are not
-uploaded to a LocalDocs document-processing server. See the
+uploaded to a LocalFiles document-processing server. See the
 [privacy and processing model](docs/privacy-and-processing.md) for the exact
 current behavior and limits.
 
 ## Project Status
 
-The current LocalDocs version is the `1.5.0-rc1` release candidate. Final
+The current LocalFiles version is the `1.5.0-rc1` release candidate. Final
 validation and early feedback are underway. It is prerelease software, not a
 final `1.5.0` release.
 
@@ -83,7 +83,7 @@ exploit details or sensitive information in public issues.
 
 ## Versioning and Releases
 
-LocalDocs follows semantic versioning. The root `package.json` version is the
+LocalFiles follows semantic versioning. The root `package.json` version is the
 authoritative product version; private workspace packages may remain at
 `0.0.0` because they are not published independently.
 
@@ -96,4 +96,4 @@ Notable release changes are recorded in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-LocalDocs is licensed under the [Apache License 2.0](LICENSE).
+LocalFiles is licensed under the [Apache License 2.0](LICENSE).

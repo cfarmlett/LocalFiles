@@ -1,8 +1,8 @@
-# Implement the LocalDocs V1 Metadata Removal Workflow
+# Implement the LocalFiles V1 Metadata Removal Workflow
 
 ## Context
 
-- LocalDocs is a privacy-first, local-only browser PDF tool.
+- LocalFiles is a privacy-first, local-only browser PDF tool.
 - Merge PDF, Split PDF, Reorder Pages, Rotate Pages, and Delete Pages are already implemented and hardened.
 - The PDF adapter already supports reading metadata through `readMetadata()`.
 - This task is product development for Metadata Removal only.

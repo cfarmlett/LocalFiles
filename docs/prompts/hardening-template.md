@@ -1,6 +1,6 @@
-# LocalDocs Hardening Review Template
+# LocalFiles Hardening Review Template
 
-This document defines the standard hardening review process for LocalDocs features.
+This document defines the standard hardening review process for LocalFiles features.
 
 Feature-specific hardening prompts should reference this document and add only the feature-specific review areas.
 
@@ -159,7 +159,7 @@ Ensure user-facing errors are:
 - clear
 - sanitized
 - actionable
-- consistent with other LocalDocs tools
+- consistent with other LocalFiles tools
 
 ---
 
@@ -217,7 +217,7 @@ Do not perform speculative performance work.
 
 ### 11. Workflow Consistency
 
-Review whether the feature remains consistent with other LocalDocs tools.
+Review whether the feature remains consistent with other LocalFiles tools.
 
 Consider:
 

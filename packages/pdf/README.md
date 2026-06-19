@@ -1,6 +1,6 @@
 # packages/pdf
 
-Thin PDF abstraction layer for LocalDocs.
+Thin PDF abstraction layer for LocalFiles.
 
 This package defines the PDF adapter contract that the rest of the app should depend on. PDF implementation details stay behind this boundary so app code does not depend directly on a specific PDF library.
 

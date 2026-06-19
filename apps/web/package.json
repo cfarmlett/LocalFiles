@@ -1,5 +1,5 @@
 {
-  "name": "@localdocs/web",
+  "name": "@localfiles/web",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,9 +11,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@localdocs/core": "workspace:*",
-    "@localdocs/pdf": "workspace:*",
-    "@localdocs/ui": "workspace:*",
+    "@localfiles/core": "workspace:*",
+    "@localfiles/pdf": "workspace:*",
+    "@localfiles/ui": "workspace:*",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

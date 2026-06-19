@@ -2,7 +2,7 @@ import {
   PdfProcessingError,
   type PdfAdapter,
   type PdfDocumentMetadata,
-} from "@localdocs/pdf";
+} from "@localfiles/pdf";
 
 import { getPdfErrorMessage, validatePdfFile } from "./mergeWorkflow";
 

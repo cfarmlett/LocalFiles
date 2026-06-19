@@ -30,22 +30,22 @@ export default tseslint.config(
         {
           name: "EventSource",
           message:
-            "Network access requires an explicit LocalDocs privacy review.",
+            "Network access requires an explicit LocalFiles privacy review.",
         },
         {
           name: "WebSocket",
           message:
-            "Network access requires an explicit LocalDocs privacy review.",
+            "Network access requires an explicit LocalFiles privacy review.",
         },
         {
           name: "XMLHttpRequest",
           message:
-            "Network access requires an explicit LocalDocs privacy review.",
+            "Network access requires an explicit LocalFiles privacy review.",
         },
         {
           name: "fetch",
           message:
-            "Network access requires an explicit LocalDocs privacy review.",
+            "Network access requires an explicit LocalFiles privacy review.",
         },
       ],
     },

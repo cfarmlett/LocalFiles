@@ -4,7 +4,7 @@ Perform a read-only hardening review of the completed UX-005 implementation.
 
 Context:
 
-UX-005 introduces collapsible large workflow sections for LocalDocs.
+UX-005 introduces collapsible large workflow sections for LocalFiles.
 
 The intended scope is narrow: collapse large repeated-content regions that can grow substantially with large PDFs, not entire workflows.
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { PlaceholderPanel, PrivacyNote, Section } from "@localdocs/ui";
+import { PlaceholderPanel, PrivacyNote, Section } from "@localfiles/ui";
 
 import { DeletePagesPage } from "./DeletePagesPage";
 import { MergePdfPage } from "./MergePdfPage";
@@ -80,7 +80,7 @@ export function App() {
           href="#home"
           onClick={() => setActiveSection("home")}
         >
-          LocalDocs.org
+          LocalFiles.org
         </a>
         <nav className="nav" aria-label="Main navigation">
           {appSections.map((section) => (
@@ -101,7 +101,7 @@ export function App() {
           <p className="eyebrow">Local-first document tools</p>
           <h1>PDF utilities that stay on your device.</h1>
           <p className="hero-copy">
-            LocalDocs.org is a browser app for common PDF workflows: Merge PDF,
+            LocalFiles.org is a browser app for common PDF workflows: Merge PDF,
             Split PDF, Reorder Pages, Rotate Pages, Delete Pages, and Remove
             Metadata. Tools run locally in your browser by default.
           </p>

@@ -4,7 +4,7 @@ import {
   PdfProcessingError,
   type PdfAdapter,
   type PdfPageRange,
-} from "@localdocs/pdf";
+} from "@localfiles/pdf";
 
 import {
   buildSplitFileItem,

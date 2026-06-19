@@ -2,7 +2,7 @@
 
 ## Context
 
-LocalDocs currently supports:
+LocalFiles currently supports:
 
 - Merge PDF
 - Split PDF

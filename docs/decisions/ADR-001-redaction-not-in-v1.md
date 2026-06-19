@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-LocalDocs is a privacy-first, local-only browser PDF tool. Redaction has a much
+LocalFiles is a privacy-first, local-only browser PDF tool. Redaction has a much
 higher trust requirement than page manipulation or metadata removal: successful
 redaction means targeted information is removed from all recoverable
 representations in the resulting PDF and cannot reasonably be recovered through
@@ -17,7 +17,7 @@ not provide enough capability or verification confidence to meet that standard.
 
 ## Decision
 
-LocalDocs will not implement browser redaction in V1.
+LocalFiles will not implement browser redaction in V1.
 
 The Redact PDF section may remain only as a clear placeholder that says
 redaction is high risk and intentionally unavailable. Browser redaction should

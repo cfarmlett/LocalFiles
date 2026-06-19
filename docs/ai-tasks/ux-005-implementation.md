@@ -1,6 +1,6 @@
 Status: Completed historical implementation task.
 
-Implement UX-005: Collapsible Large Workflow Sections for LocalDocs.
+Implement UX-005: Collapsible Large Workflow Sections for LocalFiles.
 
 Context:
 
@@ -15,7 +15,7 @@ Context:
   - Delete Pages page lists
 
 - These large sections can make the page difficult to navigate.
-- Preserve LocalDocs' privacy-first, local-only architecture.
+- Preserve LocalFiles' privacy-first, local-only architecture.
 - Do not add cloud processing, analytics, telemetry, external uploads, accounts, or network dependencies.
 
 Reference documentation:

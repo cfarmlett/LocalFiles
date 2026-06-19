@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { PdfProcessingError, type PdfAdapter } from "@localdocs/pdf";
+import { PdfProcessingError, type PdfAdapter } from "@localfiles/pdf";
 
 import {
   buildMetadataRemovalFileItem,
@@ -23,7 +23,7 @@ function createItem(): MetadataRemovalFileItem {
     metadata: {
       pageCount: 2,
       title: "Quarterly Plan",
-      author: "LocalDocs",
+      author: "LocalFiles",
       keywords: "private local",
     },
   };
@@ -35,7 +35,7 @@ function createAdapter(): PdfAdapter {
     readMetadata: vi.fn(async () => ({
       pageCount: 2,
       title: "Quarterly Plan",
-      author: "LocalDocs",
+      author: "LocalFiles",
     })),
     split: vi.fn(),
     merge: vi.fn(),

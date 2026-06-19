@@ -10,17 +10,17 @@ describe("ExportResultPanel", () => {
         results={[
           {
             id: "merged",
-            filename: "localdocs-merged.pdf",
+            filename: "localfiles-merged.pdf",
             bytes: new Uint8Array(),
             mimeType: "application/pdf",
-            url: "blob:localdocs-merged",
+            url: "blob:localfiles-merged",
           },
         ]}
       />,
     );
 
     expect(markup).toContain("PDF Generated");
-    expect(markup).toContain("localdocs-merged.pdf");
+    expect(markup).toContain("localfiles-merged.pdf");
     expect(markup).toContain("Download PDF");
     expect(markup).toContain("Open PDF");
     expect(markup).not.toContain("<details");

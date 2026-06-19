@@ -1,13 +1,13 @@
 Status: Completed historical implementation task.
 
-Implement UX-003: Persistent Export Result Panel for LocalDocs.
+Implement UX-003: Persistent Export Result Panel for LocalFiles.
 
 Context:
 
 - This is the first V1.5 implementation task.
 - A read-only architecture review has already been completed.
 - V1.5 is focused on UX polish and workflow refinement.
-- Preserve LocalDocs' privacy-first, local-only architecture.
+- Preserve LocalFiles' privacy-first, local-only architecture.
 - Do not add cloud processing, analytics, telemetry, external uploads, accounts, or network dependencies.
 
 Reference documentation:

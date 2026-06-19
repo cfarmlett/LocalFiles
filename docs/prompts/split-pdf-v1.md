@@ -1,8 +1,8 @@
-Implement the LocalDocs V1 Split PDF workflow.
+Implement the LocalFiles V1 Split PDF workflow.
 
 Context:
 
-- LocalDocs is a privacy-first, local-only browser PDF tool.
+- LocalFiles is a privacy-first, local-only browser PDF tool.
 - Merge PDF is already implemented and should be treated as the implementation pattern.
 - CI, testing, TypeScript separation, and repository hygiene are already in place.
 - This task is product development for Split PDF only.

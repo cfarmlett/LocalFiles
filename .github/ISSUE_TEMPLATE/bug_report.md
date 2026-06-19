@@ -20,7 +20,7 @@ What happened, and what did you expect instead?
 
 - Browser and version:
 - Operating system:
-- LocalDocs version or commit:
+- LocalFiles version or commit:
 
 ## Privacy and Safety
 

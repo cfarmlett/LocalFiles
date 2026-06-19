@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 
-import { LocalPdfAdapter, type PdfAdapter } from "@localdocs/pdf";
+import { LocalPdfAdapter, type PdfAdapter } from "@localfiles/pdf";
 
 import { createAsyncOperationTracker } from "./asyncOperationToken";
 import {

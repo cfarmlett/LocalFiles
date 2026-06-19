@@ -1,6 +1,6 @@
-# LocalDocs Independent Review Template
+# LocalFiles Independent Review Template
 
-You are acting as an independent reviewer of the LocalDocs codebase.
+You are acting as an independent reviewer of the LocalFiles codebase.
 
 This is a read-only review.
 
@@ -101,7 +101,7 @@ Identify areas where tests may not fully prove correctness.
 
 ### 3. Privacy and Trust
 
-LocalDocs makes strong claims:
+LocalFiles makes strong claims:
 
 - local processing
 - no uploads

@@ -1,8 +1,8 @@
-# Implement the LocalDocs V1 Delete Pages Workflow
+# Implement the LocalFiles V1 Delete Pages Workflow
 
 ## Context
 
-- LocalDocs is a privacy-first, local-only browser PDF tool.
+- LocalFiles is a privacy-first, local-only browser PDF tool.
 - Merge PDF, Split PDF, Reorder Pages, and Rotate Pages are already implemented.
 - This task is product development for Delete Pages only.
 - Do not implement Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.

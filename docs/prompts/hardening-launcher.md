@@ -1,6 +1,6 @@
-# LocalDocs Hardening Review Launcher
+# LocalFiles Hardening Review Launcher
 
-You are performing a LocalDocs feature hardening review.
+You are performing a LocalFiles feature hardening review.
 
 A feature-specific hardening prompt will be provided separately.
 

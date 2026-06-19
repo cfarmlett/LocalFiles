@@ -1,6 +1,6 @@
 # apps/web
 
-Browser application for LocalDocs.org.
+Browser application for LocalFiles.org.
 
 This app is a Vite, React, and TypeScript browser app for local-first PDF tools.
 The current V1 workflows are Merge PDF, Split PDF, Reorder Pages, Rotate Pages,

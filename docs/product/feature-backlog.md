@@ -1,4 +1,4 @@
-# LocalDocs Feature Backlog
+# LocalFiles Feature Backlog
 
 Ideas worth preserving for future evaluation.
 
@@ -183,7 +183,7 @@ Allow advanced workflows to optionally expose both Preview and Export actions wh
 Status: Backlog
 
 Description:
-Establish a consistent export workflow and terminology across all LocalDocs tools.
+Establish a consistent export workflow and terminology across all LocalFiles tools.
 
 Example:
 
@@ -266,7 +266,7 @@ Generate Again
 Motivation:
 Automatically downloading files immediately after processing is convenient for some users but can feel disruptive for others.
 
-A persistent result panel gives users more control over what happens next while keeping the generated document readily available. It also provides a foundation for more advanced workflows as LocalDocs grows.
+A persistent result panel gives users more control over what happens next while keeping the generated document readily available. It also provides a foundation for more advanced workflows as LocalFiles grows.
 
 Notes:
 
@@ -375,7 +375,7 @@ Low
 
 ## Context
 
-LocalDocs currently generates workflow-specific output filenames such as:
+LocalFiles currently generates workflow-specific output filenames such as:
 
 ```text
 document-merged.pdf
@@ -550,7 +550,7 @@ Do not:
 - Filename generation remains deterministic.
 - Existing workflows continue functioning.
 - Output filenames remain readable and predictable.
-- No LocalDocs privacy guarantees are affected.
+- No LocalFiles privacy guarantees are affected.
 
 ---
 
@@ -593,7 +593,7 @@ Add a local ZIP download option when Split PDF produces multiple output files.
 
 Motivation:
 Split can produce many PDFs. ZIP export would make multi-output downloads easier
-without changing LocalDocs' local-only processing model.
+without changing LocalFiles' local-only processing model.
 
 Notes:
 

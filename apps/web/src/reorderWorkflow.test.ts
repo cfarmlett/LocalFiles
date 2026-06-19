@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { PdfProcessingError, type PdfAdapter } from "@localdocs/pdf";
+import { PdfProcessingError, type PdfAdapter } from "@localfiles/pdf";
 
 import {
   buildReorderFileItem,

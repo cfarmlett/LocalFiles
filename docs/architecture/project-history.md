@@ -1,12 +1,22 @@
-# LocalDocs Foundation Phase
+# LocalFiles Foundation and Project History
 
 ## Purpose
 
-This document records the major setup, architecture, tooling, and process decisions made during the initial creation of LocalDocs.
+This document records the major setup, architecture, tooling, and process
+decisions made during the initial creation of the project under its original
+LocalDocs name.
 
 The goal is not only to document what was done, but why it was done. Future
 contributors should be able to understand the reasoning behind early decisions
 and determine whether those reasons still apply.
+
+## Pre-Public-Launch Rename
+
+The project began as LocalDocs and was renamed to LocalFiles prior to public
+launch to better reflect a broader vision of privacy-first local file processing
+beyond documents. The rename updated current application, repository, package,
+and domain branding; historical Git commits and the existing release-candidate
+tag were intentionally left unchanged.
 
 ---
 
@@ -27,7 +37,7 @@ Core principles:
 
 ### Why
 
-Many existing document utility websites require users to upload potentially sensitive files to unknown servers. LocalDocs aims to compete primarily on trust and transparency rather than feature count.
+Many existing document utility websites require users to upload potentially sensitive files to unknown servers. LocalFiles aims to compete primarily on trust and transparency rather than feature count.
 
 The philosophy was intentionally defined before implementation so that architecture decisions could support it.
 
@@ -435,7 +445,7 @@ Throughout the foundation phase, preference was given to:
 
 The primary question remains:
 
-> Does this make LocalDocs more trustworthy, useful, and maintainable without adding unnecessary complexity?
+> Does this make LocalFiles more trustworthy, useful, and maintainable without adding unnecessary complexity?
 
 If the answer is no, the change should generally be deferred.
 

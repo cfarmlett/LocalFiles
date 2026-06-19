@@ -1,8 +1,8 @@
-# Implement the LocalDocs V1 Rotate Pages Workflow
+# Implement the LocalFiles V1 Rotate Pages Workflow
 
 ## Context
 
-- LocalDocs is a privacy-first, local-only browser PDF tool.
+- LocalFiles is a privacy-first, local-only browser PDF tool.
 - Merge PDF, Split PDF, and Reorder Pages are already implemented.
 - This task is product development for Rotate Pages only.
 - Do not implement Delete Pages, Extract Pages, compression, ZIP export, OCR, AI, accounts, telemetry, analytics, backend upload paths, or cloud processing.

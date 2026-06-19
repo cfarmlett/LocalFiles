@@ -1,13 +1,13 @@
 # Security Policy
 
-LocalDocs processes documents locally in the browser. The current application
+LocalFiles processes documents locally in the browser. The current application
 has no document-processing backend, upload path, analytics, telemetry,
 advertising, or tracking. Security reports that could affect this model are
 especially important.
 
 ## Supported Versions
 
-The current LocalDocs version is the `1.5.0-rc1` release candidate. Only this
+The current LocalFiles version is the `1.5.0-rc1` release candidate. Only this
 release-candidate line is supported while the project is in prerelease.
 Historical development versions are not supported, and no support commitment
 is made here for future versions.
@@ -45,7 +45,7 @@ Useful reports include:
 - privacy or security claims that do not match implementation behavior.
 
 Reports about compromised devices, malicious browser extensions, or behavior
-outside LocalDocs code may be out of scope unless LocalDocs makes the impact
+outside LocalFiles code may be out of scope unless LocalFiles makes the impact
 worse.
 
 See the [threat model](docs/security/threat-model.md) and

@@ -9,7 +9,7 @@ assignees: ""
 ## Before Posting
 
 Do not use this public template for exploit details, credentials, sensitive
-documents, personal information, or other confidential material. LocalDocs does
+documents, personal information, or other confidential material. LocalFiles does
 not yet publish a private vulnerability-reporting channel. Read the
 repository's `SECURITY.md` before continuing.
 

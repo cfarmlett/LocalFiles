@@ -8,7 +8,7 @@ export default defineConfig({
     baseURL: "http://127.0.0.1:5173",
   },
   webServer: {
-    command: "pnpm --filter @localdocs/web dev -- --host 127.0.0.1",
+    command: "pnpm --filter @localfiles/web dev -- --host 127.0.0.1",
     reuseExistingServer: false,
     url: "http://127.0.0.1:5173",
   },

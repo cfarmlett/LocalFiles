@@ -1,6 +1,6 @@
-# LocalDocs Redaction Research & Capability Assessment
+# LocalFiles Redaction Research & Capability Assessment
 
-Perform a read-only research and design assessment for a potential LocalDocs Redaction feature.
+Perform a read-only research and design assessment for a potential LocalFiles Redaction feature.
 
 This is not an implementation task.
 
@@ -11,13 +11,13 @@ Do not add dependencies.
 Do not create UI.
 Do not create tests.
 
-The goal is to determine whether redaction can be implemented safely, what level of redaction is feasible with the current architecture, what limitations exist, and what LocalDocs could honestly claim.
+The goal is to determine whether redaction can be implemented safely, what level of redaction is feasible with the current architecture, what limitations exist, and what LocalFiles could honestly claim.
 
 ---
 
 ## Project Context
 
-LocalDocs is a privacy-first, local-only browser PDF tool.
+LocalFiles is a privacy-first, local-only browser PDF tool.
 
 Core principles:
 
@@ -49,9 +49,9 @@ Current architecture:
 
 ## Independence Requirement
 
-Do not assume that LocalDocs should implement redaction.
+Do not assume that LocalFiles should implement redaction.
 
-One valid outcome of this assessment is that redaction should not be implemented in the browser version of LocalDocs.
+One valid outcome of this assessment is that redaction should not be implemented in the browser version of LocalFiles.
 
 Evaluate whether the feature should exist at all before evaluating how it should be implemented.
 
@@ -94,14 +94,14 @@ Instead, produce a capability map.
 
 For each part of the redaction definition, determine:
 
-1. Can LocalDocs achieve this with the current stack?
+1. Can LocalFiles achieve this with the current stack?
 2. If not, what specific parts cannot be achieved?
 3. Can those gaps be closed with additional browser-compatible libraries?
 4. Would the gap require a desktop/native component?
 5. Would the gap require server-side processing?
 6. Would the gap be impractical or unreliable even with additional tooling?
 7. What automated verification would be possible?
-8. What claims could LocalDocs safely make?
+8. What claims could LocalFiles safely make?
 
 ---
 
@@ -235,7 +235,7 @@ The redacted information is removed from:
 
 ### 17. Verification
 
-LocalDocs can automatically verify that the redacted target is no longer recoverable through supported methods.
+LocalFiles can automatically verify that the redacted target is no longer recoverable through supported methods.
 
 ---
 
@@ -421,7 +421,7 @@ Provide a strongest-to-weakest ranking with explanations.
 
 ## Automated Verification
 
-Evaluate what LocalDocs could automatically verify.
+Evaluate what LocalFiles could automatically verify.
 
 Examples:
 
@@ -446,9 +446,9 @@ Based on the capability matrix, propose safe user-facing language.
 
 Include:
 
-### 1. Claims LocalDocs Could Safely Make
+### 1. Claims LocalFiles Could Safely Make
 
-### 2. Claims LocalDocs Must Avoid
+### 2. Claims LocalFiles Must Avoid
 
 ### 3. Warning Language
 
@@ -482,7 +482,7 @@ Identify:
 - unsupported PDF structures
 - categories of information that may remain recoverable
 
-Explicitly identify situations where LocalDocs should refuse to claim successful redaction.
+Explicitly identify situations where LocalFiles should refuse to claim successful redaction.
 
 ---
 

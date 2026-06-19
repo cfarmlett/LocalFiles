@@ -6,7 +6,7 @@ docs/prompts/claude-review-template.md
 
 Review Scope:
 
-The LocalDocs codebase after completion and hardening of:
+The LocalFiles codebase after completion and hardening of:
 
 ### Core PDF Workflows
 
@@ -41,7 +41,7 @@ The LocalDocs codebase after completion and hardening of:
 
 Purpose:
 
-This review is intended to evaluate LocalDocs as a V1.5 pre-release candidate before a friends-and-family feedback release.
+This review is intended to evaluate LocalFiles as a V1.5 pre-release candidate before a friends-and-family feedback release.
 
 Review only what currently exists.
 
@@ -62,7 +62,7 @@ The goal of this review is release readiness, not feature ideation.
 
 ## Project Context
 
-LocalDocs is a privacy-first, local-only document-processing application.
+LocalFiles is a privacy-first, local-only document-processing application.
 
 Core principles:
 
@@ -118,7 +118,7 @@ Evaluate:
 
 ### Privacy / Security
 
-Verify LocalDocs still appears to satisfy:
+Verify LocalFiles still appears to satisfy:
 
 - Local-only processing
 - No uploads
@@ -225,7 +225,7 @@ What is concerning?
 
 ### 6. Privacy / Trust Assessment
 
-Would the implementation support LocalDocs' trust-first positioning?
+Would the implementation support LocalFiles' trust-first positioning?
 
 ### 7. UX Assessment
 

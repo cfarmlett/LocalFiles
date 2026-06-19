@@ -1,6 +1,6 @@
 Status: Completed historical implementation task.
 
-Implement RP-001: Reset Page Order for LocalDocs.
+Implement RP-001: Reset Page Order for LocalFiles.
 
 Context:
 
@@ -8,7 +8,7 @@ Context:
 - UX-004 (Clear Loaded Document) has been completed.
 - UX-005 (Collapsible Large Workflow Sections) has been completed.
 - Reorder Pages currently allows users to modify page order, but users need a fast way to restore the original document order without clearing the loaded document.
-- Preserve LocalDocs' privacy-first, local-only architecture.
+- Preserve LocalFiles' privacy-first, local-only architecture.
 - Do not add cloud processing, analytics, telemetry, external uploads, accounts, or network dependencies.
 
 Reference documentation:

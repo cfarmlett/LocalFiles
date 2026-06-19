@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { PdfProcessingError, type PdfAdapter } from "@localdocs/pdf";
+import { PdfProcessingError, type PdfAdapter } from "@localfiles/pdf";
 
 import {
   buildMergeFileItem,
@@ -102,7 +102,7 @@ describe("mergeFiles", () => {
     const files = [createItem("b", "b.pdf"), createItem("a", "a.pdf")];
     const result = await mergeFiles(files, adapter);
 
-    expect(result.filename).toBe("localdocs-merged.pdf");
+    expect(result.filename).toBe("localfiles-merged.pdf");
     expect(result.bytes).toEqual(new Uint8Array([1, 2, 3]));
     expect(adapter.merge).toHaveBeenCalledWith({
       documents: [files[0].bytes, files[1].bytes],

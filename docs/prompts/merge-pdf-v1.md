@@ -1,8 +1,8 @@
-Implement the LocalDocs Merge PDF workflow.
+Implement the LocalFiles Merge PDF workflow.
 
 Context:
 
-- LocalDocs is a privacy-first PDF utility suite.
+- LocalFiles is a privacy-first PDF utility suite.
 - All document processing must occur locally in the browser.
 - No document data may be uploaded to any server.
 - Simplicity, trust, privacy, and maintainability are higher priorities than feature count.

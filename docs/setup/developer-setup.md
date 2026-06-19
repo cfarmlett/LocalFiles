@@ -1,4 +1,4 @@
-# LocalDocs Development Setup
+# LocalFiles Development Setup
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Clone the repository and enter its root directory:
 
 ```bash
 git clone <repository-url>
-cd LocalDocs
+cd LocalFiles
 ```
 
 The repository URL will be available after the public GitHub repository is
@@ -50,7 +50,7 @@ pnpm exec playwright install --with-deps chromium
 ## Run the Application
 
 ```bash
-pnpm --filter @localdocs/web dev
+pnpm --filter @localfiles/web dev
 ```
 
 Vite serves the application at `http://127.0.0.1:5173` by default.

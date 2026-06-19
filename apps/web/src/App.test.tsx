@@ -21,7 +21,7 @@ describe("App shell", () => {
   it("renders local-first privacy copy", () => {
     const markup = renderToStaticMarkup(<App />);
 
-    expect(markup).toContain("LocalDocs.org");
+    expect(markup).toContain("LocalFiles.org");
     expect(markup).toContain("Files stay local in the browser.");
     expect(markup).toContain("No backend, no accounts, no analytics");
     expect(markup).toContain("Remove Metadata. Tools run locally");

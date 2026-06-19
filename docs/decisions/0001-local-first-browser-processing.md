@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-LocalDocs is intended to provide useful PDF utilities for people handling documents they may not want to upload to a random website. Likely users include individuals, small businesses, professional offices, and privacy-conscious technical users.
+LocalFiles is intended to provide useful PDF utilities for people handling documents they may not want to upload to a random website. Likely users include individuals, small businesses, professional offices, and privacy-conscious technical users.
 
 The project philosophy favors a public-service free tier, strong privacy posture, plain explanations, no dark patterns, no ads, no telemetry, and no surprise uploads. Premium features may later focus on batch processing, hosted convenience, saved workflows, automation, support, or team needs.
 
@@ -14,7 +14,7 @@ The first product architecture needs a default processing model before PDF featu
 
 ## Decision
 
-LocalDocs will default to local-first browser processing for document workflows whenever technically feasible.
+LocalFiles will default to local-first browser processing for document workflows whenever technically feasible.
 
 Selected files should remain on the user's device and be processed in the browser by default. The app should not require a backend, user account, analytics service, telemetry pipeline, or file upload path for local workflows.
 
