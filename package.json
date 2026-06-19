@@ -1,6 +1,6 @@
 {
   "name": "localdocs",
-  "version": "0.1.0",
+  "version": "1.5.0-rc1",
   "description": "Privacy-first local document tools.",
   "private": true,
   "type": "module",
@@ -16,14 +16,18 @@
   },
   "keywords": [],
   "author": "",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "packageManager": "pnpm@11.6.0",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.3",
     "eslint": "^10.5.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.6.0",
     "playwright": "^1.60.0",
     "prettier": "^3.8.4",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.1",
     "vitest": "^4.1.8"
   }
 }

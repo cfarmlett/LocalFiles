@@ -66,3 +66,14 @@ pnpm build
 See `docs/architecture/vision.md`, `docs/product/v1-product-spec.md`, and
 `docs/security/threat-model.md` for the product direction, roadmap, and trust
 model.
+
+## Versioning and Releases
+
+LocalDocs follows semantic versioning. The root `package.json` version is the
+authoritative product version; private workspace packages may remain at
+`0.0.0` because they are not published independently.
+
+Release tags use the root version prefixed with `v`. For example, product
+version `1.5.0-rc1` is tagged `v1.5.0-rc1`, and the final release is tagged
+`v1.5.0`. Release candidates must point to a commit that passes the same CI
+checks required for `main`.

@@ -2,6 +2,10 @@
 
 Reserved for future workflow definitions.
 
-CI runs formatting, typechecking, linting, unit tests, and builds without product telemetry, analytics, cloud upload assumptions, account systems, or payment behavior.
+CI runs formatting, typechecking, linting, unit tests, production builds, and
+Playwright E2E tests without product telemetry, analytics, cloud upload
+assumptions, account systems, or payment behavior.
 
-Playwright E2E is intentionally not part of the first CI pass. When added, install browser dependencies explicitly and run `pnpm test:e2e` after the standard verification job remains stable.
+The Playwright job installs only Chromium because the current E2E configuration
+targets desktop Chromium. The verification and E2E jobs are separate checks so
+both can be required by branch protection after the GitHub repository exists.
