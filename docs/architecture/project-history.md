@@ -4,7 +4,9 @@
 
 This document records the major setup, architecture, tooling, and process decisions made during the initial creation of LocalDocs.
 
-The goal is not only to document what was done, but why it was done. Future contributors (including future Chris) should be able to understand the reasoning behind early decisions and determine whether those reasons still apply.
+The goal is not only to document what was done, but why it was done. Future
+contributors should be able to understand the reasoning behind early decisions
+and determine whether those reasons still apply.
 
 ---
 
@@ -56,11 +58,8 @@ Docker and WSL2 were installed early even though they are not immediately requir
 
 # Phase 2: Repository Creation
 
-Repository location:
-
-```text
-D:\Downloads\Code\LocalDocs
-```
+The repository was created in a local development workspace. Its filesystem
+location is not technically significant.
 
 Git repository initialized.
 
@@ -75,8 +74,6 @@ master → main
 Git provides version control, history, and rollback capability.
 
 Using "main" aligns with modern repository conventions.
-
-The specific folder location was chosen because it fits the existing personal workflow and backup strategy rather than because it is technically required.
 
 ---
 
@@ -469,9 +466,12 @@ Completed V1.5/V1 polish:
 
 - ZIP export for Split PDF
 
+Completed public release-readiness documentation:
+
+- Public privacy and processing-model documentation
+
 Current V1 release-readiness work:
 
-- Privacy page and processing-model explanation
 - Accessibility review and improvements
 - Error-message consistency review
 - Success-message consistency review

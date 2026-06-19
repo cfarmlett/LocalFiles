@@ -1,13 +1,24 @@
 # LocalDocs
 
-Privacy-first document tools that run locally in the browser.
+Privacy-first PDF tools that run locally in the browser.
 
 LocalDocs currently focuses on common PDF workflows for people who do not want
 to upload sensitive files to unknown servers. The browser app has no backend,
 accounts, analytics, telemetry, ads, trackers, or server upload path for the
 implemented V1 workflows.
 
-## Current V1 Features
+For the implemented workflows, documents remain in browser memory and are not
+uploaded to a LocalDocs document-processing server. See the
+[privacy and processing model](docs/privacy-and-processing.md) for the exact
+current behavior and limits.
+
+## Project Status
+
+The current LocalDocs version is the `1.5.0-rc1` release candidate. Final
+validation and early feedback are underway. It is prerelease software, not a
+final `1.5.0` release.
+
+## Implemented Features
 
 Implemented and hardened:
 
@@ -18,16 +29,7 @@ Implemented and hardened:
 - Delete Pages
 - Metadata Removal
 
-V1 polish still planned:
-
-- Privacy page and processing-model explanation
-- Accessibility review and improvements
-- Error-message and success-message consistency review
-- Documentation alignment
-
-V1.5 feature work and hardening are complete.
-
-Completed V1.5 polish includes:
+Implemented workflow polish includes:
 
 - Persistent export result panel
 - Collapsible feature content
@@ -42,30 +44,42 @@ Completed V1.5 polish includes:
 - Pre-release polish for ZIP cleanup, current-section announcements, Delete
   Pages wording, and Remove Metadata terminology
 
-Current phase: final manual testing and release validation before the
-friends-and-family feedback release.
-
-Future backlog includes Merge drag-and-drop reordering, broader filename
-hygiene, Reorder Pages order-expression input, and rotation iconography.
+Ideas in product documents and backlogs are exploratory. They are not committed
+features or promised release content.
 
 Browser redaction is intentionally excluded from V1. The current browser-only
 architecture does not meet the project's definition of successful redaction, and
 offering partial redaction would create false confidence.
 
+## Requirements
+
+- Node.js 24
+- pnpm 11.6.0
+
 ## Development
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
 pnpm format:check
 pnpm typecheck
 pnpm lint
 pnpm test
+pnpm test:e2e
 pnpm build
 ```
 
-See `docs/architecture/vision.md`, `docs/product/v1-product-spec.md`, and
-`docs/security/threat-model.md` for the product direction, roadmap, and trust
-model.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, review, testing, privacy,
+and dependency expectations. Additional context is in the
+[project vision](docs/architecture/vision.md),
+[V1 product specification](docs/product/v1-product-spec.md), and
+[threat model](docs/security/threat-model.md).
+
+## Security
+
+Read [SECURITY.md](SECURITY.md) before reporting a vulnerability. A private
+reporting process will be established before public release; do not place
+exploit details or sensitive information in public issues.
 
 ## Versioning and Releases
 
@@ -77,3 +91,9 @@ Release tags use the root version prefixed with `v`. For example, product
 version `1.5.0-rc1` is tagged `v1.5.0-rc1`, and the final release is tagged
 `v1.5.0`. Release candidates must point to a commit that passes the same CI
 checks required for `main`.
+
+Notable release changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+LocalDocs is licensed under the [Apache License 2.0](LICENSE).

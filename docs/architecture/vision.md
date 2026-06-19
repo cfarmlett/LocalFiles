@@ -68,9 +68,10 @@ downloads, persistent export results, Clear actions, collapsible workflow
 sections, Reorder Pages reset/drag-and-drop polish, Split validation polish, and
 Metadata Removal filename-suffix idempotency.
 
-Current release preparation remains focused on:
+The current privacy and processing behavior is documented in
+[`docs/privacy-and-processing.md`](../privacy-and-processing.md). Remaining
+release preparation is focused on:
 
-- Privacy page and processing-model explanation
 - Accessibility review and improvements
 - Error-message and success-message consistency review
 - Documentation alignment
