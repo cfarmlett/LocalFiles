@@ -1,4 +1,7 @@
-# LocalFiles V1 Product Specification
+# Archived LocalFiles V1 Product Specification
+
+This completed release specification is preserved for historical context. See
+`docs/RELEASE_HISTORY.md` for the current milestone summary.
 
 ## Vision
 

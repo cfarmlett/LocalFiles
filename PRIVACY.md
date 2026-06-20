@@ -51,5 +51,5 @@ sanitization guarantee.
 Browser redaction is intentionally unavailable. Hiding content visually is not
 enough to guarantee that sensitive information has been removed from a PDF.
 
-For technical details, see the [security policy](../SECURITY.md) and
-[threat model](security/threat-model.md).
+For technical details, see the [security policy](SECURITY.md) and
+[threat model](docs/security/threat-model.md).

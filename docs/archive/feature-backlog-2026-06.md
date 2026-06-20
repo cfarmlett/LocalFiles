@@ -1,4 +1,7 @@
-# LocalFiles Feature Backlog
+# Archived LocalFiles Feature Backlog (June 2026)
+
+This snapshot preserves shipped items and implementation notes removed from the
+current user-focused backlog in `docs/FEATURE_BACKLOG.md`.
 
 Ideas worth preserving for future evaluation.
 

@@ -1,0 +1,73 @@
+# LocalFiles Release History
+
+This file summarizes major milestones. [`CHANGELOG.md`](../CHANGELOG.md) remains
+the detailed source for verifiable release-by-release changes.
+
+## Current Status
+
+LocalFiles is at `1.5.0-rc1`. It is a release candidate undergoing final
+validation and early feedback, not the final `1.5.0` release.
+
+## Foundation and Prototype
+
+The project began as LocalDocs with a privacy-first premise: useful document
+workflows should run locally whenever feasible, with no surprise uploads.
+
+The foundation established:
+
+- a pnpm monorepo with application, domain, PDF, UI, and configuration
+  boundaries;
+- a static React/Vite browser application;
+- the `PdfAdapter` boundary around PDF implementation details;
+- automated format, type, lint, unit, browser, and build checks;
+- a threat model and an accepted local-first processing decision; and
+- review practices for privacy-sensitive and AI-assisted changes.
+
+The fuller foundation narrative is preserved in
+[`archive/project-history.md`](archive/project-history.md).
+
+## V1 Core PDF Toolkit
+
+The initial product milestone delivered local browser workflows for:
+
+- Merge PDF
+- Split PDF
+- Reorder Pages
+- Rotate Pages
+- Delete Pages
+- Metadata Removal
+
+The product also established conservative limits: Metadata Removal is not
+described as forensic sanitization, and browser redaction remains unavailable
+because the current stack cannot provide the required guarantee.
+
+The completed V1 specification is archived at
+[`archive/v1-product-spec.md`](archive/v1-product-spec.md).
+
+## V1.5 Workflow Polish and Release Candidate
+
+The V1.5 milestone focused on making the existing toolkit easier to use before
+external feedback. It added or completed:
+
+- persistent export result panels;
+- clear-document and reset-order actions;
+- collapsible feature content;
+- drag-and-drop page reordering with button alternatives;
+- Split PDF ZIP export with stale-output and ZIP32 safeguards;
+- stronger Split range validation;
+- Metadata Removal suffix idempotency; and
+- wording, label, and status-announcement polish.
+
+The resulting `1.5.0-rc1` candidate passes the repository's automated release
+checks documented at the time of the milestone. Final manual validation and
+feedback remain current roadmap work.
+
+The detailed plan is preserved in
+[`archive/v1.5-product-spec.md`](archive/v1.5-product-spec.md).
+
+## Pre-Public-Launch Rename
+
+The project was renamed from LocalDocs to LocalFiles before public launch to
+support a broader future of privacy-first local file processing. Current code,
+packages, copy, and planned domain branding use LocalFiles. Historical commits,
+tags, prompts, and review artifacts retain their original context where useful.

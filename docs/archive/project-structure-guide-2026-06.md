@@ -1,4 +1,9 @@
-# 1. High-Level Architecture
+# Archived Project Structure Guide (June 2026)
+
+This snapshot preserves the detailed repository map that preceded the concise,
+maintainable guide in `docs/PROJECT_STRUCTURE_GUIDE.md`.
+
+## 1. High-Level Architecture
 
 LocalFiles is a privacy-first, static browser application for common PDF tasks. The current `1.5.0-rc1` application merges and splits PDFs, reorders, rotates, and deletes pages, and removes standard PDF metadata. Redaction is deliberately represented only by an unavailable placeholder because the current browser stack cannot provide the project's required redaction guarantees.
 

@@ -1,4 +1,4 @@
-# LocalFiles V1 Alignment Snapshot
+# Archived LocalFiles V1 Alignment Snapshot
 
 Implemented and hardened V1 workflows:
 

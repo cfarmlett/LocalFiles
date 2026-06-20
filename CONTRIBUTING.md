@@ -65,5 +65,5 @@ privacy-affecting behavior incidentally.
 
 Read the [security policy](SECURITY.md),
 [threat model](docs/security/threat-model.md), and
-[privacy and processing model](docs/privacy-and-processing.md) before changing
+[privacy and processing model](PRIVACY.md) before changing
 document handling or dependencies.

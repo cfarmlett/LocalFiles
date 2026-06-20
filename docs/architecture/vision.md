@@ -69,12 +69,9 @@ sections, Reorder Pages reset/drag-and-drop polish, Split validation polish, and
 Metadata Removal filename-suffix idempotency.
 
 The current privacy and processing behavior is documented in
-[`docs/privacy-and-processing.md`](../privacy-and-processing.md). Remaining
-release preparation is focused on:
-
-- Accessibility review and improvements
-- Error-message and success-message consistency review
-- Documentation alignment
+[`PRIVACY.md`](../../PRIVACY.md). Current release status is summarized in
+[`docs/RELEASE_HISTORY.md`](../RELEASE_HISTORY.md), and future direction lives
+in [`ROADMAP.md`](../../ROADMAP.md).
 
 Browser redaction is intentionally excluded from V1. The completed redaction
 research found that the current browser-only stack cannot satisfy the project's
@@ -120,7 +117,7 @@ packages/pdf    - PDF adapter interfaces and implementations
 packages/ui     - reusable UI components
 packages/config - shared TypeScript, lint, and test config
 tests/e2e       - browser-level tests
-docs            - architecture, product, security, prompts, and reviews
+docs            - planning, architecture, investigations, security, and history
 ```
 
 Core business logic should be deterministic, well-tested, and independent of the browser where possible.

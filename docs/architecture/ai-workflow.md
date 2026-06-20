@@ -21,6 +21,7 @@ Feature implementation is followed by a focused hardening pass when requested.
 Hardening should preserve the feature scope, address correctness and trust
 issues, and run the validation steps named in the prompt.
 
-Independent Claude review artifacts live under `docs/reviews`. They should be
-treated as review inputs, not as automatically current roadmap truth; product
-and architecture docs remain the source of current project status.
+Historical prompts, task briefs, and independent review artifacts live under
+`docs/archive`. They are provenance, not current roadmap truth. `ROADMAP.md`,
+`docs/FEATURE_BACKLOG.md`, and current architecture documents remain the
+sources of present direction.

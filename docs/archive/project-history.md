@@ -1,4 +1,7 @@
-# LocalFiles Foundation and Project History
+# Archived LocalFiles Foundation and Project History
+
+The durable milestone summary now lives in `docs/RELEASE_HISTORY.md`. This file
+preserves the fuller foundation narrative.
 
 ## Purpose
 

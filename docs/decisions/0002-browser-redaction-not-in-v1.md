@@ -1,4 +1,4 @@
-# ADR 001: Browser Redaction Is Not In V1
+# ADR 0002: Browser Redaction Is Not In V1
 
 ## Status
 

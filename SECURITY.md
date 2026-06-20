@@ -49,5 +49,5 @@ outside LocalFiles code may be out of scope unless LocalFiles makes the impact
 worse.
 
 See the [threat model](docs/security/threat-model.md) and
-[privacy and processing model](docs/privacy-and-processing.md) for the current
+[privacy and processing model](PRIVACY.md) for the current
 security boundaries and privacy behavior.

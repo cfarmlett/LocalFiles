@@ -13,4 +13,4 @@ project's definition of successful redaction without creating false confidence.
 
 Public-facing guidance is available in the repository
 [security policy](../../SECURITY.md) and
-[privacy and processing model](../privacy-and-processing.md).
+[privacy and processing model](../../PRIVACY.md).

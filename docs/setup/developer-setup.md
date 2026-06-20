@@ -80,8 +80,11 @@ packages/pdf     Local PDF adapter and interfaces
 packages/ui      Shared React components
 packages/config  Shared configuration placeholder
 tests/e2e        Playwright browser tests
-docs             Architecture, product, security, and project documentation
+docs             Planning, architecture, security, investigations, and history
 ```
 
 See [CONTRIBUTING.md](../../CONTRIBUTING.md) for the branch, pull request,
 testing, privacy, and dependency expectations.
+
+See the [project structure guide](../PROJECT_STRUCTURE_GUIDE.md) for the current
+repository and documentation map.

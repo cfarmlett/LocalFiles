@@ -9,8 +9,8 @@ implemented V1 workflows.
 
 For the implemented workflows, documents remain in browser memory and are not
 uploaded to a LocalFiles document-processing server. See the
-[privacy and processing model](docs/privacy-and-processing.md) for the exact
-current behavior and limits.
+[privacy and processing model](PRIVACY.md) for the exact current behavior and
+limits.
 
 ## Project Status
 
@@ -20,8 +20,6 @@ final `1.5.0` release.
 
 ## Implemented Features
 
-Implemented and hardened:
-
 - Merge PDF
 - Split PDF
 - Reorder Pages
@@ -29,27 +27,23 @@ Implemented and hardened:
 - Delete Pages
 - Metadata Removal
 
-Implemented workflow polish includes:
-
-- Persistent export result panel
-- Collapsible feature content
-- Clear loaded document
-- Reset Page Order
-- Drag-and-drop page reordering
-- Reorder Pages label cleanup
-- Split custom-range page-count validation
-- Metadata Removal suffix idempotency
-- ZIP export for Split PDF multi-output downloads
-- ZIP export stale-output and ZIP32 hardening
-- Pre-release polish for ZIP cleanup, current-section announcements, Delete
-  Pages wording, and Remove Metadata terminology
-
-Ideas in product documents and backlogs are exploratory. They are not committed
-features or promised release content.
+Split PDF also supports local ZIP export for multi-output jobs. See the
+[release history](docs/RELEASE_HISTORY.md) for completed workflow polish and
+milestones.
 
 Browser redaction is intentionally excluded from V1. The current browser-only
 architecture does not meet the project's definition of successful redaction, and
-offering partial redaction would create false confidence.
+offering partial redaction would create false confidence. The current assessment
+is documented in the [redaction investigation](docs/investigations/redaction.md).
+
+## Project Documentation
+
+- [Privacy and processing](PRIVACY.md)
+- [Roadmap](ROADMAP.md)
+- [Feature backlog](docs/FEATURE_BACKLOG.md)
+- [Release history](docs/RELEASE_HISTORY.md)
+- [Project structure guide](docs/PROJECT_STRUCTURE_GUIDE.md)
+- [Product vision](docs/architecture/vision.md)
 
 ## Requirements
 
@@ -70,10 +64,8 @@ pnpm build
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, review, testing, privacy,
-and dependency expectations. Additional context is in the
-[project vision](docs/architecture/vision.md),
-[V1 product specification](docs/product/v1-product-spec.md), and
-[threat model](docs/security/threat-model.md).
+and dependency expectations. Reproducible setup details are in the
+[developer setup guide](docs/setup/developer-setup.md).
 
 ## Security
 
@@ -92,7 +84,8 @@ version `1.5.0-rc1` is tagged `v1.5.0-rc1`, and the final release is tagged
 `v1.5.0`. Release candidates must point to a commit that passes the same CI
 checks required for `main`.
 
-Notable release changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+Notable release changes are recorded in [CHANGELOG.md](CHANGELOG.md); major
+milestones are summarized in the [release history](docs/RELEASE_HISTORY.md).
 
 ## License
 
