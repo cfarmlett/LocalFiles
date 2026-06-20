@@ -607,15 +607,236 @@ Notes:
 
 ---
 
-# Redaction
+Redaction
+RD-001: Safe PDF Redaction
 
-Reserved for RD-xxx entries.
+Status: Backlog
+
+Description:
+Allow users to permanently remove selected content from a PDF using a redaction workflow designed around irreversible content removal rather than visual masking.
+
+Example:
+
+User selects:
+
+Confidential paragraph
+Signature
+Account number
+
+Result:
+
+A new PDF is generated where the selected content can no longer be recovered from the exported document.
+
+Motivation:
+Many existing PDF tools implement redaction by drawing black rectangles over content while leaving the original information embedded in the file.
+
+LocalFiles should prioritize trustworthy redaction behavior that aligns with its privacy-first philosophy.
+
+Notes:
+
+Must not rely on visual overlays alone.
+Redaction output should be generated from a sanitized document representation.
+Should clearly distinguish between redaction marks and finalized redactions.
+Should include appropriate warnings regarding irreversible actions.
+Should integrate with future verification capabilities.
+
+Potential Future Enhancement:
+Support multiple redaction modes optimized for security, fidelity, or accessibility.
+
+RD-002: Redaction Verification Report
+
+Status: Backlog
+
+Description:
+Provide a verification summary after redaction processing completes.
+
+Example:
+
+Verification Complete
+
+✓ No text layer detected
+✓ No annotations detected
+✓ No attachments detected
+✓ No metadata detected
+
+Motivation:
+Users should have visibility into what sanitization and verification steps were performed before downloading a redacted document.
+
+Notes:
+
+Should describe what checks were performed.
+Should avoid overstating guarantees.
+Should integrate with future sanitization workflows.
+Should remain understandable to non-technical users.
+
+Potential Future Enhancement:
+Export machine-readable verification reports for compliance workflows.
+
+RD-003: Search-Based Redaction
+
+Status: Backlog
+
+Description:
+Allow users to search for text within a PDF and create redaction candidates from matching results.
+
+Example:
+
+Search:
+
+Acme Corporation
+
+Matches Found:
+
+Page 2
+Page 7
+Page 12
+
+User reviews and approves desired matches.
+
+Motivation:
+Many redaction tasks involve removing repeated names, organizations, identifiers, or phrases throughout a document.
+
+Search-assisted redaction can significantly reduce manual effort.
+
+Notes:
+
+User review should remain required.
+Search results should be clearly highlighted.
+Matches should be navigable across pages.
+Should support future pattern-based workflows.
+
+Potential Future Enhancement:
+Support saved search terms and reusable redaction profiles.
+
+RD-004: Pattern-Based Redaction
+
+Status: Backlog
+
+Description:
+Automatically identify common sensitive information patterns and propose redaction candidates.
+
+Examples:
+
+Email addresses
+Phone numbers
+Social Security numbers
+Account numbers
+User-defined patterns
+
+Motivation:
+Many documents contain structured information that can be identified using deterministic pattern matching.
+
+Pattern-assisted workflows can accelerate review while maintaining user control.
+
+Notes:
+
+Candidates should require user approval.
+False positives and false negatives are expected.
+Should not claim complete detection of sensitive information.
+Should support custom patterns in the future.
+
+Potential Future Enhancement:
+Industry-specific pattern libraries for legal, HR, healthcare, and financial workflows.
+
+RD-005: OCR-Assisted Redaction
+
+Status: Backlog
+
+Description:
+Allow redaction assistance for scanned PDFs and image-based documents using local OCR processing.
+
+Example:
+
+Scanned contract PDF
+
+↓
+
+OCR identifies text regions
+
+↓
+
+User searches, reviews, and redacts matches
+
+Motivation:
+Many real-world PDFs contain scanned pages that do not include searchable text.
+
+OCR assistance would enable redaction workflows on image-based documents while preserving LocalFiles' local-only processing model.
+
+Notes:
+
+OCR should execute locally.
+User review should remain required.
+Confidence information should be exposed where appropriate.
+Performance and language support should be evaluated carefully.
+
+Potential Future Enhancement:
+Multi-language OCR support and custom language packs.
 
 ---
 
-# Metadata
+Metadata
+MD-001: PDF Sanitization Tool
 
-Reserved for MD-xxx entries.
+Status: Backlog
+
+Description:
+Provide a dedicated workflow for removing non-visible information from PDF documents.
+
+Examples:
+
+Metadata
+Comments
+Annotations
+Attachments
+Form data
+Scripts
+
+Motivation:
+Users may wish to remove hidden information from a document without performing visual redactions.
+
+A dedicated sanitization workflow would provide a simpler experience for this common privacy use case.
+
+Notes:
+
+Distinct from visual redaction.
+Should focus on hidden or embedded information.
+Should provide a clear summary of removed content.
+Should align with LocalFiles' privacy and transparency goals.
+
+Potential Future Enhancement:
+Support configurable sanitization profiles for different document-sharing scenarios.
+
+MD-002: Sanitization Verification Report
+
+Status: Backlog
+
+Description:
+Provide a detailed summary of sanitization actions performed during export.
+
+Example:
+
+Removed:
+
+✓ Metadata
+✓ Comments
+✓ Attachments
+
+Retained:
+
+✓ Page content
+✓ Images
+
+Motivation:
+Users should understand exactly what information was removed and what remains in the exported document.
+
+Notes:
+
+Should complement PDF Sanitization Tool workflows.
+Should remain understandable to non-technical users.
+Should avoid implying guarantees beyond performed checks.
+
+Potential Future Enhancement:
+Export detailed audit reports for enterprise workflows.
 
 ---
 
@@ -631,9 +852,28 @@ Reserved for PLAT-xxx entries.
 
 ---
 
-# Trust & Transparency
+Trust & Transparency
+TT-001: Redaction Security Documentation
 
-Reserved for TT-xxx entries.
+Status: Backlog
+
+Description:
+Publish documentation explaining how LocalFiles performs redaction, what guarantees are provided, and what limitations users should understand.
+
+Motivation:
+Redaction is a trust-sensitive feature.
+
+Users should be able to understand the difference between visual masking and true redaction without needing specialized PDF knowledge.
+
+Notes:
+
+Should explain processing architecture.
+Should describe verification behavior.
+Should document known limitations.
+Should remain accessible to non-technical users.
+
+Potential Future Enhancement:
+Third-party review or independent validation of redaction workflows.
 
 ---
 
@@ -660,3 +900,140 @@ Notes:
 - Should verify privacy/local-only behavior remains intact.
 - Should run the full local validation suite.
 - Should collect early tester feedback before expanding scope.
+
+## MP-002: Default Natural File Sorting
+
+Status: Planned
+
+Description:
+Sort uploaded Merge PDF files using natural/alphanumeric ordering when files are initially added.
+
+Example:
+
+Uploaded:
+
+page-10.pdf
+page-2.pdf
+page-1.pdf
+
+Default merge order:
+
+page-1.pdf
+page-2.pdf
+page-10.pdf
+
+Motivation:
+Users frequently merge files that were previously generated by Split PDF or another batch export workflow.
+
+Default natural sorting helps preserve expected document order and reduces the need for manual reordering.
+
+Notes:
+
+- Sorting should occur when files are initially added.
+- Users should still be able to manually reorder files afterward.
+- Sorting should use natural/alphanumeric ordering rather than simple string comparison.
+- Particularly valuable for large file sets.
+- Supports Split PDF → Merge PDF round-trip workflows.
+
+Potential Future Enhancement:
+Allow users to choose between upload order and natural-sort order.
+
+## SP-002: Zero-Padded Split Output Filenames
+
+Status: Planned
+
+Description:
+Generate numbered Split PDF output filenames using zero-padded numeric suffixes.
+
+Example:
+
+For 99 outputs:
+
+document-page-01.pdf
+document-page-02.pdf
+...
+document-page-99.pdf
+
+For 548 outputs:
+
+document-page-001.pdf
+document-page-002.pdf
+...
+document-page-548.pdf
+
+Motivation:
+Zero-padded filenames preserve the correct order when files are sorted alphabetically by operating systems, browsers, ZIP utilities, and Merge PDF workflows.
+
+Notes:
+
+- Padding width should be based on the total number of generated outputs.
+- Should apply to individual PDF downloads.
+- Should apply to ZIP export filenames.
+- Existing naming conventions should otherwise remain unchanged.
+- Improves Split PDF → Merge PDF round-trip behavior.
+
+Potential Future Enhancement:
+Apply similar zero-padding conventions to other numbered export workflows if introduced in the future.
+
+## UX-006: Professional UI Polish Pass
+
+Status: Backlog
+
+Description:
+Review and refine the overall LocalFiles visual design to improve usability, consistency, readability, and perceived quality while maintaining a straightforward, utilitarian experience.
+
+Motivation:
+LocalFiles is intended to be trusted with potentially sensitive documents.
+
+The interface should feel professional, modern, and intentionally designed without becoming visually distracting or marketing-oriented.
+
+Users should feel confident using the application while still benefiting from a clean and pleasant experience.
+
+Notes:
+
+- Focus on usability and clarity before visual styling.
+- Preserve the lightweight, local-first nature of the application.
+- Avoid excessive animations, visual effects, or decorative elements.
+- Maintain strong accessibility and readability.
+- Prioritize consistency across:
+
+  - spacing
+  - typography
+  - button styles
+  - form controls
+  - status messaging
+  - feature layouts
+
+- Evaluate visual hierarchy and information density.
+- Reduce unnecessary visual clutter.
+- Ensure the application feels polished and cohesive across all tools.
+
+Areas For Review:
+
+- Typography
+- Spacing and layout
+- Button and control styling
+- Card and panel styling
+- Icons and visual cues
+- Color palette
+- Success, warning, and error states
+- Responsive/mobile behavior
+- Empty states
+- Loading states
+
+Examples Of Desired Direction:
+
+- Professional SaaS utility tools
+- Modern documentation sites
+- Productivity software
+- Enterprise-friendly business applications
+
+Examples Of Undesired Direction:
+
+- Excessive animations
+- Heavy marketing aesthetics
+- Overly playful visual design
+- Trend-driven redesigns that reduce clarity
+
+Potential Future Enhancement:
+Perform a dedicated design-system pass that formalizes colors, spacing, typography, component styling, and interaction patterns across the entire application.
