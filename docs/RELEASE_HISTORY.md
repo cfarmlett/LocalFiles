@@ -8,6 +8,11 @@ the detailed source for verifiable release-by-release changes.
 LocalFiles is at `1.5.0-rc1`. It is a release candidate undergoing final
 validation and early feedback, not the final `1.5.0` release.
 
+The existing `v1.5.0-rc2` tag was created during the pre-public LocalFiles
+rename, but its tagged commit still declares version `1.5.0-rc1`. It is retained
+as historical tag metadata rather than treated as a separate release. The root
+`package.json` remains authoritative.
+
 ## Improvements Since 1.5.0-rc1
 
 - Simplified Split PDF to two plain-language modes: a page interval that

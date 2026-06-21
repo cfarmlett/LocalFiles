@@ -14,12 +14,11 @@ web application.
 Clone the repository and enter its root directory:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/cfarmlett/LocalFiles.git
 cd LocalFiles
 ```
 
-The repository URL will be available after the public GitHub repository is
-created. The local filesystem path is not significant.
+The local filesystem path is not significant.
 
 ## Install Dependencies
 

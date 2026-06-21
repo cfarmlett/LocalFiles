@@ -10,8 +10,9 @@ assignees: ""
 
 Do not use this public template for exploit details, credentials, sensitive
 documents, personal information, or other confidential material. LocalFiles does
-not yet publish a private vulnerability-reporting channel. Read the
-repository's `SECURITY.md` before continuing.
+not accept vulnerability reports through public issues. Report potential
+vulnerabilities privately to `security@localfiles.org` and read the repository's
+`SECURITY.md` before continuing.
 
 ## Concern
 

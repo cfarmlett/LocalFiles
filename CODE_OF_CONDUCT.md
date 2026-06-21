@@ -54,11 +54,12 @@ an individual is officially representing the community in public spaces.
 
 ## Enforcement
 
-A private conduct-reporting method will be published before the repository
-opens to external participation. Until then, do not put sensitive personal
-details into a public issue. Community leaders are responsible for enforcement
-and will handle reports as privately and fairly as the available project tools
-allow.
+Report Code of Conduct concerns privately to
+[conduct@localfiles.org](mailto:conduct@localfiles.org). Include a concise
+description and links to relevant public repository activity when practical.
+Do not put sensitive personal information in a public issue or send unrelated
+private documents. Community leaders will review reports on a best-effort basis
+and share report information only as needed for fair enforcement.
 
 ## Enforcement Guidelines
 

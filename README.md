@@ -69,8 +69,9 @@ and dependency expectations. Reproducible setup details are in the
 
 ## Security
 
-Read [SECURITY.md](SECURITY.md) before reporting a vulnerability. A private
-reporting process will be established before public release; do not place
+Report potential vulnerabilities privately to
+[security@localfiles.org](mailto:security@localfiles.org) and read
+[SECURITY.md](SECURITY.md) for scope and reporting guidance. Do not place
 exploit details or sensitive information in public issues.
 
 ## Versioning and Releases
@@ -83,6 +84,11 @@ Release tags use the root version prefixed with `v`. For example, product
 version `1.5.0-rc1` is tagged `v1.5.0-rc1`, and the final release is tagged
 `v1.5.0`. Release candidates must point to a commit that passes the same CI
 checks required for `main`.
+
+The existing `v1.5.0-rc2` tag was created during the pre-public LocalFiles
+rename, but its tagged commit still declares version `1.5.0-rc1`. It is
+retained as historical tag metadata, not treated as a separate release, and
+does not change the current authoritative version.
 
 Notable release changes are recorded in [CHANGELOG.md](CHANGELOG.md); major
 milestones are summarized in the [release history](docs/RELEASE_HISTORY.md).

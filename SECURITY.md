@@ -19,15 +19,16 @@ is made here for future versions.
 
 ## Reporting a Vulnerability
 
-A private vulnerability-reporting process will be established and documented
-before the repository is made public. No security email address or other
-private contact method currently exists.
+Report potential vulnerabilities privately by email to
+[security@localfiles.org](mailto:security@localfiles.org). Include the affected
+version or commit, a concise description of the impact, and reproduction steps
+when practical.
 
-Until that process is available, do not publish exploit details, sensitive
-documents, personal information, credentials, or other confidential material
-in a public issue. Non-sensitive privacy questions and hardening suggestions
-may be raised through the security/privacy issue template after the issue
-tracker is available.
+Do not publish exploit details, sensitive documents, personal information,
+credentials, or other confidential material in a public issue. Do not attach a
+private document to a report; use a small synthetic example when a file is
+needed. Non-sensitive privacy questions and hardening suggestions may be raised
+through the security/privacy issue template.
 
 Reports will be reviewed on a best-effort basis. Response or remediation times
 are not guaranteed while the project remains a small prerelease project.

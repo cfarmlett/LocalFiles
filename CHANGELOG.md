@@ -3,6 +3,14 @@
 This file records notable, verifiable changes to LocalFiles. It does not attempt
 to reconstruct undocumented development history.
 
+## Versioning Note
+
+The root `package.json` is the authoritative source for the product version.
+The existing `v1.5.0-rc2` tag was created during the pre-public LocalFiles
+rename, but its tagged commit still declares version `1.5.0-rc1`. The tag is
+retained as historical metadata, not treated as a separate release; the current
+supported prerelease remains `1.5.0-rc1`.
+
 ## Unreleased
 
 ### Changed
