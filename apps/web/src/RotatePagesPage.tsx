@@ -7,6 +7,7 @@ import { CollapsibleSection } from "./CollapsibleSection";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
+import { PdfFilePicker } from "./PdfFilePicker";
 import {
   buildRotateFileItem,
   createDefaultRotatePages,
@@ -193,49 +194,21 @@ export function RotatePagesPage({
         </p>
       </div>
 
-      <label
-        className="drop-zone"
-        htmlFor="rotate-file-input"
-        onDragOver={(event) => {
-          event.preventDefault();
+      <PdfFilePicker
+        errors={errors}
+        inputId="rotate-file-input"
+        inputRef={inputRef}
+        onFilesSelected={(selectedFiles) => {
+          void selectFiles(selectedFiles);
         }}
-        onDrop={(event) => {
-          event.preventDefault();
-          void selectFiles(event.dataTransfer.files);
-        }}
-      >
-        <span className="drop-zone__title">Choose one PDF or drop it here</span>
-        <span className="drop-zone__copy">
-          Only one PDF is accepted. Processing stays on this device.
-        </span>
-        <input
-          accept="application/pdf,.pdf"
-          id="rotate-file-input"
-          onChange={(event) => {
-            if (event.currentTarget.files !== null) {
-              void selectFiles(event.currentTarget.files);
-            }
-          }}
-          ref={inputRef}
-          type="file"
-        />
-      </label>
-
-      {errors.length > 0 ? (
-        <div aria-live="polite" className="error-list" role="alert">
-          {errors.map((error) => (
-            <p key={error}>{error}</p>
-          ))}
-        </div>
-      ) : null}
-
-      <div className="merge-summary" aria-live="polite">
-        {file === undefined
-          ? "No PDF selected yet."
-          : `${file.file.name}, ${file.metadata.pageCount} page${
-              file.metadata.pageCount === 1 ? "" : "s"
-            }.`}
-      </div>
+        selectionSummary={
+          file === undefined
+            ? "No PDF selected yet."
+            : `${file.file.name}, ${file.metadata.pageCount} page${
+                file.metadata.pageCount === 1 ? "" : "s"
+              }.`
+        }
+      />
 
       {pages.length > 0 ? (
         <CollapsibleSection

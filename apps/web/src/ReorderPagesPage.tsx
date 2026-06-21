@@ -7,6 +7,7 @@ import { CollapsibleSection } from "./CollapsibleSection";
 import { validatePdfFile } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
+import { PdfFilePicker } from "./PdfFilePicker";
 import {
   buildReorderFileItem,
   createDefaultPageOrder,
@@ -263,57 +264,22 @@ export function ReorderPagesPage({
         </p>
       </div>
 
-      <label
-        className="drop-zone"
-        htmlFor="reorder-file-input"
-        onDragOver={(event) => {
-          event.preventDefault();
-          event.dataTransfer.dropEffect = isFileDrop(event.dataTransfer)
-            ? "copy"
-            : "none";
+      <PdfFilePicker
+        errors={errors}
+        inputId="reorder-file-input"
+        inputRef={inputRef}
+        onFilesSelected={(selectedFiles) => {
+          clearDragState();
+          void selectFiles(selectedFiles);
         }}
-        onDrop={(event) => {
-          event.preventDefault();
-          if (!isFileDrop(event.dataTransfer)) {
-            clearDragState();
-            return;
-          }
-
-          void selectFiles(event.dataTransfer.files);
-        }}
-      >
-        <span className="drop-zone__title">Choose one PDF or drop it here</span>
-        <span className="drop-zone__copy">
-          Only one PDF is accepted. Processing stays on this device.
-        </span>
-        <input
-          accept="application/pdf,.pdf"
-          id="reorder-file-input"
-          onChange={(event) => {
-            if (event.currentTarget.files !== null) {
-              void selectFiles(event.currentTarget.files);
-            }
-          }}
-          ref={inputRef}
-          type="file"
-        />
-      </label>
-
-      {errors.length > 0 ? (
-        <div aria-live="polite" className="error-list" role="alert">
-          {errors.map((error) => (
-            <p key={error}>{error}</p>
-          ))}
-        </div>
-      ) : null}
-
-      <div className="merge-summary" aria-live="polite">
-        {file === undefined
-          ? "No PDF selected yet."
-          : `${file.file.name}, ${file.metadata.pageCount} page${
-              file.metadata.pageCount === 1 ? "" : "s"
-            }.`}
-      </div>
+        selectionSummary={
+          file === undefined
+            ? "No PDF selected yet."
+            : `${file.file.name}, ${file.metadata.pageCount} page${
+                file.metadata.pageCount === 1 ? "" : "s"
+              }.`
+        }
+      />
 
       {pages.length > 0 ? (
         <CollapsibleSection
@@ -436,12 +402,5 @@ function pageOrdersMatch(
   return (
     left.length === right.length &&
     left.every((page, index) => page.pageNumber === right[index]?.pageNumber)
-  );
-}
-
-function isFileDrop(dataTransfer: DataTransfer): boolean {
-  return (
-    dataTransfer.files.length > 0 ||
-    Array.from(dataTransfer.types).includes("Files")
   );
 }

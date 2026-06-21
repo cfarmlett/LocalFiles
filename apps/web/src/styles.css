@@ -230,6 +230,12 @@ h3 {
   padding: 28px;
 }
 
+.drop-zone:hover,
+.drop-zone--drag-active {
+  background: #f2f5f8;
+  border-color: #5d6f82;
+}
+
 .drop-zone:focus-within {
   outline: 3px solid #b8c7d6;
   outline-offset: 2px;
@@ -244,8 +250,15 @@ h3 {
   color: #536171;
 }
 
-.drop-zone input {
-  margin-top: 10px;
+.drop-zone__action {
+  background: #25313d;
+  border: 1px solid #25313d;
+  border-radius: 4px;
+  color: #ffffff;
+  font-weight: 700;
+  justify-self: start;
+  margin-top: 8px;
+  padding: 8px 12px;
 }
 
 .error-list {

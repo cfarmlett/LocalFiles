@@ -398,6 +398,59 @@ test("LocalFiles web shell syncs current section with hash navigation", async ({
   await expectCurrentSection(page, "Merge PDF");
 });
 
+test("PDF workflows share an accessible file picker", async ({ page }) => {
+  await page.goto("/");
+
+  const fileInputs = page.locator('input[type="file"]');
+
+  await expect(fileInputs).toHaveCount(6);
+
+  for (let index = 0; index < 6; index += 1) {
+    const fileInput = fileInputs.nth(index);
+
+    await expect(fileInput).toHaveAttribute("accept", "application/pdf,.pdf");
+    await expect(fileInput).toHaveClass(/visually-hidden/);
+  }
+
+  await expect(page.locator("#merge-file-input")).toHaveAttribute(
+    "multiple",
+    "",
+  );
+  await expect(page.locator("#split-file-input")).not.toHaveAttribute(
+    "multiple",
+  );
+  await expect(page.locator(".drop-zone__action")).toHaveCount(6);
+  await expect(
+    page.locator("#split").getByLabel("Choose one PDF or drop it here"),
+  ).toHaveAttribute("aria-describedby", "split-file-input-instructions");
+
+  const splitInput = page.locator("#split-file-input");
+  const splitDropZone = page.locator('label[for="split-file-input"]');
+
+  await splitInput.focus();
+  await expect(splitDropZone).toHaveCSS("outline-style", "solid");
+
+  await splitDropZone.evaluate((dropZone) => {
+    const dataTransfer = new DataTransfer();
+
+    dataTransfer.items.add(
+      new File(["%PDF- shared picker test"], "picker.pdf", {
+        type: "application/pdf",
+      }),
+    );
+    dropZone.dispatchEvent(
+      new DragEvent("dragenter", {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer,
+      }),
+    );
+  });
+  await expect(splitDropZone).toHaveClass(/drop-zone--drag-active/);
+  await splitDropZone.dispatchEvent("dragleave");
+  await expect(splitDropZone).not.toHaveClass(/drop-zone--drag-active/);
+});
+
 test("Split PDF discards operations invalidated by definition changes", async ({
   page,
 }) => {

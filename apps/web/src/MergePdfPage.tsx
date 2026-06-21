@@ -17,6 +17,7 @@ import {
 } from "./mergeWorkflow";
 import { ExportResultPanel } from "./ExportResultPanel";
 import { useExportResultUrls, type ExportResult } from "./exportResults";
+import { PdfFilePicker } from "./PdfFilePicker";
 
 export type MergePdfPageProps = Readonly<{
   adapter?: PdfAdapter;
@@ -61,6 +62,12 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     () => files.reduce((sum, file) => sum + (file.metadata?.pageCount ?? 0), 0),
     [files],
   );
+  const selectionSummary =
+    files.length === 0
+      ? "No PDFs selected yet."
+      : `${files.length} PDF${files.length === 1 ? "" : "s"} selected${
+          totalPages > 0 ? `, ${totalPages} total pages` : ""
+        }.`;
 
   async function addFiles(selectedFiles: FileList | readonly File[]) {
     const operationToken = asyncOperations.current.begin();
@@ -172,50 +179,16 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
         </p>
       </div>
 
-      <label
-        className="drop-zone"
-        htmlFor="merge-file-input"
-        onDragOver={(event) => {
-          event.preventDefault();
+      <PdfFilePicker
+        errors={errors}
+        inputId="merge-file-input"
+        inputRef={inputRef}
+        multiple
+        onFilesSelected={(selectedFiles) => {
+          void addFiles(selectedFiles);
         }}
-        onDrop={(event) => {
-          event.preventDefault();
-          void addFiles(event.dataTransfer.files);
-        }}
-      >
-        <span className="drop-zone__title">Choose PDFs or drop them here</span>
-        <span className="drop-zone__copy">
-          Only PDF files are accepted. Processing stays on this device.
-        </span>
-        <input
-          accept="application/pdf,.pdf"
-          id="merge-file-input"
-          multiple
-          onChange={(event) => {
-            if (event.currentTarget.files !== null) {
-              void addFiles(event.currentTarget.files);
-            }
-          }}
-          ref={inputRef}
-          type="file"
-        />
-      </label>
-
-      {errors.length > 0 ? (
-        <div aria-live="polite" className="error-list" role="alert">
-          {errors.map((error) => (
-            <p key={error}>{error}</p>
-          ))}
-        </div>
-      ) : null}
-
-      <div className="merge-summary" aria-live="polite">
-        {files.length === 0
-          ? "No PDFs selected yet."
-          : `${files.length} PDF${files.length === 1 ? "" : "s"} selected${
-              totalPages > 0 ? `, ${totalPages} total pages` : ""
-            }.`}
-      </div>
+        selectionSummary={selectionSummary}
+      />
 
       {files.length > 0 ? (
         <CollapsibleSection
