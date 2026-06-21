@@ -131,6 +131,94 @@ async function dropPdfOnReorderDropZone(
   );
 }
 
+async function mountDeferredSplitHarness(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const reactModulePath = "/node_modules/.vite/deps/react.js";
+    const reactDomModulePath = "/node_modules/.vite/deps/react-dom_client.js";
+    const splitPdfModulePath = "/src/SplitPdfPage.tsx";
+    const [reactModule, reactDomModule, { SplitPdfPage }] = await Promise.all([
+      import(reactModulePath),
+      import(reactDomModulePath),
+      import(splitPdfModulePath),
+    ]);
+    const createElement =
+      reactModule.createElement ?? reactModule.default.createElement;
+    const createRoot =
+      reactDomModule.createRoot ?? reactDomModule.default.createRoot;
+    const splitWindow = window as typeof window & {
+      __localFilesResolveSplit?: (requestIndex: number) => void;
+      __localFilesSplitCompletions?: number;
+      __localFilesSplitRequests?: number;
+    };
+    const pendingSplits: Array<(() => void) | undefined> = [];
+    const adapter = {
+      name: "deferred-split-test-adapter",
+      readMetadata: async () => ({ pageCount: 2 }),
+      split: async (request: {
+        ranges: readonly Readonly<{ start: number; end: number }>[];
+      }) => {
+        const requestIndex = splitWindow.__localFilesSplitRequests ?? 0;
+
+        splitWindow.__localFilesSplitRequests = requestIndex + 1;
+
+        const outputs = await new Promise<readonly Uint8Array[]>((resolve) => {
+          pendingSplits[requestIndex] = () => {
+            resolve(
+              request.ranges.map(
+                (range) => new Uint8Array([range.start, range.end]),
+              ),
+            );
+          };
+        });
+
+        splitWindow.__localFilesSplitCompletions =
+          (splitWindow.__localFilesSplitCompletions ?? 0) + 1;
+
+        return outputs;
+      },
+    };
+    const harnessRoot = document.createElement("div");
+
+    splitWindow.__localFilesSplitRequests = 0;
+    splitWindow.__localFilesSplitCompletions = 0;
+    splitWindow.__localFilesResolveSplit = (requestIndex) => {
+      const resolve = pendingSplits[requestIndex];
+
+      if (resolve === undefined) {
+        throw new Error(`Deferred split ${requestIndex} was not available.`);
+      }
+
+      pendingSplits[requestIndex] = undefined;
+      resolve();
+    };
+    document.body.replaceChildren(harnessRoot);
+    createRoot(harnessRoot).render(createElement(SplitPdfPage, { adapter }));
+  });
+
+  await expect(page.getByText("No PDF selected yet.")).toBeVisible();
+}
+
+async function resolveDeferredSplit(
+  page: Page,
+  requestIndex: number,
+  expectedCompletionCount: number,
+): Promise<void> {
+  await page.evaluate((index) => {
+    const splitWindow = window as typeof window & {
+      __localFilesResolveSplit?: (requestIndex: number) => void;
+    };
+
+    splitWindow.__localFilesResolveSplit?.(index);
+  }, requestIndex);
+  await page.waitForFunction((completionCount) => {
+    const splitWindow = window as typeof window & {
+      __localFilesSplitCompletions?: number;
+    };
+
+    return splitWindow.__localFilesSplitCompletions === completionCount;
+  }, expectedCompletionCount);
+}
+
 async function deferZipTimer(page: Page): Promise<void> {
   await page.evaluate(() => {
     const zipWindow = window as typeof window & {
@@ -308,6 +396,117 @@ test("LocalFiles web shell syncs current section with hash navigation", async ({
 
   await page.goBack();
   await expectCurrentSection(page, "Merge PDF");
+});
+
+test("Split PDF discards operations invalidated by definition changes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await mountDeferredSplitHarness(page);
+
+  const splitButton = page.getByRole("button", {
+    name: "Split PDF",
+    exact: true,
+  });
+  const splitIntervalInput = page.getByLabel("Pages per split PDF");
+
+  await page.locator("#split-file-input").setInputFiles({
+    name: "deferred.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF- deferred test"),
+  });
+  await expect(page.getByText("deferred.pdf, 2 pages.")).toBeVisible();
+
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 1,
+  );
+  await splitIntervalInput.fill("2");
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 2,
+  );
+
+  await resolveDeferredSplit(page, 1, 1);
+  await expect(page.getByText("pages-1-2.pdf")).toBeVisible();
+  await resolveDeferredSplit(page, 0, 2);
+  await expect(page.getByText("pages-1-2.pdf")).toBeVisible();
+  await expect(page.getByText("page-1.pdf")).toHaveCount(0);
+
+  await splitIntervalInput.fill("1");
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 3,
+  );
+  await page.getByRole("radio", { name: "Custom Ranges" }).check();
+  await resolveDeferredSplit(page, 2, 3);
+  await expect(page.getByRole("region", { name: "Export result" })).toHaveCount(
+    0,
+  );
+  await expect(
+    page.getByRole("heading", { name: "PDFs Generated" }),
+  ).toHaveCount(0);
+  await expect(page.getByText("page-1.pdf")).toHaveCount(0);
+
+  const customRangesInput = page.getByLabel("Page ranges");
+
+  await customRangesInput.fill("1");
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 4,
+  );
+  await customRangesInput.fill("1-2");
+  await resolveDeferredSplit(page, 3, 4);
+  await expect(page.getByRole("region", { name: "Export result" })).toHaveCount(
+    0,
+  );
+
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 5,
+  );
+  await page.locator("#split-file-input").setInputFiles({
+    name: "replacement.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF- replacement test"),
+  });
+  await expect(page.getByText("replacement.pdf, 2 pages.")).toBeVisible();
+  await resolveDeferredSplit(page, 4, 5);
+  await expect(page.getByRole("region", { name: "Export result" })).toHaveCount(
+    0,
+  );
+
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 6,
+  );
+  await resolveDeferredSplit(page, 5, 6);
+  await expect(page.getByText("part-1-pages-1-2.pdf")).toBeVisible();
+
+  await splitButton.click();
+  await page.waitForFunction(
+    () =>
+      (window as typeof window & { __localFilesSplitRequests?: number })
+        .__localFilesSplitRequests === 7,
+  );
+  await page.getByRole("button", { name: "Clear Split PDF" }).click();
+  await resolveDeferredSplit(page, 6, 7);
+  await expect(page.getByText("No PDF selected yet.")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Export result" })).toHaveCount(
+    0,
+  );
 });
 
 test("LocalFiles web shell supports local-first PDF workflows", async ({

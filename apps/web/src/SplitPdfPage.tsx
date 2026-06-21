@@ -37,7 +37,8 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const [isCreatingZip, setIsCreatingZip] = useState(false);
   const [outputs, setOutputs] = useState<readonly SplitOutput[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const asyncOperations = useRef(createAsyncOperationTracker());
+  const fileOperations = useRef(createAsyncOperationTracker());
+  const splitOperations = useRef(createAsyncOperationTracker());
   const zipOperations = useRef(createAsyncOperationTracker());
 
   const canSplit = file !== undefined && !isReading && !isSplitting;
@@ -75,9 +76,10 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   } ${Number(interval) === 1 ? "page" : "pages"}`;
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
-    const operationToken = asyncOperations.current.begin();
+    const operationToken = fileOperations.current.begin();
     const selected = Array.from(selectedFiles);
 
+    invalidateSplitOperation();
     clearOutputs();
 
     if (selected.length === 0) {
@@ -111,16 +113,16 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         crypto.randomUUID(),
       );
 
-      if (asyncOperations.current.isCurrent(operationToken)) {
+      if (fileOperations.current.isCurrent(operationToken)) {
         setFile(nextFile);
       }
     } catch (error) {
-      if (asyncOperations.current.isCurrent(operationToken)) {
+      if (fileOperations.current.isCurrent(operationToken)) {
         setFile(undefined);
         setErrors([`${selectedFile.name}: ${getSplitErrorMessage(error)}`]);
       }
     } finally {
-      if (asyncOperations.current.isCurrent(operationToken)) {
+      if (fileOperations.current.isCurrent(operationToken)) {
         setIsReading(false);
         resetInput();
       }
@@ -128,7 +130,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   }
 
   async function splitSelectedFile() {
-    const operationToken = asyncOperations.current.begin();
+    const operationToken = splitOperations.current.begin();
 
     clearOutputs();
     setErrors([]);
@@ -146,21 +148,22 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
         customRanges,
       });
 
-      if (asyncOperations.current.isCurrent(operationToken)) {
+      if (splitOperations.current.isCurrent(operationToken)) {
         setOutputs(nextOutputs);
       }
     } catch (error) {
-      if (asyncOperations.current.isCurrent(operationToken)) {
+      if (splitOperations.current.isCurrent(operationToken)) {
         setErrors([getSplitErrorMessage(error)]);
       }
     } finally {
-      if (asyncOperations.current.isCurrent(operationToken)) {
+      if (splitOperations.current.isCurrent(operationToken)) {
         setIsSplitting(false);
       }
     }
   }
 
   function changeMode(nextMode: SplitMode) {
+    invalidateSplitOperation();
     zipOperations.current.invalidate();
     setMode(nextMode);
     setErrors([]);
@@ -173,6 +176,11 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     }
   }
 
+  function invalidateSplitOperation() {
+    splitOperations.current.invalidate();
+    setIsSplitting(false);
+  }
+
   function clearOutputs() {
     zipOperations.current.invalidate();
     setOutputs([]);
@@ -180,7 +188,8 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   }
 
   function clearWorkflow() {
-    asyncOperations.current.invalidate();
+    fileOperations.current.invalidate();
+    invalidateSplitOperation();
     zipOperations.current.invalidate();
     setFile(undefined);
     setMode("interval");
@@ -188,7 +197,6 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     setCustomRanges("");
     setErrors([]);
     setIsReading(false);
-    setIsSplitting(false);
     setIsCreatingZip(false);
     clearOutputs();
     resetInput();
@@ -326,6 +334,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
             id="split-interval"
             min="1"
             onChange={(event) => {
+              invalidateSplitOperation();
               setInterval(event.currentTarget.value);
               setErrors([]);
               clearOutputs();
@@ -357,6 +366,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
           <textarea
             aria-describedby="split-ranges-help"
             onChange={(event) => {
+              invalidateSplitOperation();
               setCustomRanges(event.currentTarget.value);
               setErrors([]);
               clearOutputs();
