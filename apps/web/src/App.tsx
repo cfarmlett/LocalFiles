@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 import { PlaceholderPanel, PrivacyNote, Section } from "@localfiles/ui";
 
@@ -39,17 +39,19 @@ export const appSections: readonly AppSection[] = [
 ];
 
 function getSectionIdFromHash(): SectionId {
+  return getHashDestination() ?? "home";
+}
+
+function getHashDestination(): SectionId | undefined {
   if (typeof window === "undefined") {
-    return "home";
+    return undefined;
   }
 
   const hashSectionId = window.location.hash.slice(1);
 
-  if (appSections.some((section) => section.id === hashSectionId)) {
-    return hashSectionId as SectionId;
-  }
-
-  return "home";
+  return appSections.some((section) => section.id === hashSectionId)
+    ? (hashSectionId as SectionId)
+    : undefined;
 }
 
 export function App() {
@@ -59,6 +61,14 @@ export function App() {
     () => appSections.find((section) => section.id === activeSection)?.label,
     [activeSection],
   );
+
+  useLayoutEffect(() => {
+    const hashDestination = getHashDestination();
+
+    if (hashDestination !== undefined) {
+      document.getElementById(hashDestination)?.scrollIntoView();
+    }
+  }, []);
 
   useEffect(() => {
     function syncActiveSectionFromHash() {

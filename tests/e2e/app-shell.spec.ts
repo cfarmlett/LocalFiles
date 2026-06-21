@@ -380,22 +380,172 @@ async function expectCurrentSection(
   await expect(currentSection).toHaveCSS("height", "1px");
 }
 
-test("LocalFiles web shell syncs current section with hash navigation", async ({
-  page,
-}) => {
-  await page.goto("/#merge");
+type NavigationDestination = Readonly<{
+  id: string;
+  label: string;
+}>;
 
-  await expectCurrentSection(page, "Merge PDF");
-  await expect(page.getByRole("link", { name: "Merge PDF" })).toHaveAttribute(
-    "aria-current",
-    "page",
+const navigationDestinations: readonly NavigationDestination[] = [
+  { id: "split", label: "Split PDF" },
+  { id: "merge", label: "Merge PDF" },
+  { id: "reorder", label: "Reorder Pages" },
+  { id: "rotate", label: "Rotate Pages" },
+  { id: "delete", label: "Delete Pages" },
+  { id: "metadata", label: "Remove Metadata" },
+  { id: "redact", label: "Redact PDF" },
+  { id: "privacy", label: "Privacy" },
+];
+
+function destinationIntroduction(page: Page, id: string): Locator {
+  if (id === "redact") {
+    return page.locator("#redact .placeholder-panel p");
+  }
+
+  if (id === "privacy") {
+    return page.locator("#privacy .privacy-note").first();
+  }
+
+  return page.locator(`#${id} .tool-intro`);
+}
+
+async function expectDestinationVisible(
+  page: Page,
+  destination: NavigationDestination,
+): Promise<void> {
+  const heading = page.locator(`#${destination.id}-title`);
+  const introduction = destinationIntroduction(page, destination.id);
+
+  await expect(heading).toBeVisible();
+  await expect(introduction).toBeVisible();
+
+  const isDestinationUnobscured = await page.evaluate(
+    ({ headingId, introductionSelector }) => {
+      const header = document.querySelector<HTMLElement>(".topbar");
+      const destinationHeading = document.getElementById(headingId);
+      const destinationIntroduction =
+        document.querySelector<HTMLElement>(introductionSelector);
+
+      if (
+        header === null ||
+        destinationHeading === null ||
+        destinationIntroduction === null
+      ) {
+        return false;
+      }
+
+      const headerPosition = getComputedStyle(header).position;
+      const headerRect = header.getBoundingClientRect();
+      const headingRect = destinationHeading.getBoundingClientRect();
+      const introductionRect = destinationIntroduction.getBoundingClientRect();
+      const obstructionBottom =
+        headerPosition === "sticky" || headerPosition === "fixed"
+          ? Math.max(0, headerRect.bottom)
+          : 0;
+
+      return (
+        headingRect.top >= obstructionBottom &&
+        introductionRect.top >= obstructionBottom &&
+        headingRect.top < window.innerHeight &&
+        introductionRect.top < window.innerHeight
+      );
+    },
+    {
+      headingId: `${destination.id}-title`,
+      introductionSelector:
+        destination.id === "redact"
+          ? "#redact .placeholder-panel p"
+          : destination.id === "privacy"
+            ? "#privacy .privacy-note"
+            : `#${destination.id} .tool-intro`,
+    },
   );
 
-  await page.getByRole("link", { name: "Split PDF" }).click();
+  expect(isDestinationUnobscured).toBe(true);
+}
+
+for (const destination of [
+  { id: "merge", label: "Merge PDF" },
+  { id: "rotate", label: "Rotate Pages" },
+  { id: "privacy", label: "Privacy" },
+] as const) {
+  test(`direct hash loads reveal ${destination.label}`, async ({ page }) => {
+    await page.goto(`/#${destination.id}`);
+
+    await expectCurrentSection(page, destination.label);
+    await expect(
+      page.getByRole("link", { name: destination.label, exact: true }),
+    ).toHaveAttribute("aria-current", "page");
+    await expectDestinationVisible(page, destination);
+
+    await page.reload();
+
+    await expectCurrentSection(page, destination.label);
+    await expectDestinationVisible(page, destination);
+  });
+}
+
+test("empty hash loads show Home", async ({ page }) => {
+  await page.goto("/#");
+
+  await expectCurrentSection(page, "Home");
+  await expect(
+    page.getByRole("link", { name: "Home", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await expect(
+    page.getByRole("heading", {
+      name: "PDF utilities that stay on your device.",
+    }),
+  ).toBeInViewport();
+});
+
+test("navigation clicks reveal every destination", async ({ page }) => {
+  await page.goto("/");
+
+  for (const destination of navigationDestinations) {
+    await page
+      .getByRole("link", { name: destination.label, exact: true })
+      .click();
+    await expectCurrentSection(page, destination.label);
+    await expectDestinationVisible(page, destination);
+  }
+});
+
+test("hash navigation remains correct through browser history", async ({
+  page,
+}) => {
+  const mergeDestination = { id: "merge", label: "Merge PDF" } as const;
+  const splitDestination = { id: "split", label: "Split PDF" } as const;
+
+  await page.goto("/#merge");
+  await expectDestinationVisible(page, mergeDestination);
+
+  await page.getByRole("link", { name: "Split PDF", exact: true }).click();
   await expectCurrentSection(page, "Split PDF");
+  await expectDestinationVisible(page, splitDestination);
 
   await page.goBack();
   await expectCurrentSection(page, "Merge PDF");
+  await expectDestinationVisible(page, mergeDestination);
+
+  await page.goForward();
+  await expectCurrentSection(page, "Split PDF");
+  await expectDestinationVisible(page, splitDestination);
+});
+
+test("wrapped mobile navigation does not obscure destinations", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#merge");
+
+  await expectDestinationVisible(page, {
+    id: "merge",
+    label: "Merge PDF",
+  });
+
+  await page.getByRole("link", { name: "Privacy", exact: true }).click();
+  await expectCurrentSection(page, "Privacy");
+  await expectDestinationVisible(page, { id: "privacy", label: "Privacy" });
 });
 
 test("PDF workflows share an accessible file picker", async ({ page }) => {
