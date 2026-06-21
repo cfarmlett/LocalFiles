@@ -586,8 +586,35 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("Files stay local in the browser."),
+    page.getByText("Files are processed locally in your browser.", {
+      exact: true,
+    }),
   ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Source code" })).toHaveAttribute(
+    "href",
+    "https://github.com/cfarmlett/LocalFiles",
+  );
+  await expect(
+    page.getByRole("link", { name: "Privacy details" }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/cfarmlett/LocalFiles/blob/main/PRIVACY.md",
+  );
+  await expect(
+    page.getByRole("link", { name: "Security policy" }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/cfarmlett/LocalFiles/blob/main/SECURITY.md",
+  );
+  await expect(
+    page.locator("#redact").getByText("Redaction is not available."),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "redaction investigation" }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/cfarmlett/LocalFiles/blob/main/docs/investigations/redaction.md",
+  );
 
   await page.getByRole("link", { name: "Split PDF" }).click();
   await expectCurrentSection(page, "Split PDF");

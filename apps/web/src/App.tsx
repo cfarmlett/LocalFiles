@@ -103,12 +103,12 @@ export function App() {
           <p className="hero-copy">
             LocalFiles.org is a browser app for common PDF workflows: Merge PDF,
             Split PDF, Reorder Pages, Rotate Pages, Delete Pages, and Remove
-            Metadata. Tools run locally in your browser by default.
+            Metadata. Files are processed locally in your browser.
           </p>
         </div>
         <PrivacyNote>
-          No backend, no accounts, no analytics, no telemetry, and no server
-          upload path in this app shell.
+          Your PDFs are not uploaded to a LocalFiles server. No account is
+          required.
         </PrivacyNote>
       </div>
 
@@ -141,22 +141,45 @@ export function App() {
       </Section>
 
       <Section id="redact" title="Redact PDF">
-        <PlaceholderPanel title="Redact PDF" status="Placeholder">
-          Redaction is high risk and is intentionally not implemented. The shell
-          makes no redaction claims.
+        <PlaceholderPanel title="Redact PDF" status="Unavailable">
+          Redaction is not available. It is intentionally withheld because
+          visually hiding content without safely removing the underlying PDF
+          data would be misleading. Read the{" "}
+          <a
+            className="limitation-link"
+            href="https://github.com/cfarmlett/LocalFiles/blob/main/docs/investigations/redaction.md"
+          >
+            redaction investigation
+          </a>
+          .
         </PlaceholderPanel>
       </Section>
 
       <Section id="privacy" title="Privacy">
         <div className="privacy-grid">
-          <PrivacyNote>Files stay local in the browser.</PrivacyNote>
           <PrivacyNote>
-            No login, tracking, analytics, or telemetry.
+            Files are processed locally in your browser.
           </PrivacyNote>
           <PrivacyNote>
-            No server upload behavior exists in the current local workflows.
+            No account, tracking, analytics, or telemetry.
+          </PrivacyNote>
+          <PrivacyNote>
+            PDFs are not uploaded to a LocalFiles server.
           </PrivacyNote>
         </div>
+        <nav className="trust-links" aria-label="Trust and project resources">
+          <span>Verify how LocalFiles works:</span>
+          <a href="https://github.com/cfarmlett/LocalFiles">Source code</a>
+          <a href="https://github.com/cfarmlett/LocalFiles/blob/main/LICENSE">
+            Apache 2.0 license
+          </a>
+          <a href="https://github.com/cfarmlett/LocalFiles/blob/main/PRIVACY.md">
+            Privacy details
+          </a>
+          <a href="https://github.com/cfarmlett/LocalFiles/blob/main/SECURITY.md">
+            Security policy
+          </a>
+        </nav>
       </Section>
     </main>
   );

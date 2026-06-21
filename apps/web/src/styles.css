@@ -204,6 +204,31 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.trust-links {
+  align-items: baseline;
+  color: #44515f;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 18px;
+}
+
+.trust-links span {
+  font-weight: 700;
+}
+
+.trust-links a,
+.limitation-link {
+  color: #25313d;
+  text-underline-offset: 3px;
+}
+
+.trust-links a:focus-visible,
+.limitation-link:focus-visible {
+  outline: 3px solid #b8c7d6;
+  outline-offset: 2px;
+}
+
 .merge-tool {
   display: grid;
   gap: 18px;
