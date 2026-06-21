@@ -23,11 +23,6 @@ Sort newly selected Merge PDF files in natural numeric order, while preserving
 manual reordering. This should make files such as `page-2.pdf` sort before
 `page-10.pdf`.
 
-### SP-002: Zero-Padded Split Filenames
-
-Pad numbered Split PDF outputs according to the number of results so operating
-systems, ZIP tools, and Merge PDF keep them in the expected order.
-
 ## Workflow Improvements
 
 ### RP-002: Advanced Page Ordering Input

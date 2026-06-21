@@ -12,6 +12,9 @@ to reconstruct undocumented development history.
   naming, and private workspace package scope.
 - Simplified Split PDF to a page interval (defaulting to one page) or custom
   ranges, while preserving existing split results and filenames.
+- Zero-padded single-page Split PDF outputs and added padded `part-N-` prefixes
+  to range-based outputs according to the result count, while preserving page
+  ranges, PDF contents, individual downloads, and ZIP entries.
 
 ## 1.5.0-rc1 - Release Candidate
 

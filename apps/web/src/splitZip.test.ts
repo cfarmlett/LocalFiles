@@ -24,19 +24,19 @@ describe("createSplitZipEntries", () => {
     const outputs: readonly SplitOutput[] = [
       {
         bytes: new Uint8Array([1, 2, 3]),
-        filename: "page-1.pdf",
+        filename: "page-01.pdf",
         range: { start: 1, end: 1 },
       },
       {
         bytes: new Uint8Array([4, 5, 6]),
-        filename: "page-2.pdf",
+        filename: "page-02.pdf",
         range: { start: 2, end: 2 },
       },
     ];
 
     expect(createSplitZipEntries(outputs)).toEqual([
-      { filename: "page-1.pdf", bytes: outputs[0].bytes },
-      { filename: "page-2.pdf", bytes: outputs[1].bytes },
+      { filename: "page-01.pdf", bytes: outputs[0].bytes },
+      { filename: "page-02.pdf", bytes: outputs[1].bytes },
     ]);
   });
 });

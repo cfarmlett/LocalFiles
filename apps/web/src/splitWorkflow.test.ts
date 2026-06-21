@@ -9,10 +9,27 @@ import {
 import {
   buildSplitFileItem,
   createSplitPlan,
+  formatSplitSequenceNumber,
   getSplitErrorMessage,
   splitFile,
   type SplitFileItem,
 } from "./splitWorkflow";
+
+describe("formatSplitSequenceNumber", () => {
+  it.each([
+    [1, 1, "1"],
+    [8, 8, "8"],
+    [1, 10, "01"],
+    [10, 10, "10"],
+    [1, 99, "01"],
+    [99, 99, "99"],
+    [1, 100, "001"],
+    [100, 100, "100"],
+    [999, 999, "999"],
+  ])("formats sequence %i of %i as %s", (sequence, total, expected) => {
+    expect(formatSplitSequenceNumber(sequence, total)).toBe(expected);
+  });
+});
 
 function createFile(name: string, type = "application/pdf") {
   return new File(["%PDF- test"], name, { type });
@@ -54,6 +71,31 @@ describe("createSplitPlan", () => {
     });
   });
 
+  it("zero-pads every-page output names without changing their ranges", () => {
+    const plan = createSplitPlan("interval", 12, { interval: 1 });
+
+    expect(plan.filenames).toEqual([
+      "page-01.pdf",
+      "page-02.pdf",
+      "page-03.pdf",
+      "page-04.pdf",
+      "page-05.pdf",
+      "page-06.pdf",
+      "page-07.pdf",
+      "page-08.pdf",
+      "page-09.pdf",
+      "page-10.pdf",
+      "page-11.pdf",
+      "page-12.pdf",
+    ]);
+    expect(plan.ranges).toEqual(
+      Array.from({ length: 12 }, (_, index) => ({
+        start: index + 1,
+        end: index + 1,
+      })),
+    );
+  });
+
   it("plans a one-page PDF as one interval output", () => {
     expect(createSplitPlan("interval", 1, { interval: 1 })).toEqual({
       ranges: [{ start: 1, end: 1 }],
@@ -68,14 +110,40 @@ describe("createSplitPlan", () => {
         { start: 6, end: 10 },
         { start: 11, end: 12 },
       ],
-      filenames: ["pages-1-5.pdf", "pages-6-10.pdf", "pages-11-12.pdf"],
+      filenames: [
+        "part-1-pages-1-5.pdf",
+        "part-2-pages-6-10.pdf",
+        "part-3-pages-11-12.pdf",
+      ],
     });
+  });
+
+  it("prefixes every-N page ranges with sortable padded part numbers", () => {
+    const plan = createSplitPlan("interval", 120, { interval: 10 });
+
+    expect(plan.filenames).toEqual([
+      "part-01-pages-1-10.pdf",
+      "part-02-pages-11-20.pdf",
+      "part-03-pages-21-30.pdf",
+      "part-04-pages-31-40.pdf",
+      "part-05-pages-41-50.pdf",
+      "part-06-pages-51-60.pdf",
+      "part-07-pages-61-70.pdf",
+      "part-08-pages-71-80.pdf",
+      "part-09-pages-81-90.pdf",
+      "part-10-pages-91-100.pdf",
+      "part-11-pages-101-110.pdf",
+      "part-12-pages-111-120.pdf",
+    ]);
+    expect([...plan.filenames].sort()).toEqual(plan.filenames);
+    expect(plan.ranges).toHaveLength(12);
+    expect(plan.ranges.at(-1)).toEqual({ start: 111, end: 120 });
   });
 
   it("plans one interval chunk when the interval is larger than page count", () => {
     expect(createSplitPlan("interval", 3, { interval: 10 })).toEqual({
       ranges: [{ start: 1, end: 3 }],
-      filenames: ["pages-1-3.pdf"],
+      filenames: ["part-1-pages-1-3.pdf"],
     });
   });
 
@@ -96,6 +164,21 @@ describe("createSplitPlan", () => {
         "part-3-pages-11-20.pdf",
       ],
     });
+  });
+
+  it("zero-pads custom-range part numbers without changing range labels", () => {
+    const customRanges = Array.from(
+      { length: 12 },
+      (_, index) => `${index + 1}`,
+    ).join(",");
+    const plan = createSplitPlan("custom-ranges", 12, { customRanges });
+
+    expect(plan.filenames[0]).toBe("part-01-pages-1-1.pdf");
+    expect(plan.filenames[8]).toBe("part-09-pages-9-9.pdf");
+    expect(plan.filenames[11]).toBe("part-12-pages-12-12.pdf");
+    expect([...plan.filenames].sort()).toEqual(plan.filenames);
+    expect(plan.ranges[0]).toEqual({ start: 1, end: 1 });
+    expect(plan.ranges[11]).toEqual({ start: 12, end: 12 });
   });
 
   it("preserves duplicate and overlapping custom ranges as separate outputs", () => {
@@ -166,9 +249,9 @@ describe("splitFile", () => {
     });
 
     expect(outputs.map((output) => output.filename)).toEqual([
-      "pages-1-2.pdf",
-      "pages-3-4.pdf",
-      "pages-5-5.pdf",
+      "part-1-pages-1-2.pdf",
+      "part-2-pages-3-4.pdf",
+      "part-3-pages-5-5.pdf",
     ]);
     expect(adapter.split).toHaveBeenCalledWith({
       document: createItem().bytes,

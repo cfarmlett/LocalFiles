@@ -12,6 +12,9 @@ validation and early feedback, not the final `1.5.0` release.
 
 - Simplified Split PDF to two plain-language modes: a page interval that
   defaults to one page, and custom ranges.
+- Added zero-padded sequence numbers to single-page Split PDF outputs and
+  sortable `part-N-` prefixes to range-based outputs so generated files retain
+  their intended order in lexicographic sorting and ZIP archives.
 
 ## Foundation and Prototype
 

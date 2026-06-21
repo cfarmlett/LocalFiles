@@ -432,9 +432,9 @@ test("Split PDF discards operations invalidated by definition changes", async ({
   );
 
   await resolveDeferredSplit(page, 1, 1);
-  await expect(page.getByText("pages-1-2.pdf")).toBeVisible();
+  await expect(page.getByText("part-1-pages-1-2.pdf")).toBeVisible();
   await resolveDeferredSplit(page, 0, 2);
-  await expect(page.getByText("pages-1-2.pdf")).toBeVisible();
+  await expect(page.getByText("part-1-pages-1-2.pdf")).toBeVisible();
   await expect(page.getByText("page-1.pdf")).toHaveCount(0);
 
   await splitIntervalInput.fill("1");
@@ -646,7 +646,9 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
     splitIntervalOption.getByText("pages", { exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Split PDF", exact: true }).click();
-  await expect(page.locator("#split").getByText("pages-1-2.pdf")).toBeVisible();
+  await expect(
+    page.locator("#split").getByText("part-1-pages-1-2.pdf"),
+  ).toBeVisible();
   await splitIntervalInput.fill("1");
   await expect(
     page.getByRole("radio", { name: "Split every 1 page" }),

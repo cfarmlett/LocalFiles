@@ -27,6 +27,20 @@ export type SplitPlan = Readonly<{
   filenames: readonly string[];
 }>;
 
+export function formatSplitSequenceNumber(
+  sequenceNumber: number,
+  outputCount: number,
+): string {
+  return String(sequenceNumber).padStart(String(outputCount).length, "0");
+}
+
+function createSplitPartPrefix(
+  outputIndex: number,
+  outputCount: number,
+): string {
+  return `part-${formatSplitSequenceNumber(outputIndex + 1, outputCount)}-`;
+}
+
 export async function buildSplitFileItem(
   file: File,
   adapter: PdfAdapter,
@@ -79,10 +93,10 @@ export function createSplitPlan(
 
     return {
       ranges,
-      filenames: ranges.map((range) =>
+      filenames: ranges.map((range, index) =>
         interval === 1
-          ? `page-${range.start}.pdf`
-          : `pages-${range.start}-${range.end}.pdf`,
+          ? `page-${formatSplitSequenceNumber(index + 1, ranges.length)}.pdf`
+          : `${createSplitPartPrefix(index, ranges.length)}pages-${range.start}-${range.end}.pdf`,
       ),
     };
   }
@@ -93,7 +107,7 @@ export function createSplitPlan(
     ranges,
     filenames: ranges.map(
       (range, index) =>
-        `part-${index + 1}-pages-${range.start}-${range.end}.pdf`,
+        `${createSplitPartPrefix(index, ranges.length)}pages-${range.start}-${range.end}.pdf`,
     ),
   };
 }
