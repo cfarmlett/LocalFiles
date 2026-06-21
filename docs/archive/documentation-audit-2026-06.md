@@ -3,6 +3,10 @@
 This point-in-time audit records the documentation state before the current
 reorganization. It is historical evidence, not a current navigation guide.
 
+**Superseded note:** Prompt, task, and AI workflow artifacts retained during
+this audit were later removed after their durable product and review guidance
+was migrated into current documentation.
+
 ## Inventory and Disposition
 
 | Document                                                | Current Purpose                                                              | Recommended Location                                                           | Action  |
@@ -25,12 +29,11 @@ reorganization. It is historical evidence, not a current navigation guide.
 | `docs/architecture/vision.md`                           | Product purpose, principles, target users, and long-term intent              | Existing location                                                              | Keep    |
 | `docs/architecture/v0.1.md`                             | Short, partially stale V1 status snapshot                                    | Summary in `docs/RELEASE_HISTORY.md`; detail in `docs/archive`                 | Merge   |
 | `docs/architecture/project-history.md`                  | Detailed foundation and setup narrative                                      | Summary in `docs/RELEASE_HISTORY.md`; detail in `docs/archive`                 | Merge   |
-| `docs/architecture/ai-workflow.md`                      | Durable AI-assisted development expectations                                 | Existing location                                                              | Keep    |
+| Standalone AI workflow guidance                         | Development and review expectations                                          | Current product and contributor documentation                                  | Removed |
 | `docs/decisions/README.md`                              | ADR folder guidance                                                          | Existing location                                                              | Keep    |
 | `docs/decisions/0001-local-first-browser-processing.md` | Accepted local-first architecture decision                                   | Existing location                                                              | Keep    |
 | `docs/decisions/ADR-001-redaction-not-in-v1.md`         | Accepted browser-redaction scope decision                                    | `docs/decisions/0002-browser-redaction-not-in-v1.md`                           | Move    |
-| `docs/prompts/*.md` (21 files)                          | Feature prompts, hardening prompts, review templates, and research briefs    | `docs/archive/prompts`                                                         | Archive |
-| `docs/ai-tasks/*.md` (18 files)                         | Implementation, hardening, review, planning, and readiness task briefs       | `docs/archive/ai-tasks`                                                        | Archive |
+| Prompt and task artifact collections                    | Implementation, hardening, review, planning, and research briefs             | Durable guidance migrated into current documentation                           | Removed |
 | `docs/reviews/*.md` (2 files)                           | Point-in-time independent technical reviews                                  | `docs/archive/reviews`                                                         | Archive |
 | `docs/security/README.md`                               | Security documentation directory boundary                                    | Existing location                                                              | Keep    |
 | `docs/security/threat-model.md`                         | Current threats, boundaries, risks, and mitigations                          | Existing location                                                              | Keep    |
@@ -44,9 +47,9 @@ reorganization. It is historical evidence, not a current navigation guide.
 | `tests/e2e/README.md`                                   | Browser-test directory guidance                                              | Existing location                                                              | Keep    |
 | `tests/fixtures/README.md`                              | Safe fixture guidance                                                        | Existing location                                                              | Keep    |
 
-No useful document was deleted. Repetitive historical groups are represented as
+At the time of the audit, repetitive historical groups were represented as
 grouped rows because every file in each group had the same purpose and
-disposition; their individual names remain visible in the archive directories.
+disposition. The superseded note above records their later removal.
 
 ## Main Findings
 
@@ -57,9 +60,9 @@ disposition; their individual names remain visible in the archive directories.
 - Three separate product/status documents repeated V1 and V1.5 state.
 - The root structure guide was accurate but too detailed to maintain after each
   source-file change.
-- Prompts, AI task briefs, and reviews were useful provenance but visually
-  competed with current documentation.
-- Redaction research existed as a prompt and an ADR, but not as a durable
+- Internal workflow artifacts and reviews visually competed with current
+  documentation.
+- Redaction research existed as a research brief and an ADR, but not as a durable
   investigation summary.
 
 ## Resulting Design

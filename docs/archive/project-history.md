@@ -470,9 +470,9 @@ Completed infrastructure:
 - Local-only browser processing architecture
 - PdfAdapter boundary
 - CI pipeline for format, typecheck, lint, test, and build
-- Feature implementation prompts
-- Focused hardening prompts
-- Independent Claude review workflow
+- Feature implementation guidance
+- Focused hardening reviews
+- Independent review workflow
 - Privacy-first project positioning
 
 Completed V1.5/V1 polish:

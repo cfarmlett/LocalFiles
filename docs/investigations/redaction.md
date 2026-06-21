@@ -68,6 +68,3 @@ The accepted decision is therefore to keep browser redaction out of V1. See
 Redaction may move from investigation to release planning only after a proposed
 engine and verification strategy demonstrate the required outcome across a
 representative adversarial test corpus.
-
-The original research brief is preserved at
-[`../archive/prompts/redaction-research.md`](../archive/prompts/redaction-research.md).

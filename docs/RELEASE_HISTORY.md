@@ -36,7 +36,7 @@ The foundation established:
 - the `PdfAdapter` boundary around PDF implementation details;
 - automated format, type, lint, unit, browser, and build checks;
 - a threat model and an accepted local-first processing decision; and
-- review practices for privacy-sensitive and AI-assisted changes.
+- review practices for privacy-sensitive changes.
 
 The fuller foundation narrative is preserved in
 [`archive/project-history.md`](archive/project-history.md).
@@ -85,4 +85,4 @@ The detailed plan is preserved in
 The project was renamed from LocalDocs to LocalFiles before public launch to
 support a broader future of privacy-first local file processing. Current code,
 packages, copy, and planned domain branding use LocalFiles. Historical commits,
-tags, prompts, and review artifacts retain their original context where useful.
+tags, and release records retain their original context where useful.

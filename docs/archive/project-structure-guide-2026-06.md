@@ -66,11 +66,9 @@ Generated directories such as `node_modules`, `apps/web/dist`, `test-results`, a
 │       ├── package.json
 │       └── vite.config.ts
 ├── docs/
-│   ├── ai-tasks/
 │   ├── architecture/
 │   ├── decisions/
 │   ├── product/
-│   ├── prompts/
 │   ├── reviews/
 │   ├── security/
 │   ├── setup/
@@ -97,23 +95,23 @@ Generated directories such as `node_modules`, `apps/web/dist`, `test-results`, a
 └── tsconfig.test.json
 ```
 
-| Location        | Purpose and responsibilities                                                                                                                   | What belongs here                                                                                     | What does not belong here                                                                                                                                               |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.github/`      | GitHub contribution forms, review templates, and CI definitions.                                                                               | Repository-hosting automation and contributor-facing templates.                                       | Product runtime code, document fixtures, secrets, or generated reports.                                                                                                 |
-| `apps/`         | Deployable applications. It currently contains only the browser app.                                                                           | App composition, browser state, user interaction, app-specific styling, and application entry points. | Reusable domain rules or direct PDF-library implementation details that belong behind package boundaries.                                                               |
-| `docs/`         | Product, architecture, privacy, security, setup, decision, prompt, task, and review history.                                                   | Durable rationale and current behavior, plus clearly historical implementation/review artifacts.      | Runtime behavior or claims that are not reflected by the code. The product and architecture documents, rather than old prompts/reviews, are the current-status sources. |
-| `packages/`     | Internal workspace libraries with explicit responsibilities.                                                                                   | Reusable pure logic, PDF adapters, shared UI primitives, and shared configuration.                    | Application-only orchestration or unrelated infrastructure.                                                                                                             |
-| `scripts/`      | Reserved location for small, reviewable repository-maintenance scripts.                                                                        | Local maintenance automation when needed.                                                             | Deployment/cloud integration, telemetry, account provisioning, payments, or document-upload workflows.                                                                  |
-| `tests/`        | Cross-application smoke, fixture, and browser-level tests.                                                                                     | Workspace checks, safe synthetic shared fixtures, and Playwright journeys.                            | Feature-local unit tests, which are colocated with source, or sensitive real documents.                                                                                 |
-| Repository root | Workspace manifests, lockfile, shared TypeScript/lint/format/test configuration, project policies, release notes, and top-level documentation. | Settings that apply to the whole monorepo and public project governance files.                        | Feature implementations or generated build/test output.                                                                                                                 |
+| Location        | Purpose and responsibilities                                                                                                                   | What belongs here                                                                                     | What does not belong here                                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `.github/`      | GitHub contribution forms, review templates, and CI definitions.                                                                               | Repository-hosting automation and contributor-facing templates.                                       | Product runtime code, document fixtures, secrets, or generated reports.                                                                   |
+| `apps/`         | Deployable applications. It currently contains only the browser app.                                                                           | App composition, browser state, user interaction, app-specific styling, and application entry points. | Reusable domain rules or direct PDF-library implementation details that belong behind package boundaries.                                 |
+| `docs/`         | Product, architecture, privacy, security, setup, decision, and review history.                                                                 | Durable rationale and current behavior, plus clearly historical implementation/review artifacts.      | Runtime behavior or claims that are not reflected by the code. Current product and architecture documents are the current-status sources. |
+| `packages/`     | Internal workspace libraries with explicit responsibilities.                                                                                   | Reusable pure logic, PDF adapters, shared UI primitives, and shared configuration.                    | Application-only orchestration or unrelated infrastructure.                                                                               |
+| `scripts/`      | Reserved location for small, reviewable repository-maintenance scripts.                                                                        | Local maintenance automation when needed.                                                             | Deployment/cloud integration, telemetry, account provisioning, payments, or document-upload workflows.                                    |
+| `tests/`        | Cross-application smoke, fixture, and browser-level tests.                                                                                     | Workspace checks, safe synthetic shared fixtures, and Playwright journeys.                            | Feature-local unit tests, which are colocated with source, or sensitive real documents.                                                   |
+| Repository root | Workspace manifests, lockfile, shared TypeScript/lint/format/test configuration, project policies, release notes, and top-level documentation. | Settings that apply to the whole monorepo and public project governance files.                        | Feature implementations or generated build/test output.                                                                                   |
 
 Important documentation subdirectories have distinct roles:
 
-- `docs/architecture` explains the vision, project history, current V1 alignment, and AI-assisted development process.
+- `docs/architecture` explains the vision, project history, and current V1 alignment.
 - `docs/decisions` records accepted architecture decisions, especially local-first processing and the omission of browser redaction.
 - `docs/product` describes shipped scope and backlog status.
 - `docs/security` holds the threat model and security-specific context.
-- `docs/prompts`, `docs/ai-tasks`, and `docs/reviews` preserve development and review history; they are useful provenance but are not automatically current roadmap truth.
+- `docs/reviews` preserves point-in-time review history; it is useful provenance but is not automatically current roadmap truth.
 - `docs/setup` contains reproducible developer setup instructions.
 
 # 3. Application Overview
@@ -424,7 +422,7 @@ There is one static application, no router, no backend, no styling framework, a 
 
 ## Documentation preserves rationale
 
-Architecture decisions, threat assumptions, product scope, project history, prompts, and independent reviews are kept in separate document categories. Current product/architecture documents define present status; historical prompts and reviews explain how the implementation arrived there.
+Architecture decisions, threat assumptions, product scope, project history, and independent reviews are kept in separate document categories. Current product and architecture documents define present status; historical reviews provide additional context.
 
 # 11. Future Maintainer Quick Start
 

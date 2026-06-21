@@ -48,6 +48,14 @@ Reviewers look for correctness, clear tests, maintainable scope, accessible UI,
 and consistency with documented behavior. Privacy- or security-sensitive
 changes may require additional review even when tests pass.
 
+Review lifecycle-sensitive changes for the following:
+
+- transient browser state does not retain stale outputs;
+- object URLs are cleaned up and revoked;
+- errors are truthful and specific;
+- privacy-sensitive behavior does not regress; and
+- generated or downloadable results are invalidated when source inputs change.
+
 ## Privacy, Security, and Dependencies
 
 Current document workflows must remain local to the browser. A contribution

@@ -1,8 +1,8 @@
 # Documentation Archive
 
-This directory preserves superseded plans, implementation prompts, AI task
-briefs, review reports, and detailed snapshots that remain useful as project
-history but are not current sources of truth.
+This directory preserves superseded plans, review reports, and detailed
+snapshots that remain useful as project history but are not current sources of
+truth.
 
 Use the live documents instead:
 

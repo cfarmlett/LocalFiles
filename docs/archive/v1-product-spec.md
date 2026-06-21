@@ -176,7 +176,7 @@ Prioritized polish checklist:
 
 ### Documentation Alignment
 
-Keep README, product specs, architecture notes, security docs, prompts, and
+Keep README, product specs, architecture notes, security docs, and
 review artifacts clear about which items are implemented, planned, or
 intentionally excluded.
 

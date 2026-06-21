@@ -85,7 +85,7 @@ boundary. Use those before adding package-level prose here.
 | Why was a technical choice made?      | `docs/decisions`                                             |
 | What future area has been researched? | `docs/investigations`                                        |
 | How do I develop it?                  | `docs/setup/developer-setup.md` and `CONTRIBUTING.md`        |
-| Where are old plans and prompts?      | `docs/archive`                                               |
+| Where is historical project context?  | `docs/archive`                                               |
 
 ## Documentation Rules
 

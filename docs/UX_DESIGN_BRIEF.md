@@ -151,6 +151,10 @@ Avoid:
 
 Workflows should remain direct and efficient.
 
+Block objectively invalid input, but allow valid low-value operations instead
+of guessing user intent. Do not prevent actions merely because they seem
+unnecessary.
+
 ---
 
 ## 8. Predictability Over Cleverness

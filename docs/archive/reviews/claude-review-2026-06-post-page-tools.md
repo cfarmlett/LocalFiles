@@ -1,6 +1,6 @@
 # LocalFiles Post-Page-Tools Review
 
-**Reviewer role:** Independent read-only review per `docs/prompts/claude-review-template.md`
+**Reviewer role:** Independent read-only review
 **Scope:** Merge PDF, Split PDF, Reorder Pages, Rotate Pages, Delete Pages — as currently implemented and hardened
 
 ---
