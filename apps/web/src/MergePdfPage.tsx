@@ -10,6 +10,7 @@ import {
   mergeFiles,
   moveMergeFile,
   removeMergeFile,
+  sortFilesByNaturalFilename,
   validatePdfFile,
   type MergeFileItem,
   type MergeResult,
@@ -67,16 +68,18 @@ export function MergePdfPage({ adapter = defaultAdapter }: MergePdfPageProps) {
     setMergeResult(undefined);
 
     const nextErrors: string[] = [];
-    const pdfFiles = Array.from(selectedFiles).filter((file) => {
-      const validation = validatePdfFile(file);
+    const pdfFiles = sortFilesByNaturalFilename(
+      Array.from(selectedFiles).filter((file) => {
+        const validation = validatePdfFile(file);
 
-      if (!validation.valid) {
-        nextErrors.push(validation.message);
-        return false;
-      }
+        if (!validation.valid) {
+          nextErrors.push(validation.message);
+          return false;
+        }
 
-      return true;
-    });
+        return true;
+      }),
+    );
 
     if (pdfFiles.length === 0) {
       setErrors(nextErrors);

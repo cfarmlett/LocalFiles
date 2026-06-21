@@ -15,6 +15,8 @@ validation and early feedback, not the final `1.5.0` release.
 - Added zero-padded sequence numbers to single-page Split PDF outputs and
   sortable `part-N-` prefixes to range-based outputs so generated files retain
   their intended order in lexicographic sorting and ZIP archives.
+- Added natural numeric filename sorting for newly selected Merge PDF batches
+  without changing existing or manually arranged file order.
 
 ## Foundation and Prototype
 

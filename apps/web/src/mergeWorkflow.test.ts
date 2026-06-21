@@ -4,10 +4,12 @@ import { PdfProcessingError, type PdfAdapter } from "@localfiles/pdf";
 
 import {
   buildMergeFileItem,
+  compareNaturalFilenames,
   getPdfErrorMessage,
   mergeFiles,
   moveMergeFile,
   removeMergeFile,
+  sortFilesByNaturalFilename,
   validatePdfFile,
   type MergeFileItem,
 } from "./mergeWorkflow";
@@ -49,6 +51,75 @@ describe("validatePdfFile", () => {
       valid: false,
       message: "notes.txt is not a PDF file.",
     });
+  });
+});
+
+describe("natural filename sorting", () => {
+  function sortNames(names: readonly string[]) {
+    return sortFilesByNaturalFilename(names.map((name) => ({ name }))).map(
+      ({ name }) => name,
+    );
+  }
+
+  it("compares numeric filename segments numerically", () => {
+    expect(sortNames(["page-10.pdf", "page-2.pdf", "page-1.pdf"])).toEqual([
+      "page-1.pdf",
+      "page-2.pdf",
+      "page-10.pdf",
+    ]);
+    expect(sortNames(["page-010.pdf", "page-002.pdf", "page-001.pdf"])).toEqual(
+      ["page-001.pdf", "page-002.pdf", "page-010.pdf"],
+    );
+    expect(
+      sortNames(["part-10-pages-64-70.pdf", "part-2-pages-8-14.pdf"]),
+    ).toEqual(["part-2-pages-8-14.pdf", "part-10-pages-64-70.pdf"]);
+  });
+
+  it("keeps LocalFiles-generated filenames in natural order", () => {
+    const pages = Array.from(
+      { length: 10 },
+      (_, index) => `page-${String(index + 1).padStart(3, "0")}.pdf`,
+    );
+    const parts = Array.from({ length: 10 }, (_, index) => {
+      const part = String(index + 1).padStart(3, "0");
+      const firstPage = index * 7 + 1;
+      return `part-${part}-pages-${firstPage}-${firstPage + 6}.pdf`;
+    });
+
+    expect(sortNames([...pages].reverse())).toEqual(pages);
+    expect(sortNames([...parts].reverse())).toEqual(parts);
+  });
+
+  it("sorts mixed names predictably without locale-dependent comparison", () => {
+    expect(
+      sortNames(["page-10.pdf", "notes.pdf", "page-2.pdf", "invoice.pdf"]),
+    ).toEqual(["invoice.pdf", "notes.pdf", "page-2.pdf", "page-10.pdf"]);
+  });
+
+  it("is stable for leading-zero and casing-equivalent keys", () => {
+    const files = [
+      { name: "page-01.pdf", marker: "first" },
+      { name: "PAGE-1.PDF", marker: "second" },
+      { name: "page-001.pdf", marker: "third" },
+    ];
+
+    expect(compareNaturalFilenames("page-1.pdf", "page-01.pdf")).toBe(0);
+    expect(
+      sortFilesByNaturalFilename(files).map(({ marker }) => marker),
+    ).toEqual(["first", "second", "third"]);
+  });
+
+  it("does not mutate the input batch", () => {
+    const files = [{ name: "page-10.pdf" }, { name: "page-2.pdf" }];
+
+    expect(sortFilesByNaturalFilename(files).map(({ name }) => name)).toEqual([
+      "page-2.pdf",
+      "page-10.pdf",
+    ]);
+    expect(files.map(({ name }) => name)).toEqual([
+      "page-10.pdf",
+      "page-2.pdf",
+    ]);
   });
 });
 

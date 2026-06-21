@@ -29,6 +29,78 @@ export type FileValidationResult =
       message: string;
     }>;
 
+function splitNaturalFilename(filename: string): string[] {
+  return filename.match(/\d+|\D+/g) ?? [];
+}
+
+function compareNumericSegments(left: string, right: string): number {
+  const normalizedLeft = left.replace(/^0+/, "") || "0";
+  const normalizedRight = right.replace(/^0+/, "") || "0";
+
+  if (normalizedLeft.length !== normalizedRight.length) {
+    return normalizedLeft.length < normalizedRight.length ? -1 : 1;
+  }
+
+  if (normalizedLeft === normalizedRight) {
+    return 0;
+  }
+
+  return normalizedLeft < normalizedRight ? -1 : 1;
+}
+
+export function compareNaturalFilenames(left: string, right: string): number {
+  const leftSegments = splitNaturalFilename(left);
+  const rightSegments = splitNaturalFilename(right);
+  const sharedLength = Math.min(leftSegments.length, rightSegments.length);
+
+  for (let index = 0; index < sharedLength; index += 1) {
+    const leftSegment = leftSegments[index];
+    const rightSegment = rightSegments[index];
+    const leftIsNumeric = /^\d+$/.test(leftSegment);
+    const rightIsNumeric = /^\d+$/.test(rightSegment);
+
+    if (leftIsNumeric && rightIsNumeric) {
+      const comparison = compareNumericSegments(leftSegment, rightSegment);
+
+      if (comparison !== 0) {
+        return comparison;
+      }
+
+      continue;
+    }
+
+    if (leftIsNumeric !== rightIsNumeric) {
+      return leftIsNumeric ? -1 : 1;
+    }
+
+    const normalizedLeft = leftSegment.toLowerCase();
+    const normalizedRight = rightSegment.toLowerCase();
+
+    if (normalizedLeft !== normalizedRight) {
+      return normalizedLeft < normalizedRight ? -1 : 1;
+    }
+  }
+
+  if (leftSegments.length === rightSegments.length) {
+    return 0;
+  }
+
+  return leftSegments.length < rightSegments.length ? -1 : 1;
+}
+
+export function sortFilesByNaturalFilename<T extends { readonly name: string }>(
+  files: readonly T[],
+): T[] {
+  return files
+    .map((file, originalIndex) => ({ file, originalIndex }))
+    .sort(
+      (left, right) =>
+        compareNaturalFilenames(left.file.name, right.file.name) ||
+        left.originalIndex - right.originalIndex,
+    )
+    .map(({ file }) => file);
+}
+
 export function validatePdfFile(file: File): FileValidationResult {
   const hasPdfExtension = file.name.toLowerCase().endsWith(".pdf");
   // Some browsers and operating systems leave File.type empty for local PDFs.

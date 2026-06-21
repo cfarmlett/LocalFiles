@@ -15,6 +15,8 @@ to reconstruct undocumented development history.
 - Zero-padded single-page Split PDF outputs and added padded `part-N-` prefixes
   to range-based outputs according to the result count, while preserving page
   ranges, PDF contents, individual downloads, and ZIP entries.
+- Naturally sorted each newly added batch of Merge PDF files by filename while
+  preserving the existing list and any manual reordering.
 
 ## 1.5.0-rc1 - Release Candidate
 

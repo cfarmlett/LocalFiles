@@ -15,14 +15,6 @@ Statuses:
 - **Deferred**: intentionally postponed until the product or architecture
   matures.
 
-## Planned
-
-### MP-002: Natural Merge File Sorting
-
-Sort newly selected Merge PDF files in natural numeric order, while preserving
-manual reordering. This should make files such as `page-2.pdf` sort before
-`page-10.pdf`.
-
 ## Workflow Improvements
 
 ### RP-002: Advanced Page Ordering Input

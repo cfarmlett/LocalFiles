@@ -1309,6 +1309,23 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
     .allTextContents();
   expect(fileNames).toEqual(["second.pdf", "first.pdf"]);
 
+  await fileInput.setInputFiles([
+    {
+      name: "page-10.pdf",
+      mimeType: "application/pdf",
+      buffer: pdfBuffer(onePagePdf),
+    },
+    {
+      name: "page-2.pdf",
+      mimeType: "application/pdf",
+      buffer: pdfBuffer(onePagePdf),
+    },
+  ]);
+  await expect(page.getByText("4 PDFs selected, 5 total pages.")).toBeVisible();
+  expect(
+    await page.locator("#merge .file-list__item strong").allTextContents(),
+  ).toEqual(["second.pdf", "first.pdf", "page-2.pdf", "page-10.pdf"]);
+
   await page.getByRole("button", { name: "Merge PDFs" }).click();
   await expect(
     page.locator("#merge").getByRole("link", { name: "Download PDF" }),
