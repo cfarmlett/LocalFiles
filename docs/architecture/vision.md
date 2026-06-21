@@ -10,6 +10,13 @@ The core promise is simple:
 
 LocalFiles should feel boring, serious, and trustworthy. It should be suitable for individuals, small businesses, law firms, accountants, medical offices, consultants, and anyone else handling documents they would rather not send to an unknown server.
 
+Local processing is the foundation of the product, but it is not sufficient
+differentiation by itself. Future unique value should come from trustworthy
+document handling: inspection, evidence-backed results, transparent
+limitations, and verifiable sanitization or redaction. LocalFiles should not
+optimize primarily for catalog size, a general PDF editor, workflow-builder
+parity, or broad conversion coverage.
+
 ## Product Philosophy
 
 LocalFiles should be built around a few durable principles:
@@ -145,9 +152,12 @@ Security and privacy expectations:
 - Do not log file contents.
 - Do not retain documents without explicit user action.
 - Avoid unnecessary third-party scripts.
+- Prefer zero-egress operation for sensitive workflows and make offline and
+  network assumptions observable and testable when practical.
 - Keep dependencies limited and reviewable.
 - Treat redaction as high risk and avoid unsafe “fake redaction.”
-- Make privacy claims technically accurate.
+- Make privacy and safety claims specific, evidence-backed, and technically
+  accurate; avoid blanket claims that the implementation cannot demonstrate.
 
 For current local workflows, the processing model is:
 

@@ -24,27 +24,31 @@ The current product version is `1.5.0-rc1`.
 - Apply feedback-driven usability and visual polish, beginning with simpler
   Split PDF controls and plain-language labels.
 - Make output naming and export behavior more predictable.
-- Evaluate additional privacy-oriented PDF utilities without weakening the
-  local-processing model.
+- Evaluate document inspection and verifiable sanitization without weakening
+  the local-processing model or overstating guarantees.
 
 ## Later: Add Page Preview and Visual Editing
 
 Establish a shared, local page-preview foundation so users can inspect and
 manipulate pages without coordinating with an external PDF viewer. Build
 mobile-friendly visual selection, navigation, and split-point editing on that
-foundation across page-based workflows.
+foundation across page-based workflows. Treat previews as inspection
+infrastructure, not merely visual polish.
 
 ## Later: Expand Local Workflows
 
-Potential directions include file conversion, batch processing, stronger PDF
-sanitization, and local OCR. Scope and sequencing will depend on real usage,
-browser constraints, and maintenance cost.
+Potential directions include focused file conversion, batch processing,
+verifiable PDF sanitization, and local OCR where it supports a validated
+workflow. Broad catalogs and standalone feature parity are lower priorities.
+Scope and sequencing will depend on real usage, browser constraints, trust
+requirements, and maintenance cost.
 
 ## Explore: Capabilities That Need Research
 
-Redaction, a desktop application, and AI-assisted document features require
-separate trust and feasibility work before they can enter a release plan.
-Investigation does not imply commitment.
+Document inspection, verifiable sanitization, redaction, a desktop application,
+and AI-assisted document features require separate trust and feasibility work
+before they can enter a release plan. AI-assisted tools are a lower near-term
+priority. Investigation does not imply commitment.
 
 ## Roadmap Rules
 

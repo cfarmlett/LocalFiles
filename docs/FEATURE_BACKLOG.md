@@ -72,7 +72,8 @@ Create a reusable, in-browser page thumbnail system for Split PDF, Reorder
 Pages, Rotate Pages, Delete Pages, and future page-based tools such as
 redaction. It should keep documents local, provide meaningful context for
 text-heavy pages, and remain usable on mobile. This is shared foundation for
-later preview and visual-editing features, not an isolated workflow.
+later inspection, preview, and visual-editing features, not an isolated
+workflow or visual-polish task.
 
 ### PDF-THUMB-002: Expanded Page Preview Viewer
 
@@ -113,24 +114,41 @@ context.
 
 ## New Local Capabilities
 
-### PDF Sanitization and Verification
+### DOC-INSPECT-001: Document Inspection
 
-**Status:** Candidate
+**Status:** Investigating
 
-Offer a dedicated workflow for removing supported hidden information such as
-metadata, comments, annotations, attachments, forms, or scripts, accompanied by
-an honest summary of what was checked and removed.
+Investigate whether LocalFiles can reliably inventory sensitive or hidden PDF
+features before modification, including standard metadata, XMP, attachments,
+annotations and comments, forms, scripts and actions, optional content and
+layers, OCR text layers, signatures, structure data, and suspicious residual
+objects.
+
+The result should help users understand what is present and establish evidence
+for later sanitization or redaction decisions.
+
+### PDF-SAN-001: Verifiable Sanitization
+
+**Status:** Investigating
+
+Investigate a sanitization workflow that reports what was found, what was
+removed, what failed, what was not checked, and what residual risks remain.
+The result should include a clear human-readable report and may also provide a
+machine-readable verification receipt.
 
 This would extend—not overstate—the current Metadata Removal tool.
 
+**Depends on:** DOC-INSPECT-001 or an equivalent inspection model.
+
 ### File Conversion Tools
 
-**Status:** Candidate
+**Status:** Deferred
 
 Evaluate focused local workflows such as PDF to images, images to PDF, text
 extraction, and PDF compression. Each workflow should be considered separately
-based on user value, output quality, and browser cost. See the
-[file conversion investigation](investigations/file-conversion.md).
+based on user value, output quality, browser cost, and fit with a complete
+LocalFiles workflow. A broad conversion catalog is not a primary
+differentiation strategy. See the [file conversion investigation](investigations/file-conversion.md).
 
 ### Batch Processing
 
@@ -147,15 +165,22 @@ limits.
 Make scanned documents searchable or extractable without uploading them.
 Engine size, language support, accuracy, accessibility, and browser performance
 need research before scheduling; see the [OCR investigation](investigations/ocr.md).
+Standalone OCR is a lower priority than OCR that supports inspection,
+accessibility, sanitization, or redaction assurance.
 
-### Safe PDF Redaction
+### PDF-REDACT-001: Redaction Assurance
 
 **Status:** Investigating
 
-Permanently remove selected information and provide understandable verification
-of the resulting file. The current browser stack does not meet the project's
-redaction standard; see the
-[redaction investigation](investigations/redaction.md).
+Investigate what would be required to make an honest, explicit guarantee that
+selected content is gone. The model must combine destructive redaction with
+independent verification and adversarial fixtures covering text extraction,
+object scanning, OCR and images, annotations, metadata, attachments, and other
+hidden content.
+
+The current browser stack does not meet this standard. Any future workflow must
+define guarantee levels and explain what each level does and does not cover;
+see the [redaction investigation](investigations/redaction.md).
 
 Potential user-visible extensions include search-assisted and pattern-assisted
 candidate selection, but user review and conservative claims remain mandatory.
@@ -170,12 +195,13 @@ the [desktop application investigation](investigations/desktop-app.md).
 
 ### AI-Assisted Document Tools
 
-**Status:** Investigating
+**Status:** Deferred
 
 Explore optional capabilities such as summaries, classification, extraction,
 and question answering. Any proposal must define where models run, what data
 leaves the device, what users are told, and whether a genuinely local option is
-practical.
+practical. These tools are a lower near-term priority than core workflow
+quality and verifiable document-safety work.
 
 See the [AI features investigation](investigations/ai-features.md).
 

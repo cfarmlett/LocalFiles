@@ -253,6 +253,17 @@ over assertions alone.
 
 Users should be able to verify important claims independently.
 
+For sensitive document operations, prefer a clear workflow model:
+
+1. Inspect what is present.
+2. Let the user choose the intended change.
+3. Process the document.
+4. Verify and explain the result.
+
+The verification step should identify failures, unchecked areas, and residual
+risks rather than presenting every completed operation as an unconditional
+success.
+
 ---
 
 ## Open Source Transparency
@@ -297,6 +308,9 @@ Prefer:
 - Plain language
 - Specific statements
 - Verifiable claims
+
+Avoid blanket claims such as “100% private,” “completely safe,” or “unlimited”
+unless the product can define and demonstrate their scope.
 
 ---
 

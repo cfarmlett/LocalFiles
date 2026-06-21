@@ -25,6 +25,11 @@ The workflow must consider more than visible page content, including text and
 image layers, vectors, annotations, forms, metadata, XMP, attachments, hidden
 streams, structure trees, actions, and incremental revisions where relevant.
 
+Any future implementation must define explicit guarantee levels rather than
+using a single universal “redacted” claim. Each level must state which content
+representations were destructively changed, which independent checks passed,
+what was not checked, and what residual risks remain.
+
 ## Current Finding
 
 The current browser stack is well suited to page manipulation and standard
@@ -57,7 +62,9 @@ The accepted decision is therefore to keep browser redaction out of V1. See
 - Which PDF engine can remove content across text, images, vectors, forms,
   annotations, metadata, attachments, and prior revisions?
 - How will scanned, OCR, and mixed-content PDFs be handled?
-- What automated checks can verify text, object, metadata, and visual removal?
+- Which independent parser or engine can verify text extraction, PDF objects,
+  annotations, metadata, attachments, hidden content, and rendered output after
+  redaction?
 - Can output preserve acceptable fidelity and accessibility?
 - What warnings and claim language can non-technical users understand?
 - Can the implementation and its dependencies remain local, reviewable, and
@@ -66,5 +73,7 @@ The accepted decision is therefore to keep browser redaction out of V1. See
 ## Revisit Criteria
 
 Redaction may move from investigation to release planning only after a proposed
-engine and verification strategy demonstrate the required outcome across a
-representative adversarial test corpus.
+engine and independent verification strategy demonstrate the required outcome
+across a representative adversarial corpus. Fixtures must cover searchable
+text, OCR layers, scanned images, vectors, forms, annotations, metadata,
+attachments, hidden content, and malformed or unusual object structures.
