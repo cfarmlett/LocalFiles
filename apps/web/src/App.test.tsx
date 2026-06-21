@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { App, appSections } from "./App";
+import { App, appSections, toolSections } from "./App";
 
 describe("App shell", () => {
   it("defines the expected sections", () => {
@@ -16,12 +16,22 @@ describe("App shell", () => {
       "Redact PDF",
       "Privacy",
     ]);
+
+    expect(toolSections.map((section) => section.label)).toEqual([
+      "Split PDF",
+      "Merge PDF",
+      "Reorder Pages",
+      "Rotate Pages",
+      "Delete Pages",
+      "Remove Metadata",
+    ]);
   });
 
   it("renders verifiable local-processing claims and honest limitations", () => {
     const markup = renderToStaticMarkup(<App />);
 
     expect(markup).toContain("LocalFiles.org");
+    expect(markup).toContain('aria-label="PDF tools"');
     expect(markup).toContain("Files are processed locally in your browser.");
     expect(markup).toContain(
       "Your PDFs are not uploaded to a LocalFiles server.",

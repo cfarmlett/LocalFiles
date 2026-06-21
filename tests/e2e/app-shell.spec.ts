@@ -385,15 +385,13 @@ type NavigationDestination = Readonly<{
   label: string;
 }>;
 
-const navigationDestinations: readonly NavigationDestination[] = [
+const toolNavigationDestinations: readonly NavigationDestination[] = [
   { id: "split", label: "Split PDF" },
   { id: "merge", label: "Merge PDF" },
   { id: "reorder", label: "Reorder Pages" },
   { id: "rotate", label: "Rotate Pages" },
   { id: "delete", label: "Delete Pages" },
   { id: "metadata", label: "Remove Metadata" },
-  { id: "redact", label: "Redact PDF" },
-  { id: "privacy", label: "Privacy" },
 ];
 
 function destinationIntroduction(page: Page, id: string): Locator {
@@ -489,8 +487,11 @@ test("empty hash loads show Home", async ({ page }) => {
 
   await expectCurrentSection(page, "Home");
   await expect(
-    page.getByRole("link", { name: "Home", exact: true }),
+    page.getByRole("link", { name: "LocalFiles.org", exact: true }),
   ).toHaveAttribute("aria-current", "page");
+  await expect(
+    page.getByRole("link", { name: "Home", exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("heading", {
       name: "PDF utilities that stay on your device.",
@@ -498,16 +499,64 @@ test("empty hash loads show Home", async ({ page }) => {
   ).toBeInViewport();
 });
 
-test("navigation clicks reveal every destination", async ({ page }) => {
+test("header prioritizes implemented PDF tools", async ({ page }) => {
   await page.goto("/");
 
-  for (const destination of navigationDestinations) {
+  const toolNavigation = page.getByRole("navigation", { name: "PDF tools" });
+
+  await expect(toolNavigation.getByRole("link")).toHaveCount(6);
+  await expect(
+    toolNavigation.getByRole("link", { name: "Home", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    toolNavigation.getByRole("link", { name: "Redact PDF", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    toolNavigation.getByRole("link", { name: "Privacy", exact: true }),
+  ).toHaveCount(0);
+
+  for (const destination of toolNavigationDestinations) {
     await page
       .getByRole("link", { name: destination.label, exact: true })
       .click();
     await expectCurrentSection(page, destination.label);
     await expectDestinationVisible(page, destination);
   }
+
+  await page.getByRole("link", { name: "Privacy", exact: true }).click();
+  await expectCurrentSection(page, "Privacy");
+  await expectDestinationVisible(page, { id: "privacy", label: "Privacy" });
+});
+
+test("Redact remains discoverable in content and reachable by hash", async ({
+  page,
+}) => {
+  await page.goto("/#redact");
+
+  await expectCurrentSection(page, "Redact PDF");
+  await expectDestinationVisible(page, { id: "redact", label: "Redact PDF" });
+  await expect(
+    page.getByRole("link", { name: "Redact PDF", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator("#redact").getByText("Redaction is not available."),
+  ).toBeVisible();
+});
+
+test("tool navigation remains keyboard operable", async ({ page }) => {
+  await page.goto("/");
+
+  const splitLink = page
+    .getByRole("navigation", { name: "PDF tools" })
+    .getByRole("link", { name: "Split PDF", exact: true });
+
+  await splitLink.focus();
+  await expect(splitLink).toBeFocused();
+  await page.keyboard.press("Enter");
+
+  await expectCurrentSection(page, "Split PDF");
+  await expect(splitLink).toHaveAttribute("aria-current", "page");
+  await expectDestinationVisible(page, { id: "split", label: "Split PDF" });
 });
 
 test("hash navigation remains correct through browser history", async ({
@@ -542,6 +591,19 @@ test("wrapped mobile navigation does not obscure destinations", async ({
     id: "merge",
     label: "Merge PDF",
   });
+
+  const toolNavigationRows = await page
+    .getByRole("navigation", { name: "PDF tools" })
+    .getByRole("link")
+    .evaluateAll((links) =>
+      Array.from(
+        new Set(
+          links.map((link) => Math.round(link.getBoundingClientRect().top)),
+        ),
+      ),
+    );
+
+  expect(toolNavigationRows.length).toBeLessThanOrEqual(2);
 
   await page.getByRole("link", { name: "Privacy", exact: true }).click();
   await expectCurrentSection(page, "Privacy");

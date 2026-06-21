@@ -26,14 +26,18 @@ type AppSection = Readonly<{
   label: string;
 }>;
 
-export const appSections: readonly AppSection[] = [
-  { id: "home", label: "Home" },
+export const toolSections: readonly AppSection[] = [
   { id: "split", label: "Split PDF" },
   { id: "merge", label: "Merge PDF" },
   { id: "reorder", label: "Reorder Pages" },
   { id: "rotate", label: "Rotate Pages" },
   { id: "delete", label: "Delete Pages" },
   { id: "metadata", label: "Remove Metadata" },
+];
+
+export const appSections: readonly AppSection[] = [
+  { id: "home", label: "Home" },
+  ...toolSections,
   { id: "redact", label: "Redact PDF" },
   { id: "privacy", label: "Privacy" },
 ];
@@ -85,15 +89,26 @@ export function App() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <a
-          className="brand"
-          href="#home"
-          onClick={() => setActiveSection("home")}
-        >
-          LocalFiles.org
-        </a>
-        <nav className="nav" aria-label="Main navigation">
-          {appSections.map((section) => (
+        <div className="topbar__identity">
+          <a
+            aria-current={activeSection === "home" ? "page" : undefined}
+            className="brand"
+            href="#home"
+            onClick={() => setActiveSection("home")}
+          >
+            LocalFiles.org
+          </a>
+          <a
+            aria-current={activeSection === "privacy" ? "page" : undefined}
+            className="header-utility"
+            href="#privacy"
+            onClick={() => setActiveSection("privacy")}
+          >
+            Privacy
+          </a>
+        </div>
+        <nav className="nav" aria-label="PDF tools">
+          {toolSections.map((section) => (
             <a
               aria-current={activeSection === section.id ? "page" : undefined}
               href={`#${section.id}`}

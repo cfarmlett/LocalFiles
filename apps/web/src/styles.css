@@ -60,11 +60,31 @@ button:disabled {
   z-index: 1;
 }
 
+.topbar__identity {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+}
+
 .brand {
   font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.header-utility {
+  border-left: 1px solid #d7dde4;
+  color: #536171;
+  font-size: 0.9rem;
+  padding-left: 16px;
+  text-underline-offset: 3px;
+}
+
+.header-utility[aria-current="page"],
+.header-utility:hover {
+  color: #17212b;
+  font-weight: 700;
 }
 
 .nav {
@@ -596,10 +616,16 @@ h3 {
   .topbar {
     align-items: flex-start;
     flex-direction: column;
+    gap: 16px;
   }
 
   .nav {
+    column-gap: 4px;
     justify-content: flex-start;
+  }
+
+  .nav a {
+    padding-inline: 7px;
   }
 
   .hero,
