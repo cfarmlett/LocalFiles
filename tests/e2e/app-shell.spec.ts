@@ -341,6 +341,21 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
   await expectCurrentSection(page, "Split PDF");
 
   const splitFileInput = page.locator("#split-file-input");
+  const splitIntervalOption = page.locator(".split-interval-option");
+  const splitIntervalInput = page.getByLabel("Pages per split PDF");
+
+  await expect(splitIntervalOption.getByText("Split every")).toBeVisible();
+  await expect(
+    splitIntervalOption.getByText("page", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("radio", { name: "Split every 1 page" }),
+  ).toBeChecked();
+  await expect(splitIntervalInput).toHaveValue("1");
+  await expect(page.getByText("Pages per file", { exact: true })).toHaveCount(
+    0,
+  );
+
   const generateTwoPageSplit = async () => {
     await splitFileInput.setInputFiles({
       name: "split-source.pdf",
@@ -421,11 +436,22 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
 
   await generateTwoPageSplit();
   await expectNoStaleZipDownload(page, async () => {
-    await page.getByRole("radio", { name: "Every N Pages" }).check();
+    await splitIntervalInput.fill("2");
     await expect(page.locator("#split").getByText("page-1.pdf")).toHaveCount(0);
   });
 
-  await page.getByRole("radio", { name: "Every Page" }).check();
+  await expect(
+    page.getByRole("radio", { name: "Split every 2 pages" }),
+  ).toBeChecked();
+  await expect(
+    splitIntervalOption.getByText("pages", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Split PDF", exact: true }).click();
+  await expect(page.locator("#split").getByText("pages-1-2.pdf")).toBeVisible();
+  await splitIntervalInput.fill("1");
+  await expect(
+    page.getByRole("radio", { name: "Split every 1 page" }),
+  ).toBeChecked();
   await generateTwoPageSplit();
   await expectNoStaleZipDownload(page, async () => {
     await page.getByRole("button", { name: "Split PDF", exact: true }).click();
@@ -490,9 +516,13 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
     page.locator("#split").getByText("part-1-pages-1-2.pdf"),
   ).toHaveCount(0);
 
-  await page.getByRole("radio", { name: "Every N Pages" }).check();
+  await expect(splitIntervalInput).toHaveAttribute("tabindex", "-1");
+  await splitIntervalInput.click();
+  await expect(
+    page.getByRole("radio", { name: "Split every 1 page" }),
+  ).toBeChecked();
   await expect(page.getByText("page-1.pdf")).toHaveCount(0);
-  await page.getByLabel("Pages per file").fill("0");
+  await splitIntervalInput.fill("0");
   await page.getByRole("button", { name: "Split PDF", exact: true }).click();
   await expect(
     page.getByText("Enter a positive whole number of pages per file."),
@@ -511,8 +541,9 @@ test("LocalFiles web shell supports local-first PDF workflows", async ({
       .getByText("Enter a positive whole number of pages per file."),
   ).toHaveCount(0);
   await expect(
-    page.locator("#split").getByRole("radio", { name: "Every Page" }),
+    page.locator("#split").getByRole("radio", { name: "Split every 1 page" }),
   ).toBeChecked();
+  await expect(splitIntervalInput).toHaveValue("1");
 
   await page.getByRole("link", { name: "Reorder Pages" }).click();
   await expectCurrentSection(page, "Reorder Pages");

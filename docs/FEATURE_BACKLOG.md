@@ -65,17 +65,6 @@ operation suffixes, and handle long or awkward source names cleanly.
 Add recognizable rotation cues alongside text labels without reducing keyboard
 or screen-reader accessibility.
 
-### UX-006: Simplify Split PDF Controls
-
-**Status:** Candidate
-
-**Priority:** High
-
-Replace the separate "Every Page" and "Every N Pages" modes with one
-plain-language control: `Split every [number] page(s)`. Default to `1`, use the
-singular "page" for `1` and "pages" for larger values, and keep Custom Ranges
-available. Avoid technical "N" terminology in user-facing copy.
-
 ### UX-007: Professional Interface Refresh
 
 **Status:** Candidate

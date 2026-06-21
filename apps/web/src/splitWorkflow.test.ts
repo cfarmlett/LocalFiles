@@ -43,8 +43,8 @@ function createAdapter(): PdfAdapter {
 }
 
 describe("createSplitPlan", () => {
-  it("plans one output for every page", () => {
-    expect(createSplitPlan("every-page", 3)).toEqual({
+  it("plans one output for every page when the interval is 1", () => {
+    expect(createSplitPlan("interval", 3, { interval: 1 })).toEqual({
       ranges: [
         { start: 1, end: 1 },
         { start: 2, end: 2 },
@@ -54,15 +54,15 @@ describe("createSplitPlan", () => {
     });
   });
 
-  it("plans a one-page PDF as one every-page output", () => {
-    expect(createSplitPlan("every-page", 1)).toEqual({
+  it("plans a one-page PDF as one interval output", () => {
+    expect(createSplitPlan("interval", 1, { interval: 1 })).toEqual({
       ranges: [{ start: 1, end: 1 }],
       filenames: ["page-1.pdf"],
     });
   });
 
-  it("plans every-N-page chunks including a short final chunk", () => {
-    expect(createSplitPlan("every-n-pages", 12, { chunkSize: 5 })).toEqual({
+  it("plans interval chunks including a short final chunk", () => {
+    expect(createSplitPlan("interval", 12, { interval: 5 })).toEqual({
       ranges: [
         { start: 1, end: 5 },
         { start: 6, end: 10 },
@@ -72,8 +72,8 @@ describe("createSplitPlan", () => {
     });
   });
 
-  it("plans one every-N-page chunk when chunk size is larger than page count", () => {
-    expect(createSplitPlan("every-n-pages", 3, { chunkSize: 10 })).toEqual({
+  it("plans one interval chunk when the interval is larger than page count", () => {
+    expect(createSplitPlan("interval", 3, { interval: 10 })).toEqual({
       ranges: [{ start: 1, end: 3 }],
       filenames: ["pages-1-3.pdf"],
     });
@@ -117,11 +117,14 @@ describe("createSplitPlan", () => {
     });
   });
 
-  it("rejects invalid chunk sizes", () => {
-    expect(() => createSplitPlan("every-n-pages", 5, { chunkSize: 0 })).toThrow(
-      "Enter a positive whole number of pages per file.",
-    );
-  });
+  it.each([undefined, 0, -1, 1.5])(
+    "rejects invalid interval %s",
+    (interval) => {
+      expect(() => createSplitPlan("interval", 5, { interval })).toThrow(
+        "Enter a positive whole number of pages per file.",
+      );
+    },
+  );
 
   it("rejects invalid custom ranges", () => {
     expect(() =>
@@ -158,8 +161,8 @@ describe("buildSplitFileItem", () => {
 describe("splitFile", () => {
   it("calls the adapter and maps output names", async () => {
     const adapter = createAdapter();
-    const outputs = await splitFile(createItem(), adapter, "every-n-pages", {
-      chunkSize: 2,
+    const outputs = await splitFile(createItem(), adapter, "interval", {
+      interval: 2,
     });
 
     expect(outputs.map((output) => output.filename)).toEqual([
@@ -205,7 +208,7 @@ describe("splitFile", () => {
     };
 
     await expect(
-      splitFile(createItem(), adapter, "every-page"),
+      splitFile(createItem(), adapter, "interval", { interval: 1 }),
     ).rejects.toMatchObject({
       code: "processing-failed",
     });

@@ -292,6 +292,12 @@ h3 {
   gap: 7px;
 }
 
+.split-interval-option {
+  align-items: center;
+  display: flex;
+  gap: 7px;
+}
+
 .field-row {
   color: #25313d;
   display: grid;
@@ -301,13 +307,18 @@ h3 {
 }
 
 .field-row input,
-.field-row textarea {
+.field-row textarea,
+.split-interval-option input[type="number"] {
   border: 1px solid #9aa8b6;
   border-radius: 4px;
   color: #17212b;
   font: inherit;
   font-weight: 400;
   padding: 8px 10px;
+}
+
+.split-interval-option input[type="number"] {
+  width: 4.75rem;
 }
 
 .field-row textarea {

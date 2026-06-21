@@ -8,6 +8,11 @@ the detailed source for verifiable release-by-release changes.
 LocalFiles is at `1.5.0-rc1`. It is a release candidate undergoing final
 validation and early feedback, not the final `1.5.0` release.
 
+## Improvements Since 1.5.0-rc1
+
+- Simplified Split PDF to two plain-language modes: a page interval that
+  defaults to one page, and custom ranges.
+
 ## Foundation and Prototype
 
 The project began as LocalDocs with a privacy-first premise: useful document

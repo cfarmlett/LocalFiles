@@ -10,6 +10,8 @@ to reconstruct undocumented development history.
 - Renamed the project from LocalDocs to LocalFiles before public launch,
   including the `localfiles.org` domain, application branding, downloaded file
   naming, and private workspace package scope.
+- Simplified Split PDF to a page interval (defaulting to one page) or custom
+  ranges, while preserving existing split results and filenames.
 
 ## 1.5.0-rc1 - Release Candidate
 

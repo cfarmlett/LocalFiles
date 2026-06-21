@@ -7,7 +7,7 @@ import {
 
 import { getPdfErrorMessage, validatePdfFile } from "./mergeWorkflow";
 
-export type SplitMode = "every-page" | "every-n-pages" | "custom-ranges";
+export type SplitMode = "interval" | "custom-ranges";
 
 export type SplitFileItem = Readonly<{
   id: string;
@@ -53,7 +53,7 @@ export function createSplitPlan(
   mode: SplitMode,
   pageCount: number,
   options: Readonly<{
-    chunkSize?: number;
+    interval?: number;
     customRanges?: string;
   }> = {},
 ): SplitPlan {
@@ -61,41 +61,29 @@ export function createSplitPlan(
     throw new Error("Select a readable PDF before splitting.");
   }
 
-  if (mode === "every-page") {
-    const ranges = Array.from({ length: pageCount }, (_, index) => ({
-      start: index + 1,
-      end: index + 1,
-    }));
+  if (mode === "interval") {
+    const interval = options.interval;
 
-    return {
-      ranges,
-      filenames: ranges.map((range) => `page-${range.start}.pdf`),
-    };
-  }
-
-  if (mode === "every-n-pages") {
-    const chunkSize = options.chunkSize;
-
-    if (
-      chunkSize === undefined ||
-      !Number.isInteger(chunkSize) ||
-      chunkSize < 1
-    ) {
+    if (interval === undefined || !Number.isInteger(interval) || interval < 1) {
       throw new Error("Enter a positive whole number of pages per file.");
     }
 
     const ranges: PageRange[] = [];
 
-    for (let start = 1; start <= pageCount; start += chunkSize) {
+    for (let start = 1; start <= pageCount; start += interval) {
       ranges.push({
         start,
-        end: Math.min(start + chunkSize - 1, pageCount),
+        end: Math.min(start + interval - 1, pageCount),
       });
     }
 
     return {
       ranges,
-      filenames: ranges.map((range) => `pages-${range.start}-${range.end}.pdf`),
+      filenames: ranges.map((range) =>
+        interval === 1
+          ? `page-${range.start}.pdf`
+          : `pages-${range.start}-${range.end}.pdf`,
+      ),
     };
   }
 
@@ -115,7 +103,7 @@ export async function splitFile(
   adapter: PdfAdapter,
   mode: SplitMode,
   options: Readonly<{
-    chunkSize?: number;
+    interval?: number;
     customRanges?: string;
   }> = {},
 ): Promise<readonly SplitOutput[]> {

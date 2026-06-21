@@ -28,8 +28,8 @@ const defaultAdapter = new LocalPdfAdapter();
 
 export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const [file, setFile] = useState<SplitFileItem>();
-  const [mode, setMode] = useState<SplitMode>("every-page");
-  const [chunkSize, setChunkSize] = useState("1");
+  const [mode, setMode] = useState<SplitMode>("interval");
+  const [interval, setInterval] = useState("1");
   const [customRanges, setCustomRanges] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const [isReading, setIsReading] = useState(false);
@@ -43,8 +43,8 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
   const canSplit = file !== undefined && !isReading && !isSplitting;
   const canClear =
     file !== undefined ||
-    mode !== "every-page" ||
-    chunkSize !== "1" ||
+    mode !== "interval" ||
+    interval !== "1" ||
     customRanges !== "" ||
     errors.length > 0 ||
     isReading ||
@@ -70,6 +70,9 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     !isReading &&
     !isSplitting &&
     !isCreatingZip;
+  const intervalModeLabel = `Split every ${
+    interval === "" ? "—" : interval
+  } ${Number(interval) === 1 ? "page" : "pages"}`;
 
   async function selectFiles(selectedFiles: FileList | readonly File[]) {
     const operationToken = asyncOperations.current.begin();
@@ -139,7 +142,7 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
 
     try {
       const nextOutputs = await splitFile(file, adapter, mode, {
-        chunkSize: Number(chunkSize),
+        interval: Number(interval),
         customRanges,
       });
 
@@ -164,6 +167,12 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     clearOutputs();
   }
 
+  function activateIntervalMode() {
+    if (mode !== "interval") {
+      changeMode("interval");
+    }
+  }
+
   function clearOutputs() {
     zipOperations.current.invalidate();
     setOutputs([]);
@@ -174,8 +183,8 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
     asyncOperations.current.invalidate();
     zipOperations.current.invalidate();
     setFile(undefined);
-    setMode("every-page");
-    setChunkSize("1");
+    setMode("interval");
+    setInterval("1");
     setCustomRanges("");
     setErrors([]);
     setIsReading(false);
@@ -301,24 +310,36 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
 
       <fieldset className="split-options">
         <legend>Split mode</legend>
-        <label>
+        <div className="split-interval-option">
           <input
-            checked={mode === "every-page"}
+            aria-label={intervalModeLabel}
+            checked={mode === "interval"}
+            id="split-mode-interval"
             name="split-mode"
-            onChange={() => changeMode("every-page")}
+            onChange={() => changeMode("interval")}
             type="radio"
           />
-          Every Page
-        </label>
-        <label>
+          <label htmlFor="split-mode-interval">Split every</label>
           <input
-            checked={mode === "every-n-pages"}
-            name="split-mode"
-            onChange={() => changeMode("every-n-pages")}
-            type="radio"
+            aria-describedby="split-interval-unit"
+            aria-label="Pages per split PDF"
+            id="split-interval"
+            min="1"
+            onChange={(event) => {
+              setInterval(event.currentTarget.value);
+              setErrors([]);
+              clearOutputs();
+            }}
+            onFocus={activateIntervalMode}
+            step="1"
+            tabIndex={mode === "interval" ? 0 : -1}
+            type="number"
+            value={interval}
           />
-          Every N Pages
-        </label>
+          <span aria-live="polite" id="split-interval-unit">
+            {Number(interval) === 1 ? "page" : "pages"}
+          </span>
+        </div>
         <label>
           <input
             checked={mode === "custom-ranges"}
@@ -329,23 +350,6 @@ export function SplitPdfPage({ adapter = defaultAdapter }: SplitPdfPageProps) {
           Custom Ranges
         </label>
       </fieldset>
-
-      {mode === "every-n-pages" ? (
-        <label className="field-row">
-          Pages per file
-          <input
-            min="1"
-            onChange={(event) => {
-              setChunkSize(event.currentTarget.value);
-              setErrors([]);
-              clearOutputs();
-            }}
-            step="1"
-            type="number"
-            value={chunkSize}
-          />
-        </label>
-      ) : null}
 
       {mode === "custom-ranges" ? (
         <label className="field-row">
