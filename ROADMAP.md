@@ -21,10 +21,18 @@ The current product version is `1.5.0-rc1`.
 ## Next: Strengthen the Core PDF Toolkit
 
 - Improve round-trip Split and Merge workflows.
-- Apply feedback-driven usability and visual polish.
+- Apply feedback-driven usability and visual polish, beginning with simpler
+  Split PDF controls and plain-language labels.
 - Make output naming and export behavior more predictable.
 - Evaluate additional privacy-oriented PDF utilities without weakening the
   local-processing model.
+
+## Later: Add Page Preview and Visual Editing
+
+Establish a shared, local page-preview foundation so users can inspect and
+manipulate pages without coordinating with an external PDF viewer. Build
+mobile-friendly visual selection, navigation, and split-point editing on that
+foundation across page-based workflows.
 
 ## Later: Expand Local Workflows
 

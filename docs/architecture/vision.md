@@ -35,6 +35,11 @@ LocalFiles should be built around a few durable principles:
 7. **Boring is good**
    The site should look professional, calm, and competent rather than flashy or gimmicky.
 
+8. **Complete workflows in one place**
+   Favor workflows that let users inspect documents and finish a task within
+   LocalFiles. Page-based tools should not require coordination with an
+   external PDF viewer.
+
 ## Initial Target Users
 
 LocalFiles is intended for people who need simple document manipulation but are uneasy about uploading sensitive files to random websites.

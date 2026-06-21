@@ -65,12 +65,75 @@ operation suffixes, and handle long or awkward source names cleanly.
 Add recognizable rotation cues alongside text labels without reducing keyboard
 or screen-reader accessibility.
 
-### UX-006: Professional Interface Polish
+### UX-006: Simplify Split PDF Controls
 
 **Status:** Candidate
 
-Refine hierarchy, spacing, controls, responsive behavior, and status messaging
-while keeping the application lightweight, accessible, and utilitarian.
+**Priority:** High
+
+Replace the separate "Every Page" and "Every N Pages" modes with one
+plain-language control: `Split every [number] page(s)`. Default to `1`, use the
+singular "page" for `1` and "pages" for larger values, and keep Custom Ranges
+available. Avoid technical "N" terminology in user-facing copy.
+
+### UX-007: Professional Interface Refresh
+
+**Status:** Candidate
+
+Refine visual hierarchy, spacing, typography, forms, button affordances,
+workflow organization, mobile presentation, and overall interface cohesion.
+The result should feel modern, calm, and credible for users handling important
+documents while preserving LocalFiles' simple, trustworthy, utility-focused
+identity rather than becoming a flashy redesign.
+
+### PDF-THUMB-001: Shared Page Thumbnail Framework
+
+**Status:** Candidate
+
+**Priority:** High
+
+Create a reusable, in-browser page thumbnail system for Split PDF, Reorder
+Pages, Rotate Pages, Delete Pages, and future page-based tools such as
+redaction. It should keep documents local, provide meaningful context for
+text-heavy pages, and remain usable on mobile. This is shared foundation for
+later preview and visual-editing features, not an isolated workflow.
+
+### PDF-THUMB-002: Expanded Page Preview Viewer
+
+**Status:** Candidate
+
+**Priority:** Medium
+
+Let users open a thumbnail in a larger, readable preview with next/previous
+navigation and practical zoom controls. Reuse the viewer across page-based
+workflows so users can inspect page contents without opening an external PDF
+viewer.
+
+**Depends on:** PDF-THUMB-001
+
+### SPLIT-002: Visual Split Point Editor
+
+**Status:** Candidate
+
+**Priority:** Medium-High
+
+Show pages in order and let users click or tap between previews to add or
+remove split points. Generate outputs from those boundaries so users do not
+have to calculate ranges manually.
+
+**Depends on:** PDF-THUMB-001; PDF-THUMB-002 may enhance the workflow.
+
+### SPLIT-003: Thumbnail-Assisted Custom Ranges
+
+**Status:** Candidate
+
+**Priority:** Low
+
+Keep visual selections and Custom Ranges synchronized in both directions so
+users can switch between visual editing and precise range input without losing
+context.
+
+**Depends on:** PDF-THUMB-001
 
 ## New Local Capabilities
 
