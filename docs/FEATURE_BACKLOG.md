@@ -102,6 +102,19 @@ context.
 
 **Depends on:** PDF-THUMB-001
 
+### FILE-WS-001: File-First Workflow Discovery
+
+**Status:** Candidate
+
+Explore whether users should be able to load files first and then see relevant
+local workflows based on file type, file count, and available capabilities. The
+goal would be simpler discovery across PDF tools and possible future file
+categories without obscuring the current explicit workflow model.
+
+This is a product direction candidate, not an approved architecture. It should
+preserve local processing, predictable user control, accessibility, and clear
+workflow outcomes before moving into implementation planning.
+
 ## New Local Capabilities
 
 ### DOC-INSPECT-001: Document Inspection

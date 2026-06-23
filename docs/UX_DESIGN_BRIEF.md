@@ -218,6 +218,17 @@ As additional categories are added, separate workspaces may be appropriate.
 
 Within a category, maintaining a unified workflow experience is preferred.
 
+## Possible Future Direction: File-First Entry
+
+LocalFiles may eventually let users start by loading one or more files and then
+surface relevant workflows from that context. For example, one PDF might expose
+single-document PDF actions, multiple PDFs might expose merge-oriented actions,
+and future image support might expose image-specific actions.
+
+This direction is exploratory. If pursued, it should clarify rather than hide
+the available workflow, preserve explicit user choice, avoid surprising
+automation, and remain consistent with the current workspace model.
+
 ---
 
 # Trust Design Guidance

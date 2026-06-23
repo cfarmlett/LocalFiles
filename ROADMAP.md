@@ -40,8 +40,10 @@ infrastructure, not merely visual polish.
 Potential directions include focused file conversion, batch processing,
 verifiable PDF sanitization, and local OCR where it supports a validated
 workflow. Broad catalogs and standalone feature parity are lower priorities.
-Scope and sequencing will depend on real usage, browser constraints, trust
-requirements, and maintenance cost.
+LocalFiles may also explore file-first workflow discovery, where selected files
+help surface relevant local actions instead of requiring users to choose a tool
+up front. Scope and sequencing will depend on real usage, browser constraints,
+trust requirements, and maintenance cost.
 
 ## Explore: Capabilities That Need Research
 
