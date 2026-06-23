@@ -89,36 +89,38 @@ export function App() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div className="topbar__identity">
-          <a
-            aria-current={activeSection === "home" ? "page" : undefined}
-            className="brand"
-            href="#home"
-            onClick={() => setActiveSection("home")}
-          >
-            LocalFiles.org
-          </a>
-          <a
-            aria-current={activeSection === "privacy" ? "page" : undefined}
-            className="header-utility"
-            href="#privacy"
-            onClick={() => setActiveSection("privacy")}
-          >
-            Privacy
-          </a>
-        </div>
-        <nav className="nav" aria-label="PDF tools">
-          {toolSections.map((section) => (
+        <div className="topbar__inner">
+          <div className="topbar__identity">
             <a
-              aria-current={activeSection === section.id ? "page" : undefined}
-              href={`#${section.id}`}
-              key={section.id}
-              onClick={() => setActiveSection(section.id)}
+              aria-current={activeSection === "home" ? "page" : undefined}
+              className="brand"
+              href="#home"
+              onClick={() => setActiveSection("home")}
             >
-              {section.label}
+              LocalFiles.org
             </a>
-          ))}
-        </nav>
+            <a
+              aria-current={activeSection === "privacy" ? "page" : undefined}
+              className="header-utility"
+              href="#privacy"
+              onClick={() => setActiveSection("privacy")}
+            >
+              Privacy
+            </a>
+          </div>
+          <nav className="nav" aria-label="PDF tools">
+            {toolSections.map((section) => (
+              <a
+                aria-current={activeSection === section.id ? "page" : undefined}
+                href={`#${section.id}`}
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+              >
+                {section.label}
+              </a>
+            ))}
+          </nav>
+        </div>
       </header>
 
       <div className="hero" id="home">
