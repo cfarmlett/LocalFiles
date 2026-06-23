@@ -647,6 +647,7 @@ h3 {
     align-items: flex-start;
     flex-direction: column;
     gap: 16px;
+    width: min(calc(100% - 32px), var(--shell-rail-width));
   }
 
   .nav {
@@ -655,6 +656,7 @@ h3 {
   }
 
   .nav a {
+    font-size: 0.875rem;
     padding-inline: 4px;
   }
 
