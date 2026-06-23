@@ -22,6 +22,15 @@ as historical tag metadata rather than treated as a separate release. The root
   their intended order in lexicographic sorting and ZIP archives.
 - Added natural numeric filename sorting for newly selected Merge PDF batches
   without changing existing or manually arranged file order.
+- Added a shared professional PDF file picker across the implemented workflows,
+  preserving native file input behavior while improving drag-and-drop and
+  keyboard accessibility.
+- Refined the app shell with hash navigation correctness, a clearer header
+  hierarchy, a more compact hero, and a shared content rail for the header,
+  hero, workflows, Redact limitation, and Privacy section.
+- Made trust and limitation cues easier to verify through prominent Privacy
+  access, source/license/privacy/security links, and an explicit unavailable
+  state for Redact PDF.
 
 ## Foundation and Prototype
 

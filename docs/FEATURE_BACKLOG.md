@@ -52,16 +52,6 @@ operation suffixes, and handle long or awkward source names cleanly.
 Add recognizable rotation cues alongside text labels without reducing keyboard
 or screen-reader accessibility.
 
-### UX-007: Professional Interface Refresh
-
-**Status:** Candidate
-
-Refine visual hierarchy, spacing, typography, forms, button affordances,
-workflow organization, mobile presentation, and overall interface cohesion.
-The result should feel modern, calm, and credible for users handling important
-documents while preserving LocalFiles' simple, trustworthy, utility-focused
-identity rather than becoming a flashy redesign.
-
 ### PDF-THUMB-001: Shared Page Thumbnail Framework
 
 **Status:** Candidate

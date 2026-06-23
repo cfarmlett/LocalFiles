@@ -25,6 +25,11 @@ supported prerelease remains `1.5.0-rc1`.
   ranges, PDF contents, individual downloads, and ZIP entries.
 - Naturally sorted each newly added batch of Merge PDF files by filename while
   preserving the existing list and any manual reordering.
+- Professionalized the application shell with a shared PDF file picker, more
+  reliable hash navigation, clearer tool navigation hierarchy, compact hero
+  spacing, and a centered content rail across major page regions.
+- Made trust verification and unsupported Redact PDF limitations easier to find
+  without changing the local-processing privacy model.
 
 ## 1.5.0-rc1 - Release Candidate
 
