@@ -385,6 +385,53 @@ type NavigationDestination = Readonly<{
   label: string;
 }>;
 
+type ToolNavigationLayoutDiagnostic = Readonly<{
+  viewport: Readonly<{
+    innerWidth: number;
+    innerHeight: number;
+    clientWidth: number;
+    clientHeight: number;
+    visualViewportWidth: number | null;
+    visualViewportHeight: number | null;
+    visualViewportScale: number | null;
+    devicePixelRatio: number;
+  }>;
+  nav: Readonly<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    display: string;
+    flexWrap: string;
+    gap: string;
+    rowGap: string;
+    columnGap: string;
+    justifyContent: string;
+  }>;
+  links: readonly Readonly<{
+    text: string;
+    box: Readonly<{
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }>;
+    computed: Readonly<{
+      display: string;
+      fontFamily: string;
+      fontSize: string;
+      lineHeight: string;
+      padding: string;
+      paddingInline: string;
+      textDecorationLine: string;
+    }>;
+  }>[];
+  rowGroups: readonly Readonly<{
+    y: number;
+    texts: readonly string[];
+  }>[];
+}>;
+
 const toolNavigationDestinations: readonly NavigationDestination[] = [
   { id: "split", label: "Split PDF" },
   { id: "merge", label: "Merge PDF" },
@@ -459,6 +506,89 @@ async function expectDestinationVisible(
   );
 
   expect(isDestinationUnobscured).toBe(true);
+}
+
+async function getToolNavigationLayoutDiagnostic(
+  page: Page,
+): Promise<ToolNavigationLayoutDiagnostic> {
+  return page
+    .getByRole("navigation", { name: "PDF tools" })
+    .evaluate((navigation) => {
+      const nav = navigation as HTMLElement;
+      const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>("a"));
+      const navStyles = getComputedStyle(nav);
+      const rowGroupsByY = new Map<number, string[]>();
+
+      const linkDiagnostics = links.map((link) => {
+        const linkRect = link.getBoundingClientRect();
+        const linkStyles = getComputedStyle(link);
+        const roundedY = Math.round(linkRect.y);
+        rowGroupsByY.set(roundedY, [
+          ...(rowGroupsByY.get(roundedY) ?? []),
+          link.textContent?.trim() ?? "",
+        ]);
+
+        return {
+          text: link.textContent?.trim() ?? "",
+          box: {
+            x: Number(linkRect.x.toFixed(2)),
+            y: Number(linkRect.y.toFixed(2)),
+            width: Number(linkRect.width.toFixed(2)),
+            height: Number(linkRect.height.toFixed(2)),
+          },
+          computed: {
+            display: linkStyles.display,
+            fontFamily: linkStyles.fontFamily,
+            fontSize: linkStyles.fontSize,
+            lineHeight: linkStyles.lineHeight,
+            padding: linkStyles.padding,
+            paddingInline: linkStyles.paddingInline,
+            textDecorationLine: linkStyles.textDecorationLine,
+          },
+        };
+      });
+
+      const navRect = nav.getBoundingClientRect();
+
+      return {
+        viewport: {
+          innerWidth: window.innerWidth,
+          innerHeight: window.innerHeight,
+          clientWidth: document.documentElement.clientWidth,
+          clientHeight: document.documentElement.clientHeight,
+          visualViewportWidth:
+            window.visualViewport === null
+              ? null
+              : Number(window.visualViewport.width.toFixed(2)),
+          visualViewportHeight:
+            window.visualViewport === null
+              ? null
+              : Number(window.visualViewport.height.toFixed(2)),
+          visualViewportScale: window.visualViewport?.scale ?? null,
+          devicePixelRatio: window.devicePixelRatio,
+        },
+        nav: {
+          x: Number(navRect.x.toFixed(2)),
+          y: Number(navRect.y.toFixed(2)),
+          width: Number(navRect.width.toFixed(2)),
+          height: Number(navRect.height.toFixed(2)),
+          display: navStyles.display,
+          flexWrap: navStyles.flexWrap,
+          gap: navStyles.gap,
+          rowGap: navStyles.rowGap,
+          columnGap: navStyles.columnGap,
+          justifyContent: navStyles.justifyContent,
+        },
+        links: linkDiagnostics,
+        rowGroups: Array.from(rowGroupsByY, ([y, texts]) => ({ y, texts })),
+      };
+    });
+}
+
+function formatToolNavigationLayoutDiagnostic(
+  diagnostic: ToolNavigationLayoutDiagnostic,
+): string {
+  return JSON.stringify(diagnostic, null, 2);
 }
 
 for (const destination of [
@@ -592,18 +722,23 @@ test("wrapped mobile navigation does not obscure destinations", async ({
     label: "Merge PDF",
   });
 
-  const toolNavigationRows = await page
-    .getByRole("navigation", { name: "PDF tools" })
-    .getByRole("link")
-    .evaluateAll((links) =>
-      Array.from(
-        new Set(
-          links.map((link) => Math.round(link.getBoundingClientRect().top)),
-        ),
-      ),
-    );
+  const toolNavigationDiagnostic =
+    await getToolNavigationLayoutDiagnostic(page);
 
-  expect(toolNavigationRows.length).toBeLessThanOrEqual(2);
+  if (process.env.LOCALFILES_NAV_DIAGNOSTICS === "1") {
+    console.warn(
+      `Tool navigation layout diagnostic:\n${formatToolNavigationLayoutDiagnostic(
+        toolNavigationDiagnostic,
+      )}`,
+    );
+  }
+
+  expect(
+    toolNavigationDiagnostic.rowGroups.length,
+    `Tool navigation should wrap to at most two rows.\n${formatToolNavigationLayoutDiagnostic(
+      toolNavigationDiagnostic,
+    )}`,
+  ).toBeLessThanOrEqual(2);
 
   await page.getByRole("link", { name: "Privacy", exact: true }).click();
   await expectCurrentSection(page, "Privacy");
