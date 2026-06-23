@@ -102,18 +102,22 @@ context.
 
 **Depends on:** PDF-THUMB-001
 
-### FILE-WS-001: File-First Workflow Discovery
+### FILE-WS-001: Universal File Intake and Workflow Discovery
 
 **Status:** Candidate
 
-Explore whether users should be able to load files first and then see relevant
-local workflows based on file type, file count, and available capabilities. The
-goal would be simpler discovery across PDF tools and possible future file
-categories without obscuring the current explicit workflow model.
+Explore whether users should be able to drag supported files anywhere onto the
+page, with the page itself acting as a file intake target, and then choose from
+compatible local workflows based on file type, file count, and available
+capabilities. The goal would be to reduce uncertainty about where files belong
+while preserving simpler discovery across PDF tools and possible future file
+categories.
 
 This is a product direction candidate, not an approved architecture. It should
-preserve local processing, predictable user control, accessibility, and clear
-workflow outcomes before moving into implementation planning.
+preserve the workspace model, direct workflow navigation, workflow-specific
+upload controls, explicit workflow selection, local processing, predictable user
+control, accessibility, and clear workflow outcomes before moving into
+implementation planning.
 
 ## New Local Capabilities
 
